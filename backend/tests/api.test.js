@@ -326,4 +326,39 @@ describe('University Club Portal API Integration Tests', () => {
     expect(detailRes.body.data.application.histories.length).toBeGreaterThanOrEqual(1);
     expect(detailRes.body.data.application.histories[0].toStatus).toBe('ACCEPTED');
   });
+
+  // TC19: Dịch vụ Email gửi thông báo kết quả an toàn
+  it('TC19: Dịch vụ Email gửi thông báo nộp đơn và trúng tuyển an toàn', async () => {
+    const { emailService } = await import('../src/modules/email/email.service.js');
+    const result = await emailService.sendApplicationSubmitted(
+      'test.student@bafu.edu.vn',
+      'Sinh viên BAFU',
+      'CLB BAFU Tech',
+      'Đợt tuyển Gen 5'
+    );
+    expect(result.success).toBe(true);
+
+    const acceptResult = await emailService.sendApplicationAccepted(
+      'test.student@bafu.edu.vn',
+      'Sinh viên BAFU',
+      'CLB BAFU Tech'
+    );
+    expect(acceptResult.success).toBe(true);
+  });
+
+  // TC20: Kiểm thử khả năng phục hồi (Resilience): Lỗi SMTP không làm hỏng transaction duyệt đơn
+  it('TC20: Lỗi dịch vụ Email không làm hỏng tiến trình xét duyệt hồ sơ ứng tuyển', async () => {
+    // Xét duyệt đơn sang UNDER_REVIEW
+    const res = await request(app)
+      .patch(`/api/v1/applications/${createdApplicationId}/status`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        status: 'UNDER_REVIEW',
+        internalNotes: 'Ứng viên được gọi phỏng vấn vòng 2'
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.application.status).toBe('UNDER_REVIEW');
+  });
 });

@@ -1,4 +1,5 @@
 import prisma from '../../config/db.js';
+import { emailService } from '../email/email.service.js';
 
 export class ApplicationsService {
   static async submitApplication({ campaignId, userId, answers = [] }) {
@@ -133,6 +134,21 @@ export class ApplicationsService {
         notes: 'Sinh viên nộp hồ sơ trực tuyến'
       }
     });
+
+    // Gửi email xác nhận nộp hồ sơ (Bất đồng bộ an toàn)
+    prisma.user.findUnique({
+      where: { id: userId },
+      include: { studentProfile: true }
+    }).then(applicantUser => {
+      if (applicantUser?.email) {
+        emailService.sendApplicationSubmitted(
+          applicantUser.email,
+          applicantUser.studentProfile?.fullName || 'Sinh viên',
+          campaign.club.name,
+          campaign.title
+        ).catch(err => console.error('Lỗi gửi email nộp đơn:', err.message));
+      }
+    }).catch(() => {});
 
     return application;
   }
@@ -396,6 +412,26 @@ export class ApplicationsService {
 
       return updatedApp;
     });
+
+    // Gửi email thông báo kết quả (Bất đồng bộ an toàn sau khi commit transaction)
+    prisma.user.findUnique({
+      where: { id: application.userId },
+      include: { studentProfile: true }
+    }).then(applicantUser => {
+      if (applicantUser?.email) {
+        const studentName = applicantUser.studentProfile?.fullName || 'Sinh viên';
+        if (status === 'ACCEPTED') {
+          emailService.sendApplicationAccepted(applicantUser.email, studentName, clubName)
+            .catch(err => console.error('Lỗi gửi email trúng tuyển:', err.message));
+        } else if (status === 'REJECTED') {
+          emailService.sendApplicationRejected(applicantUser.email, studentName, clubName)
+            .catch(err => console.error('Lỗi gửi email từ chối:', err.message));
+        } else if (status === 'NEED_MORE_INFO') {
+          emailService.sendApplicationNeedMoreInfo(applicantUser.email, studentName, clubName)
+            .catch(err => console.error('Lỗi gửi email bổ sung hồ sơ:', err.message));
+        }
+      }
+    }).catch(() => {});
 
     return result;
   }
