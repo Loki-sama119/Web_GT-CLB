@@ -505,4 +505,46 @@ describe('University Club Portal API Integration Tests', () => {
       expect(allMemberships.length).toBeGreaterThanOrEqual(2);
     }
   });
+
+  // TC30: Super Admin truy cập báo cáo tổng hợp hoạt động CLB toàn trường
+  it('TC30: Super Admin truy cập báo cáo tổng hợp hoạt động CLB toàn trường', async () => {
+    const res = await request(app)
+      .get('/api/v1/admin/reports/clubs')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.reports).toBeDefined();
+    expect(res.body.data.reports.length).toBeGreaterThanOrEqual(1);
+
+    const firstReport = res.body.data.reports[0];
+    expect(firstReport.name).toBeDefined();
+    expect(firstReport.category).toBeDefined();
+    expect(firstReport.totalMembers).toBeDefined();
+    expect(firstReport.acceptanceRate).toBeDefined();
+  });
+
+  // TC31: Super Admin xuất file CSV báo cáo toàn trường có UTF-8 BOM
+  it('TC31: Super Admin xuất file CSV báo cáo toàn trường có UTF-8 BOM', async () => {
+    const res = await request(app)
+      .get('/api/v1/admin/reports/clubs/export')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.headers['content-type']).toContain('text/csv');
+    expect(res.text.startsWith('\uFEFF')).toBe(true);
+    expect(res.text).toContain('Tên Câu Lạc Bộ');
+    expect(res.text).toContain('Tỷ Lệ Trúng Tuyển (%)');
+  });
+
+  // TC32: Chặn Sinh viên truy cập báo cáo Super Admin (RBAC 403)
+  it('TC32: Chặn tài khoản Sinh viên truy cập báo cáo Super Admin (RBAC 403)', async () => {
+    const res = await request(app)
+      .get('/api/v1/admin/reports/clubs')
+      .set('Authorization', `Bearer ${studentToken}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+  });
 });
+

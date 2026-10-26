@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { 
   Shield, Users, Award, FileText, CheckCircle2, 
-  Activity, Plus, UserCheck, AlertCircle 
+  Activity, Plus, UserCheck, AlertCircle, Download, BarChart3, Calendar, CheckSquare
 } from 'lucide-react';
 
 export default function SuperAdminDashboard() {
@@ -10,8 +10,11 @@ export default function SuperAdminDashboard() {
   const [users, setUsers] = useState([]);
   const [clubs, setClubs] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [clubReports, setClubReports] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview'); // overview | users | clubs | audit
+  const [loadingReports, setLoadingReports] = useState(false);
+  const [exportingReportCSV, setExportingReportCSV] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview'); // overview | reports | users | clubs | audit
 
   // Form phân quyền Club Admin
   const [assignUserId, setAssignUserId] = useState('');
@@ -57,9 +60,54 @@ export default function SuperAdminDashboard() {
     }
   };
 
+  const loadReports = async () => {
+    setLoadingReports(true);
+    try {
+      const res = await api.getClubReports();
+      if (res?.data?.reports) {
+        setClubReports(res.data.reports);
+      }
+    } catch (err) {
+      console.error('Lỗi khi tải báo cáo CLB:', err);
+    } finally {
+      setLoadingReports(false);
+    }
+  };
+
+  const handleExportReportsCSV = async () => {
+    setExportingReportCSV(true);
+    try {
+      const response = await fetch('/api/v1/admin/reports/clubs/export', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Lỗi khi tải file báo cáo CSV');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `bao-cao-clb-bafu-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(err.message || 'Lỗi khi xuất file báo cáo CSV');
+    } finally {
+      setExportingReportCSV(false);
+    }
+  };
+
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (activeTab === 'reports' && clubReports.length === 0) {
+      loadReports();
+    }
+  }, [activeTab]);
 
   const handleAssignClubAdmin = async (e) => {
     e.preventDefault();
@@ -124,6 +172,14 @@ export default function SuperAdminDashboard() {
           }`}
         >
           Tổng Quan Thống Kê
+        </button>
+        <button
+          onClick={() => setActiveTab('reports')}
+          className={`pb-3 text-sm font-bold border-b-2 transition-colors ${
+            activeTab === 'reports' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500'
+          }`}
+        >
+          Báo Cáo CLB Toàn Trường
         </button>
         <button
           onClick={() => setActiveTab('users')}
@@ -197,6 +253,117 @@ export default function SuperAdminDashboard() {
                       <td className="p-3">
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700">
                           {app.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB: SCHOOL-WIDE CLUB REPORTS */}
+      {activeTab === 'reports' && (
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+            <div>
+              <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-blue-600" /> Báo Cáo Hoạt Động Câu Lạc Bộ Toàn Trường
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                Thống kê chi tiết số lượng hội viên, quy mô tuyển quân, tỷ lệ trúng tuyển và các hoạt động sự kiện
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={loadReports}
+                disabled={loadingReports}
+                className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                {loadingReports ? 'Đang tải...' : 'Làm mới số liệu'}
+              </button>
+              <button
+                onClick={handleExportReportsCSV}
+                disabled={exportingReportCSV}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                {exportingReportCSV ? 'Đang xuất file...' : 'Xuất Báo Cáo Excel (CSV)'}
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Metrics */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs">
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-bold text-slate-500">Tổng sự kiện CLB đã tổ chức</div>
+                <Calendar className="w-5 h-5 text-indigo-500" />
+              </div>
+              <div className="text-3xl font-black text-indigo-600 mt-2">{dashboardData?.totalEvents || 0}</div>
+            </div>
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs">
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-bold text-slate-500">Lượt sinh viên đăng ký sự kiện</div>
+                <CheckSquare className="w-5 h-5 text-teal-500" />
+              </div>
+              <div className="text-3xl font-black text-teal-600 mt-2">{dashboardData?.totalRegistrations || 0}</div>
+            </div>
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs">
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-bold text-slate-500">Tỷ lệ duyệt trúng tuyển TB</div>
+                <Award className="w-5 h-5 text-amber-500" />
+              </div>
+              <div className="text-3xl font-black text-amber-500 mt-2">{dashboardData?.overallAcceptanceRate || 0}%</div>
+            </div>
+          </div>
+
+          {/* Reports Table */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="font-extrabold text-slate-900 text-base">Bảng Báo Cáo Từng Câu Lạc Bộ ({clubReports.length})</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold">
+                    <th className="p-3">#</th>
+                    <th className="p-3">Tên Câu Lạc Bộ</th>
+                    <th className="p-3">Lĩnh Vực</th>
+                    <th className="p-3">Chủ Nhiệm / Đại Diện</th>
+                    <th className="p-3 text-center">Thành Viên</th>
+                    <th className="p-3 text-center">Đợt Tuyển</th>
+                    <th className="p-3 text-center">Đơn Nộp</th>
+                    <th className="p-3 text-center">Trúng Tuyển</th>
+                    <th className="p-3 text-center">Tỷ Lệ</th>
+                    <th className="p-3 text-center">Sự Kiện</th>
+                    <th className="p-3 text-center">Lượt ĐK</th>
+                    <th className="p-3 text-center">Trạng Thái</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {clubReports.map((report, idx) => (
+                    <tr key={report.id} className="hover:bg-slate-50/60 transition-colors">
+                      <td className="p-3 text-slate-400 font-bold">{idx + 1}</td>
+                      <td className="p-3 font-bold text-slate-900">{report.name}</td>
+                      <td className="p-3 text-slate-600">{report.category}</td>
+                      <td className="p-3 font-medium text-slate-800">{report.leaderName}</td>
+                      <td className="p-3 text-center font-bold text-blue-600">{report.totalMembers}</td>
+                      <td className="p-3 text-center text-slate-600">{report.totalCampaigns}</td>
+                      <td className="p-3 text-center text-slate-700 font-medium">{report.totalApplications}</td>
+                      <td className="p-3 text-center text-emerald-600 font-bold">{report.acceptedApplications}</td>
+                      <td className="p-3 text-center font-bold text-amber-600">{report.acceptanceRate}</td>
+                      <td className="p-3 text-center text-indigo-600 font-semibold">{report.totalEvents}</td>
+                      <td className="p-3 text-center text-teal-600 font-semibold">{report.totalRegistrations}</td>
+                      <td className="p-3 text-center">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          report.status === 'ACTIVE' 
+                            ? 'bg-emerald-50 text-emerald-700' 
+                            : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {report.status === 'ACTIVE' ? 'Hoạt động' : 'Tạm dừng'}
                         </span>
                       </td>
                     </tr>

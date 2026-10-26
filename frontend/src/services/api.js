@@ -97,6 +97,7 @@ export const api = {
   getAdminUsers: () => request('/admin/users'),
   assignClubAdmin: (body) => request('/admin/assign-club-admin', { method: 'POST', body }),
   getAuditLogs: () => request('/admin/audit-logs'),
+  getClubReports: () => request('/admin/reports/clubs'),
 
   // Media & Album Management
   uploadAvatar: (formData) => request('/users/me/avatar', { method: 'POST', body: formData }),
