@@ -1,0 +1,347 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SystemRole {
+  STUDENT
+  SUPER_ADMIN
+}
+
+enum ClubRole {
+  MEMBER
+  VICE_LEADER
+  LEADER
+}
+
+enum ClubStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
+
+enum CampaignStatus {
+  DRAFT
+  OPEN
+  CLOSED
+}
+
+enum QuestionType {
+  SHORT_TEXT
+  LONG_TEXT
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  DATE
+  NUMBER
+  URL
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  NEED_MORE_INFO
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum RegistrationStatus {
+  REGISTERED
+  ATTENDED
+  CANCELLED
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model User {
+  id                   String              @id @default(uuid())
+  email                String              @unique
+  passwordHash         String
+  role                 SystemRole          @default(STUDENT)
+  isActive             Boolean             @default(true)
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+
+  studentProfile       StudentProfile?
+  memberships          ClubMembership[]
+  applications         Application[]       @relation("StudentApplications")
+  reviewedApplications Application[]       @relation("ReviewedApplications")
+  posts                ClubPost[]
+  eventRegistrations   EventRegistration[]
+  notifications        Notification[]
+  auditLogs            AuditLog[]
+
+  @@map("users")
+}
+
+model StudentProfile {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  fullName     String
+  studentCode  String   @unique
+  faculty      String?
+  major        String?
+  academicYear String?
+  phone        String?
+  avatarUrl    String?
+  bio          String?
+  skills       String?
+  interests    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("student_profiles")
+}
+
+model ClubCategory {
+  id           String   @id @default(uuid())
+  name         String   @unique
+  slug         String   @unique
+  description  String?
+  icon         String   @default("Users")
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  clubs        Club[]
+
+  @@map("club_categories")
+}
+
+model Club {
+  id               String               @id @default(uuid())
+  name             String               @unique
+  slug             String               @unique
+  shortDescription String
+  description      String
+  categoryId       String
+  logoUrl          String?
+  coverUrl         String?
+  email            String?
+  phone            String?
+  fanpageUrl       String?
+  establishedDate  DateTime?
+  meetingSchedule  String?
+  status           ClubStatus           @default(ACTIVE)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  category         ClubCategory         @relation(fields: [categoryId], references: [id])
+  memberships      ClubMembership[]
+  campaigns        RecruitmentCampaign[]
+  posts            ClubPost[]
+  events           ClubEvent[]
+
+  @@map("clubs")
+}
+
+model ClubMembership {
+  id        String           @id @default(uuid())
+  userId    String
+  clubId    String
+  role      ClubRole         @default(MEMBER)
+  status    MembershipStatus @default(ACTIVE)
+  joinedAt  DateTime         @default(now())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  club      Club             @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clubId])
+  @@map("club_memberships")
+}
+
+model RecruitmentCampaign {
+  id             String           @id @default(uuid())
+  clubId         String
+  title          String
+  slug           String
+  description    String
+  requirements   String?
+  targetQuantity Int              @default(0)
+  startDate      DateTime
+  endDate        DateTime
+  status         CampaignStatus   @default(DRAFT)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  club           Club             @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  form           ApplicationForm?
+  applications   Application[]
+
+  @@map("recruitment_campaigns")
+}
+
+model ApplicationForm {
+  id          String         @id @default(uuid())
+  campaignId  String         @unique
+  title       String
+  description String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  campaign    RecruitmentCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  questions   FormQuestion[]
+
+  @@map("application_forms")
+}
+
+model FormQuestion {
+  id           String              @id @default(uuid())
+  formId       String
+  questionText String
+  questionType QuestionType        @default(SHORT_TEXT)
+  options      String?             // JSON array string for single/multiple choice
+  isRequired   Boolean             @default(true)
+  orderIndex   Int                 @default(0)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  form         ApplicationForm     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  answers      ApplicationAnswer[]
+
+  @@map("form_questions")
+}
+
+model Application {
+  id               String            @id @default(uuid())
+  campaignId       String
+  userId           String
+  status           ApplicationStatus @default(SUBMITTED)
+  internalNotes    String?
+  submittedAt      DateTime          @default(now())
+  reviewedAt       DateTime?
+  reviewedByUserId String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  campaign         RecruitmentCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  user             User                @relation("StudentApplications", fields: [userId], references: [id], onDelete: Cascade)
+  reviewedBy       User?               @relation("ReviewedApplications", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+  answers          ApplicationAnswer[]
+
+  @@map("applications")
+}
+
+model ApplicationAnswer {
+  id                   String       @id @default(uuid())
+  applicationId        String
+  questionId           String
+  questionTextSnapshot String
+  answerValue          String       // text value or JSON string
+  createdAt            DateTime     @default(now())
+
+  application          Application  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  question             FormQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("application_answers")
+}
+
+model ClubPost {
+  id          String     @id @default(uuid())
+  clubId      String
+  authorId    String
+  title       String
+  slug        String
+  content     String
+  thumbnail   String?
+  isPinned    Boolean    @default(false)
+  status      PostStatus @default(PUBLISHED)
+  publishedAt DateTime   @default(now())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  club        Club       @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("club_posts")
+}
+
+model ClubEvent {
+  id              String              @id @default(uuid())
+  clubId          String
+  title           String
+  slug            String
+  description     String
+  location        String
+  startTime       DateTime
+  endTime         DateTime
+  maxParticipants Int                 @default(0)
+  isPublic        Boolean             @default(true)
+  status          EventStatus         @default(UPCOMING)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  club            Club                @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  registrations   EventRegistration[]
+
+  @@map("club_events")
+}
+
+model EventRegistration {
+  id           String             @id @default(uuid())
+  eventId      String
+  userId       String
+  status       RegistrationStatus @default(REGISTERED)
+  registeredAt DateTime           @default(now())
+
+  event        ClubEvent          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@map("event_registrations")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  content   String
+  type      String   @default("SYSTEM") // RECRUITMENT, MEMBERSHIP, EVENT, SYSTEM
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String?
+  details    String?  // JSON formatted details
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
