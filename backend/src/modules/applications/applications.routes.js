@@ -15,6 +15,9 @@ router.get('/applications/my-applications', authenticate, ApplicationsController
 // Club Admin xem đơn của CLB
 router.get('/clubs/:clubId/applications', authenticate, requireClubAdmin(req => req.params.clubId), ApplicationsController.getClubApplications);
 
+// Club Admin xuất danh sách ứng viên Excel/CSV
+router.get('/clubs/:clubId/applications/export', authenticate, requireClubAdmin(req => req.params.clubId), ApplicationsController.exportClubApplications);
+
 // Xem chi tiết đơn
 router.get('/applications/:id', authenticate, ApplicationsController.getApplicationById);
 

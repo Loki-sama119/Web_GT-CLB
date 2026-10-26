@@ -123,6 +123,17 @@ export class ApplicationsService {
       }
     });
 
+    // Ghi lịch sử nộp đơn ban đầu
+    await prisma.applicationHistory.create({
+      data: {
+        applicationId: application.id,
+        changedById: userId,
+        fromStatus: 'DRAFT',
+        toStatus: 'SUBMITTED',
+        notes: 'Sinh viên nộp hồ sơ trực tuyến'
+      }
+    });
+
     return application;
   }
 
@@ -217,7 +228,21 @@ export class ApplicationsService {
             club: true
           }
         },
-        answers: true
+        answers: true,
+        histories: {
+          include: {
+            changedBy: {
+              select: {
+                id: true,
+                email: true,
+                studentProfile: {
+                  select: { fullName: true }
+                }
+              }
+            }
+          },
+          orderBy: { createdAt: 'desc' }
+        }
       }
     });
 
@@ -280,6 +305,17 @@ export class ApplicationsService {
           internalNotes: internalNotes !== undefined ? internalNotes : application.internalNotes,
           reviewedAt: new Date(),
           reviewedByUserId: reviewerId
+        }
+      });
+
+      // Lưu lịch sử thay đổi trạng thái
+      await tx.applicationHistory.create({
+        data: {
+          applicationId,
+          changedById: reviewerId,
+          fromStatus: application.status,
+          toStatus: status,
+          notes: internalNotes || null
         }
       });
 
@@ -381,9 +417,97 @@ export class ApplicationsService {
       throw err;
     }
 
-    return prisma.application.update({
-      where: { id: applicationId },
-      data: { status: 'WITHDRAWN' }
+    return prisma.$transaction(async (tx) => {
+      await tx.applicationHistory.create({
+        data: {
+          applicationId,
+          changedById: userId,
+          fromStatus: application.status,
+          toStatus: 'WITHDRAWN',
+          notes: 'Sinh viên chủ động rút đơn ứng tuyển'
+        }
+      });
+
+      return tx.application.update({
+        where: { id: applicationId },
+        data: { status: 'WITHDRAWN' }
+      });
     });
+  }
+
+  static async exportClubApplications(clubId) {
+    const club = await prisma.club.findUnique({
+      where: { id: clubId },
+      select: { name: true, slug: true }
+    });
+
+    if (!club) {
+      const err = new Error('Câu lạc bộ không tồn tại');
+      err.statusCode = 404;
+      throw err;
+    }
+
+    const applications = await prisma.application.findMany({
+      where: { campaign: { clubId } },
+      include: {
+        user: { include: { studentProfile: true } },
+        campaign: { select: { title: true } },
+        answers: true
+      },
+      orderBy: { submittedAt: 'desc' }
+    });
+
+    const headers = [
+      'STT',
+      'Họ Và Tên',
+      'Mã Sinh Viên',
+      'Email',
+      'Số Điện Thoại',
+      'Khoa/Ngành',
+      'Chiến Dịch Tuyển',
+      'Ngày Nộp',
+      'Trạng Thái',
+      'Đánh Giá Nội Bộ',
+      'Nội Dung Trả Lời'
+    ];
+
+    const escape = (str) => `"${(str || '').toString().replace(/"/g, '""')}"`;
+
+    const rows = applications.map((app, index) => {
+      const profile = app.user?.studentProfile;
+      const statusMap = {
+        SUBMITTED: 'Đã nộp đơn',
+        UNDER_REVIEW: 'Đang xét duyệt',
+        NEED_MORE_INFO: 'Cần bổ sung',
+        ACCEPTED: 'Trúng tuyển',
+        REJECTED: 'Chưa phù hợp',
+        WITHDRAWN: 'Đã rút đơn'
+      };
+
+      const answerSummary = (app.answers || [])
+        .map(a => `${a.questionTextSnapshot}: ${a.answerValue}`)
+        .join(' | ')
+        .replace(/"/g, '""');
+
+      return [
+        index + 1,
+        escape(profile?.fullName || 'N/A'),
+        escape(profile?.studentCode || 'N/A'),
+        escape(app.user?.email || 'N/A'),
+        escape(profile?.phone || 'N/A'),
+        escape(profile?.faculty || 'N/A'),
+        escape(app.campaign?.title || 'N/A'),
+        escape(new Date(app.submittedAt).toLocaleDateString('vi-VN')),
+        escape(statusMap[app.status] || app.status),
+        escape(app.internalNotes || ''),
+        `"${answerSummary}"`
+      ].join(',');
+    });
+
+    const bom = '\uFEFF';
+    const csvContent = bom + [headers.map(h => `"${h}"`).join(','), ...rows].join('\r\n');
+    const filename = `danh-sach-ung-vien-${club.slug}-${new Date().toISOString().slice(0, 10)}.csv`;
+
+    return { filename, csvContent };
   }
 }

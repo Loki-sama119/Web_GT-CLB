@@ -283,4 +283,47 @@ describe('University Club Portal API Integration Tests', () => {
     expect(res.body.success).toBe(false);
     expect(res.body.message).toContain('Chỉ chấp nhận các định dạng ảnh');
   });
+
+  // TC16: Club Admin xuất danh sách ứng viên CSV thành công
+  it('TC16: Club Admin xuất danh sách ứng viên file CSV thành công có UTF-8 BOM', async () => {
+    const res = await request(app)
+      .get(`/api/v1/clubs/${techClubId}/applications/export`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.headers['content-type']).toContain('text/csv');
+    expect(res.text.startsWith('\uFEFF')).toBe(true); // Có BOM UTF-8 cho Excel
+    expect(res.text).toContain('Họ Và Tên');
+    expect(res.text).toContain('Mã Sinh Viên');
+  });
+
+  // TC17: Chặn Club Admin khác xuất danh sách ứng viên của CLB này
+  it('TC17: Chặn Club Admin CLB Cầu Lông xuất danh sách ứng viên của CLB BAFU Tech (RBAC 403)', async () => {
+    const loginRes = await request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: 'caulong.leader@bafu.edu.vn',
+        password: '12345678'
+      });
+    const caulongToken = loginRes.body.data.token;
+
+    const res = await request(app)
+      .get(`/api/v1/clubs/${techClubId}/applications/export`)
+      .set('Authorization', `Bearer ${caulongToken}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+  });
+
+  // TC18: Hệ thống ghi nhận lịch sử thay đổi trạng thái (ApplicationHistory)
+  it('TC18: Hệ thống ghi nhận đầy đủ lịch sử thay đổi trạng thái ApplicationHistory', async () => {
+    const detailRes = await request(app)
+      .get(`/api/v1/applications/${createdApplicationId}`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(detailRes.status).toBe(200);
+    expect(detailRes.body.data.application.histories).toBeDefined();
+    expect(detailRes.body.data.application.histories.length).toBeGreaterThanOrEqual(1);
+    expect(detailRes.body.data.application.histories[0].toStatus).toBe('ACCEPTED');
+  });
 });

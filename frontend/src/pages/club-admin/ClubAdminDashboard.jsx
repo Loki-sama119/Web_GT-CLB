@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 import { 
   Users, CheckCircle2, XCircle, AlertCircle, FileText, 
-  Plus, Edit, Trash2, Search, Filter, Shield, Send, ArrowRight
+  Plus, Edit, Trash2, Search, Filter, Shield, Send, ArrowRight, Download, History, Clock
 } from 'lucide-react';
 
 export default function ClubAdminDashboard() {
@@ -22,6 +22,33 @@ export default function ClubAdminDashboard() {
   const [reviewingApp, setReviewingApp] = useState(null);
   const [internalNotes, setInternalNotes] = useState('');
   const [reviewActionLoading, setReviewActionLoading] = useState(false);
+  const [exportingCSV, setExportingCSV] = useState(false);
+
+  const handleExportCSV = async () => {
+    if (!selectedClubId) return;
+    setExportingCSV(true);
+    try {
+      const response = await fetch(`/api/v1/clubs/${selectedClubId}/applications/export`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Lỗi khi xuất danh sách ứng viên');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `danh-sach-ung-vien-${selectedClubId}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(err.message || 'Lỗi khi tải file CSV');
+    } finally {
+      setExportingCSV(false);
+    }
+  };
 
   // Members
   const [members, setMembers] = useState([]);
@@ -257,6 +284,15 @@ export default function ClubAdminDashboard() {
               <option value="ACCEPTED">Đã duyệt trúng tuyển</option>
               <option value="REJECTED">Từ chối</option>
             </select>
+
+            <button
+              onClick={handleExportCSV}
+              disabled={exportingCSV}
+              className="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors shrink-0"
+            >
+              <Download className="w-4 h-4 text-emerald-600" />
+              {exportingCSV ? 'Đang xuất...' : 'Xuất Excel / CSV'}
+            </button>
           </div>
 
           {/* Applications Table */}
@@ -527,6 +563,28 @@ export default function ClubAdminDashboard() {
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500"
               />
             </div>
+
+            {/* Lịch sử trạng thái xét duyệt */}
+            {reviewingApp.histories && reviewingApp.histories.length > 0 && (
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="font-bold text-slate-700 text-xs flex items-center gap-1.5">
+                  <History className="w-4 h-4 text-slate-500" /> Lịch sử thay đổi trạng thái hồ sơ:
+                </div>
+                <div className="space-y-1.5 divide-y divide-slate-100">
+                  {reviewingApp.histories.map((h) => (
+                    <div key={h.id} className="pt-1.5 text-[11px] text-slate-600 flex items-center justify-between">
+                      <span>
+                        <span className="font-semibold text-slate-800">{h.fromStatus}</span> ➔ <span className="font-semibold text-blue-600">{h.toStatus}</span>
+                        {h.notes && <span className="text-slate-500 italic ml-1">({h.notes})</span>}
+                      </span>
+                      <span className="text-slate-400 text-[10px]">
+                        {new Date(h.createdAt).toLocaleString('vi-VN')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-end gap-3">
