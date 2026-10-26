@@ -42,12 +42,17 @@ jobs:
           cd backend
           npm ci
 
-      - name: Run Prisma Push & Seed
+      - name: Security Audit Check
+        run: |
+          cd backend
+          npm audit --audit-level=critical
+
+      - name: Run Prisma Migrate Deploy & Seed
         env:
           DATABASE_URL: postgresql://postgres:postgrespassword@localhost:5432/club_portal_db?schema=public
         run: |
           cd backend
-          npx prisma db push
+          npx prisma migrate deploy
           node prisma/seed.js
 
       - name: Run Backend Integration Tests
