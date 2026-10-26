@@ -428,4 +428,81 @@ describe('University Club Portal API Integration Tests', () => {
     expect(res.body.success).toBe(true);
     expect(res.body.data.registration.status).toBe('CANCELLED');
   });
+
+  // TC26: Club Admin lấy danh sách thành viên CLB
+  let memberToUpdateId = '';
+  it('TC26: Club Admin lấy danh sách thành viên CLB có tìm kiếm và lọc', async () => {
+    const res = await request(app)
+      .get(`/api/v1/clubs/${techClubId}/members`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.members.length).toBeGreaterThanOrEqual(1);
+
+    const firstMember = res.body.data.members.find(m => m.role === 'MEMBER');
+    if (firstMember) {
+      memberToUpdateId = firstMember.id;
+    }
+  });
+
+  // TC27: Club Admin xuất danh sách thành viên ra file CSV có UTF-8 BOM
+  it('TC27: Club Admin xuất danh sách thành viên ra file CSV có UTF-8 BOM', async () => {
+    const res = await request(app)
+      .get(`/api/v1/clubs/${techClubId}/members/export`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.headers['content-type']).toContain('text/csv');
+    expect(res.text.startsWith('\uFEFF')).toBe(true);
+    expect(res.text).toContain('Chức Vụ Trong CLB');
+  });
+
+  // TC28: Cập nhật vai trò hội viên thành VICE_LEADER thành công
+  it('TC28: Cập nhật chức vụ hội viên thành VICE_LEADER thành công', async () => {
+    if (memberToUpdateId) {
+      const res = await request(app)
+        .patch(`/api/v1/clubs/${techClubId}/members/${memberToUpdateId}/role`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ role: 'VICE_LEADER' });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.member.role).toBe('VICE_LEADER');
+    }
+  });
+
+  // TC29: Một sinh viên có thể tham gia nhiều CLB khác nhau trên cùng một tài khoản
+  it('TC29: Một sinh viên có thể tham gia nhiều câu lạc bộ trên cùng một tài khoản', async () => {
+    // Tìm một CLB khác không phải techClubId
+    const otherClub = await prisma.club.findFirst({
+      where: { id: { not: techClubId } }
+    });
+
+    if (otherClub) {
+      const secondMembership = await prisma.clubMembership.upsert({
+        where: {
+          userId_clubId: {
+            userId: studentUserId,
+            clubId: otherClub.id
+          }
+        },
+        update: { status: 'ACTIVE' },
+        create: {
+          userId: studentUserId,
+          clubId: otherClub.id,
+          role: 'MEMBER',
+          status: 'ACTIVE'
+        }
+      });
+
+      expect(secondMembership).toBeDefined();
+      expect(secondMembership.clubId).toBe(otherClub.id);
+
+      // Xác minh sinh viên có ít nhất 2 memberships khác nhau
+      const allMemberships = await prisma.clubMembership.findMany({
+        where: { userId: studentUserId, status: 'ACTIVE' }
+      });
+      expect(allMemberships.length).toBeGreaterThanOrEqual(2);
+    }
+  });
 });

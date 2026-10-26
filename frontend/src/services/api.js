@@ -69,7 +69,10 @@ export const api = {
   withdrawApplication: (id) => request(`/applications/${id}/withdraw`, { method: 'POST' }),
 
   // Memberships
-  getClubMembers: (clubId) => request(`/clubs/${clubId}/members`),
+  getClubMembers: (clubId, params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return request(`/clubs/${clubId}/members${query ? `?${query}` : ''}`);
+  },
   updateMemberRole: (clubId, memberId, role) => request(`/clubs/${clubId}/members/${memberId}/role`, { method: 'PATCH', body: { role } }),
   removeMember: (clubId, memberId) => request(`/clubs/${clubId}/members/${memberId}`, { method: 'DELETE' }),
 

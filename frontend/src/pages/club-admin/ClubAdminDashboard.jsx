@@ -53,6 +53,35 @@ export default function ClubAdminDashboard() {
   // Members
   const [members, setMembers] = useState([]);
   const [loadingMembers, setLoadingMembers] = useState(false);
+  const [memberSearch, setMemberSearch] = useState('');
+  const [memberRoleFilter, setMemberRoleFilter] = useState('');
+  const [exportingMembersCSV, setExportingMembersCSV] = useState(false);
+
+  const handleExportMembersCSV = async () => {
+    if (!selectedClubId) return;
+    setExportingMembersCSV(true);
+    try {
+      const response = await fetch(`/api/v1/clubs/${selectedClubId}/members/export`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Lỗi khi xuất danh sách hội viên');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `danh-sach-hoi-vien-${selectedClubId}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(err.message || 'Lỗi khi tải file CSV hội viên');
+    } finally {
+      setExportingMembersCSV(false);
+    }
+  };
 
   // Create Campaign Form
   const [campaignTitle, setCampaignTitle] = useState('');
@@ -109,7 +138,10 @@ export default function ClubAdminDashboard() {
     if (!selectedClubId) return;
     setLoadingMembers(true);
     try {
-      const res = await api.getClubMembers(selectedClubId);
+      const res = await api.getClubMembers(selectedClubId, {
+        search: memberSearch,
+        role: memberRoleFilter
+      });
       if (res.data?.members) {
         setMembers(res.data.members);
       }
@@ -126,7 +158,7 @@ export default function ClubAdminDashboard() {
     } else if (activeTab === 'members') {
       fetchMembers();
     }
-  }, [selectedClubId, activeTab, statusFilter]);
+  }, [selectedClubId, activeTab, statusFilter, search, memberSearch, memberRoleFilter]);
 
   // Hành động xét duyệt hồ sơ
   const handleReviewAction = async (newStatus) => {
@@ -368,19 +400,57 @@ export default function ClubAdminDashboard() {
 
       {/* TAB 2: MEMBERS */}
       {activeTab === 'members' && (
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden p-6 space-y-4">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden p-6 sm:p-8 space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div>
-              <h3 className="font-extrabold text-slate-900 text-base">Danh Sách Hội Viên Chính Thức</h3>
-              <p className="text-xs text-slate-500">Quản lý phân quyền chức vụ và nhân sự nội bộ CLB</p>
+              <h3 className="font-extrabold text-slate-900 text-lg">Danh Sách Hội Viên Chính Thức</h3>
+              <p className="text-xs text-slate-500">Quản lý phân quyền chức vụ, tìm kiếm và nhân sự nội bộ CLB</p>
             </div>
-            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-              {members.length} thành viên
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100">
+                {members.length} thành viên
+              </span>
+              <button
+                onClick={handleExportMembersCSV}
+                disabled={exportingMembersCSV || !selectedClubId}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors disabled:opacity-50"
+              >
+                <Download className="w-3.5 h-3.5" />
+                {exportingMembersCSV ? 'Đang xuất CSV...' : 'Xuất Danh Sách (Excel/CSV)'}
+              </button>
+            </div>
+          </div>
+
+          {/* Search & Filter Bar */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="sm:col-span-2 relative">
+              <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Tìm hội viên theo Họ tên, MSSV, Khoa..."
+                value={memberSearch}
+                onChange={(e) => setMemberSearch(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 bg-slate-50 focus:bg-white"
+              />
+            </div>
+            <div>
+              <select
+                value={memberRoleFilter}
+                onChange={(e) => setMemberRoleFilter(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold bg-slate-50 focus:bg-white"
+              >
+                <option value="">Tất cả vai trò</option>
+                <option value="LEADER">Chủ nhiệm (LEADER)</option>
+                <option value="VICE_LEADER">Phó chủ nhiệm (VICE_LEADER)</option>
+                <option value="MEMBER">Hội viên (MEMBER)</option>
+              </select>
+            </div>
           </div>
 
           {loadingMembers ? (
-            <div className="py-8 text-center text-xs text-slate-400">Đang tải danh sách thành viên...</div>
+            <div className="py-12 text-center text-xs text-slate-400">Đang tải danh sách thành viên...</div>
+          ) : members.length === 0 ? (
+            <div className="py-12 text-center text-xs text-slate-400">Không tìm thấy hội viên nào phù hợp</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
@@ -400,13 +470,17 @@ export default function ClubAdminDashboard() {
                       <td className="p-4 font-bold text-slate-900">
                         {m.user?.studentProfile?.fullName || m.user?.email}
                       </td>
-                      <td className="p-4 text-slate-600">{m.user?.studentProfile?.studentCode || 'N/A'}</td>
+                      <td className="p-4 text-slate-600 font-mono">{m.user?.studentProfile?.studentCode || 'N/A'}</td>
                       <td className="p-4 text-slate-600">{m.user?.studentProfile?.faculty || 'N/A'}</td>
                       <td className="p-4">
                         <select
                           value={m.role}
                           onChange={(e) => handleUpdateRole(m.id, e.target.value)}
-                          className="px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-semibold bg-white"
+                          className={`px-2.5 py-1 rounded-lg border text-xs font-semibold bg-white ${
+                            m.role === 'LEADER' ? 'border-amber-300 text-amber-700 bg-amber-50' :
+                            m.role === 'VICE_LEADER' ? 'border-purple-300 text-purple-700 bg-purple-50' :
+                            'border-slate-200 text-slate-700'
+                          }`}
                         >
                           <option value="MEMBER">Hội viên (MEMBER)</option>
                           <option value="VICE_LEADER">Phó chủ nhiệm (VICE_LEADER)</option>
@@ -419,7 +493,8 @@ export default function ClubAdminDashboard() {
                       <td className="p-4 text-right">
                         <button
                           onClick={() => handleRemoveMember(m.id)}
-                          className="text-red-500 hover:text-red-700 font-bold p-1 rounded-md"
+                          title="Xóa khỏi CLB"
+                          className="text-red-500 hover:text-red-700 font-bold p-1 rounded-md transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
