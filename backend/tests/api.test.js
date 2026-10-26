@@ -361,4 +361,71 @@ describe('University Club Portal API Integration Tests', () => {
     expect(res.body.success).toBe(true);
     expect(res.body.data.application.status).toBe('UNDER_REVIEW');
   });
+
+  // TC21: BCN tạo sự kiện mới cho CLB thành công
+  let testEventId = '';
+  it('TC21: BCN tạo sự kiện mới cho CLB thành công', async () => {
+    const res = await request(app)
+      .post(`/api/v1/clubs/${techClubId}/events`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        title: 'Hội Thảo Công Nghệ AI Cho Nông Nghiệp 2026',
+        description: 'Giới thiệu ứng dụng thị giác máy tính và AI trong quản lý nông trại thông minh.',
+        location: 'Hội trường A1 - BAFU',
+        startTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000 + 3 * 3600 * 1000).toISOString(),
+        maxParticipants: 50,
+        isPublic: true
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.event.id).toBeDefined();
+    testEventId = res.body.data.event.id;
+  });
+
+  // TC22: Sinh viên đăng ký tham gia sự kiện
+  it('TC22: Sinh viên đăng ký tham gia sự kiện và nhận email xác nhận', async () => {
+    const res = await request(app)
+      .post(`/api/v1/events/${testEventId}/register`)
+      .set('Authorization', `Bearer ${studentToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.registration.status).toBe('REGISTERED');
+  });
+
+  // TC23: Chặn đăng ký trùng lặp vào cùng một sự kiện
+  it('TC23: Chặn đăng ký trùng lặp vào sự kiện đã tham gia', async () => {
+    const res = await request(app)
+      .post(`/api/v1/events/${testEventId}/register`)
+      .set('Authorization', `Bearer ${studentToken}`);
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+    expect(res.body.message).toContain('Bạn đã đăng ký tham gia sự kiện này rồi');
+  });
+
+  // TC24: Sinh viên xem danh sách các sự kiện mình đã đăng ký
+  it('TC24: Sinh viên xem danh sách các sự kiện mình đã đăng ký', async () => {
+    const res = await request(app)
+      .get('/api/v1/events/my-registrations')
+      .set('Authorization', `Bearer ${studentToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.registrations.length).toBeGreaterThanOrEqual(1);
+    expect(res.body.data.registrations.some(r => r.eventId === testEventId)).toBe(true);
+  });
+
+  // TC25: Sinh viên hủy đăng ký sự kiện thành công
+  it('TC25: Sinh viên hủy đăng ký sự kiện thành công', async () => {
+    const res = await request(app)
+      .post(`/api/v1/events/${testEventId}/cancel-registration`)
+      .set('Authorization', `Bearer ${studentToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.registration.status).toBe('CANCELLED');
+  });
 });

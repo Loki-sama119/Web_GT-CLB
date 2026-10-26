@@ -78,7 +78,13 @@ export const api = {
     const query = new URLSearchParams(params).toString();
     return request(`/events${query ? `?${query}` : ''}`);
   },
+  getEventById: (id) => request(`/events/${id}`),
   registerEvent: (eventId) => request(`/events/${eventId}/register`, { method: 'POST' }),
+  cancelEventRegistration: (eventId) => request(`/events/${eventId}/cancel-registration`, { method: 'POST' }),
+  getMyEventRegistrations: () => request('/events/my-registrations'),
+  createEvent: (clubId, body) => request(`/clubs/${clubId}/events`, { method: 'POST', body }),
+  getEventRegistrations: (eventId) => request(`/events/${eventId}/registrations`),
+  updateEventStatus: (eventId, status) => request(`/events/${eventId}/status`, { method: 'PATCH', body: { status } }),
 
   // Stats
   getStatsOverview: () => request('/stats/overview'),

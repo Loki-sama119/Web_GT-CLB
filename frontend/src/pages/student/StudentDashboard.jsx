@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 import { 
   User, Shield, Users, Clock, CheckCircle, XCircle, 
-  AlertCircle, ArrowRight, Award, LogOut, Edit3, Send, Camera, UploadCloud
+  AlertCircle, ArrowRight, Award, LogOut, Edit3, Send, Camera, UploadCloud, Calendar, MapPin
 } from 'lucide-react';
 
 export default function StudentDashboard() {
@@ -47,16 +47,36 @@ export default function StudentDashboard() {
     }
   };
 
+  const [myEvents, setMyEvents] = useState([]);
+
   const fetchMyData = async () => {
     try {
-      const res = await api.getMyApplications();
-      if (res.data?.applications) {
-        setApplications(res.data.applications);
+      const [resApps, resEvents] = await Promise.all([
+        api.getMyApplications(),
+        api.getMyEventRegistrations().catch(() => ({ data: { registrations: [] } }))
+      ]);
+
+      if (resApps.data?.applications) {
+        setApplications(resApps.data.applications);
+      }
+      if (resEvents.data?.registrations) {
+        setMyEvents(resEvents.data.registrations);
       }
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCancelEvent = async (eventId) => {
+    if (!window.confirm('Bạn có chắc chắn muốn hủy đăng ký tham gia sự kiện này?')) return;
+    try {
+      await api.cancelEventRegistration(eventId);
+      setSuccessMsg('Đã hủy đăng ký sự kiện thành công.');
+      fetchMyData();
+    } catch (err) {
+      alert(err.message || 'Lỗi khi hủy sự kiện');
     }
   };
 
@@ -242,6 +262,56 @@ export default function StudentDashboard() {
                         </button>
                       )}
                     </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Sự Kiện Sinh Viên Đã Đăng Ký */}
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div>
+                <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-blue-600" /> Sự Kiện Bạn Đã Đăng Ký
+                </h2>
+                <p className="text-xs text-slate-500">Lịch tham gia workshop, giải đấu và hoạt động ngoại khóa</p>
+              </div>
+              <Link
+                to="/events"
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+              >
+                Khám phá thêm sự kiện <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            {myEvents.length === 0 ? (
+              <div className="py-8 text-center text-xs text-slate-400">
+                Bạn chưa đăng ký tham gia sự kiện nào.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {myEvents.map((reg) => (
+                  <div key={reg.id} className="p-4 rounded-2xl border border-slate-100 bg-slate-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <div className="font-bold text-slate-900 text-sm">{reg.event?.title}</div>
+                      <div className="text-xs text-blue-600 font-semibold">{reg.event?.club?.name}</div>
+                      <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500 pt-1">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5" /> {new Date(reg.event?.startTime).toLocaleString('vi-VN')}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5" /> {reg.event?.location}
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleCancelEvent(reg.eventId)}
+                      className="px-3 py-1.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold shrink-0 transition-colors"
+                    >
+                      Hủy đăng ký
+                    </button>
                   </div>
                 ))}
               </div>
