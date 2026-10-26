@@ -85,8 +85,14 @@ export default function Footer() {
           <div>
             © {new Date().getFullYear()} Trường Đại học Nông - Lâm Bắc Giang. Bản quyền thuộc về Đoàn Trường & Hội Sinh Viên.
           </div>
-          <div className="flex items-center gap-1">
-            Xây dựng với <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> phục vụ sinh viên BAFU
+          <div className="flex items-center gap-4">
+            <Link to="/privacy-policy" className="hover:text-slate-300 transition-colors">
+              Chính sách quyền riêng tư
+            </Link>
+            <span>•</span>
+            <Link to="/terms-of-service" className="hover:text-slate-300 transition-colors">
+              Điều khoản sử dụng
+            </Link>
           </div>
         </div>
       </div>

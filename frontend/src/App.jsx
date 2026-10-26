@@ -11,6 +11,8 @@ import ClubDetailPage from './pages/public/ClubDetailPage';
 import EventsPage from './pages/public/EventsPage';
 import LoginPage from './pages/public/LoginPage';
 import RegisterPage from './pages/public/RegisterPage';
+import PrivacyPolicyPage from './pages/public/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/public/TermsOfServicePage';
 
 // Dashboards
 import StudentDashboard from './pages/student/StudentDashboard';
@@ -30,6 +32,8 @@ export default function App() {
             <Route path="/events" element={<EventsPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms-of-service" element={<TermsOfServicePage />} />
 
             {/* Protected Student Routes */}
             <Route element={<ProtectedRoute />}>

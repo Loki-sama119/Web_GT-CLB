@@ -503,11 +503,18 @@ export class ApplicationsService {
       'Chiến Dịch Tuyển',
       'Ngày Nộp',
       'Trạng Thái',
-      'Đánh Giá Nội Bộ',
       'Nội Dung Trả Lời'
     ];
 
-    const escape = (str) => `"${(str || '').toString().replace(/"/g, '""')}"`;
+    // Mitigate CSV Formula Injection (OWASP ASVS): prepend single quote if cell starts with dangerous formula chars
+    const escape = (val) => {
+      if (val === null || val === undefined) return '""';
+      let str = String(val);
+      if (/^[=+\-@\t\r]/.test(str)) {
+        str = "'" + str;
+      }
+      return `"${str.replace(/"/g, '""')}"`;
+    };
 
     const rows = applications.map((app, index) => {
       const profile = app.user?.studentProfile;
@@ -522,8 +529,7 @@ export class ApplicationsService {
 
       const answerSummary = (app.answers || [])
         .map(a => `${a.questionTextSnapshot}: ${a.answerValue}`)
-        .join(' | ')
-        .replace(/"/g, '""');
+        .join(' | ');
 
       return [
         index + 1,
@@ -535,8 +541,7 @@ export class ApplicationsService {
         escape(app.campaign?.title || 'N/A'),
         escape(new Date(app.submittedAt).toLocaleDateString('vi-VN')),
         escape(statusMap[app.status] || app.status),
-        escape(app.internalNotes || ''),
-        `"${answerSummary}"`
+        escape(answerSummary)
       ].join(',');
     });
 

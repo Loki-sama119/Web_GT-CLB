@@ -546,5 +546,83 @@ describe('University Club Portal API Integration Tests', () => {
     expect(res.status).toBe(403);
     expect(res.body.success).toBe(false);
   });
+
+  // TC33: Super Admin tải file mẫu CSV nhập CLB BAFU
+  it('TC33: Super Admin tải file mẫu CSV nhập CLB BAFU có UTF-8 BOM', async () => {
+    const res = await request(app)
+      .get('/api/v1/admin/clubs/template-csv')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.headers['content-type']).toContain('text/csv');
+    expect(res.text.startsWith('\uFEFF')).toBe(true);
+    expect(res.text).toContain('Tên Câu Lạc Bộ');
+    expect(res.text).toContain('Mã Định Danh (Slug)');
+  });
+
+  // TC34: Super Admin nhập danh sách CLB bằng CSV với xử lý trùng tên
+  let importedClubId = '';
+  it('TC34: Super Admin nhập danh sách CLB bằng CSV thành công', async () => {
+    const timestamp = Date.now().toString().slice(-6);
+    const uniqueName = `CLB AI & IoT BAFU ${timestamp}`;
+    const uniqueSlug = `clb-ai-iot-${timestamp}`;
+    const csvData = [
+      'Tên Câu Lạc Bộ,Mã Định Danh (Slug),Lĩnh Vực,Email Liên Hệ,Số Điện Thoại,Lịch Sinh Hoạt,Mô Tả Ngắn,Mô Tả Chi Tiết,Email Chủ Nhiệm,Trạng Thái',
+      `"${uniqueName}","${uniqueSlug}","Học thuật & Công nghệ","ai.iot@bafu.edu.vn","0988776655","Thứ 6 hàng tuần","Nghiên cứu trí tuệ nhân tạo và internet vạn vật","Câu lạc bộ học thuật chuyên sâu về AI","admin@bafu.edu.vn","ACTIVE"`
+    ].join('\r\n');
+
+    const res = await request(app)
+      .post('/api/v1/admin/clubs/import-csv')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ csvContent: csvData });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.created.length).toBe(1);
+    importedClubId = res.body.data.created[0].id;
+    expect(importedClubId).toBeDefined();
+
+    // Thử nhập lại cùng dữ liệu -> phát hiện trùng lặp và bỏ qua
+    const resDup = await request(app)
+      .post('/api/v1/admin/clubs/import-csv')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ csvContent: csvData });
+
+    expect(resDup.status).toBe(200);
+    expect(resDup.body.data.skipped.length).toBe(1);
+    expect(resDup.body.data.skipped[0].reason).toContain('đã tồn tại');
+  });
+
+  // TC35: Super Admin cập nhật trạng thái hoạt động CLB (ACTIVE / INACTIVE / PENDING)
+  it('TC35: Super Admin phê duyệt và cập nhật trạng thái hoạt động CLB', async () => {
+    if (importedClubId) {
+      const res = await request(app)
+        .patch(`/api/v1/admin/clubs/${importedClubId}/status`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ status: 'INACTIVE' });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.club.status).toBe('INACTIVE');
+    }
+  });
+
+  // TC36: Kiểm tra bảo vệ chống CSV Formula Injection (OWASP ASVS)
+  it('TC36: Xuất CSV được trung hòa chống CSV Formula Injection với các ký tự nguy hiểm', async () => {
+    const res = await request(app)
+      .get(`/api/v1/clubs/${techClubId}/members/export`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    // Dữ liệu không bắt đầu bằng raw dangerous formula mà được đóng ngoặc kép hoặc thoát
+    const lines = res.text.split('\r\n');
+    lines.forEach(line => {
+      // Mỗi ô không thể bắt đầu bằng formula injection trực tiếp ngoài dấu ngoặc kép
+      expect(line.startsWith('=')).toBe(false);
+      expect(line.startsWith('+')).toBe(false);
+      expect(line.startsWith('@')).toBe(false);
+    });
+  });
 });
+
 

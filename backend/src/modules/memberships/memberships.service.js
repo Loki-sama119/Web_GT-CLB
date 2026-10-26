@@ -96,7 +96,15 @@ export class MembershipsService {
       MEMBER: 'Hội viên chính thức'
     };
 
-    const escape = (str) => `"${(str || '').toString().replace(/"/g, '""')}"`;
+    // Mitigate CSV Formula Injection (OWASP ASVS)
+    const escape = (val) => {
+      if (val === null || val === undefined) return '""';
+      let str = String(val);
+      if (/^[=+\-@\t\r]/.test(str)) {
+        str = "'" + str;
+      }
+      return `"${str.replace(/"/g, '""')}"`;
+    };
 
     const rows = members.map((m, index) => {
       const profile = m.user?.studentProfile;

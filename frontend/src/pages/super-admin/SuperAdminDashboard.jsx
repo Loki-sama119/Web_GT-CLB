@@ -30,6 +30,11 @@ export default function SuperAdminDashboard() {
   const [newClubSchedule, setNewClubSchedule] = useState('');
   const [createClubMsg, setCreateClubMsg] = useState('');
 
+  // CSV Import CLB
+  const [importCsvContent, setImportCsvContent] = useState('');
+  const [importCsvResult, setImportCsvResult] = useState(null);
+  const [importingCsv, setImportingCsv] = useState(false);
+
   const loadData = async () => {
     setLoading(true);
     try {
@@ -96,6 +101,51 @@ export default function SuperAdminDashboard() {
       alert(err.message || 'Lỗi khi xuất file báo cáo CSV');
     } finally {
       setExportingReportCSV(false);
+    }
+  };
+
+  const handleDownloadTemplateCsv = async () => {
+    try {
+      const response = await fetch('/api/v1/admin/clubs/template-csv', {
+        credentials: 'include'
+      });
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mau-nhap-clb-bafu.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(err.message || 'Lỗi khi tải file mẫu CSV');
+    }
+  };
+
+  const handleImportCsv = async (e) => {
+    e.preventDefault();
+    if (!importCsvContent.trim()) return;
+    setImportingCsv(true);
+    setImportCsvResult(null);
+    try {
+      const res = await api.importClubsCsv(importCsvContent);
+      setImportCsvResult(res.data);
+      setImportCsvContent('');
+      loadData();
+    } catch (err) {
+      alert(err.message || 'Lỗi khi nhập danh sách CLB từ CSV');
+    } finally {
+      setImportingCsv(false);
+    }
+  };
+
+  const handleToggleClubStatus = async (clubId, newStatus) => {
+    try {
+      await api.updateClubStatus(clubId, newStatus);
+      loadData();
+    } catch (err) {
+      alert(err.message || 'Lỗi khi cập nhật trạng thái CLB');
     }
   };
 
@@ -477,84 +527,203 @@ export default function SuperAdminDashboard() {
         </div>
       )}
 
-      {/* TAB 3: CREATE CLUB */}
+      {/* TAB 3: CLUBS MANAGEMENT & CREATION */}
       {activeTab === 'clubs' && (
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs max-w-2xl space-y-4">
-          <h3 className="font-extrabold text-slate-900 text-base">Thành Lập / Tạo Câu Lạc Bộ Mới</h3>
-
-          {createClubMsg && (
-            <div className="p-3 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-xl">
-              {createClubMsg}
-            </div>
-          )}
-
-          <form onSubmit={handleCreateClub} className="space-y-3 text-xs">
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">Tên câu lạc bộ *</label>
-              <input
-                type="text"
-                required
-                value={newClubName}
-                onChange={(e) => setNewClubName(e.target.value)}
-                placeholder="CLB Robot & Trí Tuệ Nhân Tạo..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm"
-              />
+        <div className="space-y-8">
+          {/* 1. Bảng Phê Duyệt & Quản Lý Trạng Thái CLB */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden p-6 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base">Danh Sách & Phê Duyệt Câu Lạc Bộ ({clubs.length})</h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Kiểm soát trạng thái hiển thị công khai: ACTIVE (công khai), PENDING (chờ duyệt), INACTIVE (tạm dừng)
+                </p>
+              </div>
             </div>
 
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">Lĩnh vực hoạt động</label>
-              <select
-                value={newClubCatId}
-                onChange={(e) => setNewClubCatId(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs"
-              >
-                {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
-                ))}
-              </select>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold">
+                    <th className="p-3">Tên Câu Lạc Bộ</th>
+                    <th className="p-3">Mã Định Danh (Slug)</th>
+                    <th className="p-3">Lĩnh Vực</th>
+                    <th className="p-3 text-center">Trạng Thái Hiện Tại</th>
+                    <th className="p-3 text-right">Thao Tác Phê Duyệt</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {clubs.map(c => (
+                    <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
+                      <td className="p-3 font-bold text-slate-900">{c.name}</td>
+                      <td className="p-3 text-slate-500 font-mono text-[11px]">{c.slug}</td>
+                      <td className="p-3 text-slate-600">{c.category?.name || 'Chưa phân loại'}</td>
+                      <td className="p-3 text-center">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                          c.status === 'ACTIVE'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : c.status === 'PENDING'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : 'bg-slate-100 text-slate-600 border border-slate-200'
+                        }`}>
+                          {c.status === 'ACTIVE' ? 'Đang hoạt động' : c.status === 'PENDING' ? 'Chờ duyệt' : 'Tạm dừng'}
+                        </span>
+                      </td>
+                      <td className="p-3 text-right space-x-1.5">
+                        {c.status !== 'ACTIVE' && (
+                          <button
+                            onClick={() => handleToggleClubStatus(c.id, 'ACTIVE')}
+                            className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px]"
+                          >
+                            Duyệt hoạt động
+                          </button>
+                        )}
+                        {c.status !== 'INACTIVE' && (
+                          <button
+                            onClick={() => handleToggleClubStatus(c.id, 'INACTIVE')}
+                            className="px-2.5 py-1 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-[11px]"
+                          >
+                            Tạm dừng
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* 2. Nhập CLB từ file CSV */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-extrabold text-slate-900 text-base">Nhập Danh Sách CLB Bằng CSV (Batch Import)</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">Dành cho Nhà trường nhập danh sách CLB chính thức</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleDownloadTemplateCsv}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold transition-colors"
+                >
+                  <Download className="w-3.5 h-3.5" /> Tải file mẫu CSV
+                </button>
+              </div>
+
+              {importCsvResult && (
+                <div className="p-3 bg-blue-50 text-blue-800 text-xs rounded-xl space-y-1">
+                  <div className="font-bold">Kết quả xử lý:</div>
+                  <div>• Đã xử lý: {importCsvResult.totalProcessed} dòng</div>
+                  <div>• Tạo mới thành công: {importCsvResult.created?.length || 0} CLB</div>
+                  <div>• Bỏ qua (trùng tên/lỗi): {importCsvResult.skipped?.length || 0} CLB</div>
+                </div>
+              )}
+
+              <form onSubmit={handleImportCsv} className="space-y-3 text-xs">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Dán nội dung CSV hoặc mở file bằng Notepad rồi copy:
+                  </label>
+                  <textarea
+                    rows={6}
+                    required
+                    value={importCsvContent}
+                    onChange={(e) => setImportCsvContent(e.target.value)}
+                    placeholder="Dán nội dung CSV theo đúng mẫu vào đây..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-mono text-[11px] leading-relaxed"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={importingCsv}
+                  className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold disabled:opacity-50"
+                >
+                  {importingCsv ? 'Đang xử lý...' : 'Tiến hành nhập danh sách CLB'}
+                </button>
+              </form>
             </div>
 
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">Mô tả ngắn gọn *</label>
-              <input
-                type="text"
-                required
-                value={newClubShortDesc}
-                onChange={(e) => setNewClubShortDesc(e.target.value)}
-                placeholder="Mô tả 1 câu thu hút sinh viên..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm"
-              />
-            </div>
+            {/* 3. Tạo CLB Mới Đơn Lẻ */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-4">
+              <h3 className="font-extrabold text-slate-900 text-base">Thành Lập / Tạo Câu Lạc Bộ Mới Đơn Lẻ</h3>
 
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">Giới thiệu chi tiết</label>
-              <textarea
-                rows={3}
-                value={newClubDesc}
-                onChange={(e) => setNewClubDesc(e.target.value)}
-                placeholder="Mục tiêu, ban điều hành, hoạt động..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm"
-              />
-            </div>
+              {createClubMsg && (
+                <div className="p-3 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-xl">
+                  {createClubMsg}
+                </div>
+              )}
 
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">Lịch sinh hoạt định kỳ</label>
-              <input
-                type="text"
-                value={newClubSchedule}
-                onChange={(e) => setNewClubSchedule(e.target.value)}
-                placeholder="Ví dụ: Tối thứ Sáu hàng tuần..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm"
-              />
-            </div>
+              <form onSubmit={handleCreateClub} className="space-y-3 text-xs">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Tên câu lạc bộ *</label>
+                  <input
+                    type="text"
+                    required
+                    value={newClubName}
+                    onChange={(e) => setNewClubName(e.target.value)}
+                    placeholder="CLB Robot & Trí Tuệ Nhân Tạo..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm"
+                  />
+                </div>
 
-            <button
-              type="submit"
-              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold"
-            >
-              Tạo câu lạc bộ
-            </button>
-          </form>
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Lĩnh vực hoạt động</label>
+                  <select
+                    value={newClubCatId}
+                    onChange={(e) => setNewClubCatId(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs"
+                  >
+                    {categories.map(cat => (
+                      <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Mô tả ngắn gọn *</label>
+                  <input
+                    type="text"
+                    required
+                    value={newClubShortDesc}
+                    onChange={(e) => setNewClubShortDesc(e.target.value)}
+                    placeholder="Mô tả 1 câu thu hút sinh viên..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Giới thiệu chi tiết</label>
+                  <textarea
+                    rows={2}
+                    value={newClubDesc}
+                    onChange={(e) => setNewClubDesc(e.target.value)}
+                    placeholder="Mục tiêu, ban điều hành, hoạt động..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Lịch sinh hoạt định kỳ</label>
+                  <input
+                    type="text"
+                    value={newClubSchedule}
+                    onChange={(e) => setNewClubSchedule(e.target.value)}
+                    placeholder="Ví dụ: Tối thứ Sáu hàng tuần..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                >
+                  Tạo câu lạc bộ
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       )}
 

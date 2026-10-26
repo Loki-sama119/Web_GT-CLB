@@ -98,6 +98,8 @@ export const api = {
   assignClubAdmin: (body) => request('/admin/assign-club-admin', { method: 'POST', body }),
   getAuditLogs: () => request('/admin/audit-logs'),
   getClubReports: () => request('/admin/reports/clubs'),
+  importClubsCsv: (csvContent) => request('/admin/clubs/import-csv', { method: 'POST', body: { csvContent } }),
+  updateClubStatus: (clubId, status) => request(`/admin/clubs/${clubId}/status`, { method: 'PATCH', body: { status } }),
 
   // Media & Album Management
   uploadAvatar: (formData) => request('/users/me/avatar', { method: 'POST', body: formData }),
