@@ -4,7 +4,7 @@ import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { 
   Users, Calendar, Clock, MapPin, Mail, Phone, Globe, Flame, 
-  CheckCircle2, AlertCircle, Send, X, ArrowLeft, Shield
+  CheckCircle2, AlertCircle, Send, X, ArrowLeft, Shield, Image as ImageIcon, UploadCloud, Trash2
 } from 'lucide-react';
 
 export default function ClubDetailPage() {
@@ -23,6 +23,11 @@ export default function ClubDetailPage() {
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  // Album hoạt động CLB
+  const [albumImages, setAlbumImages] = useState([]);
+  const [lightboxImage, setLightboxImage] = useState(null);
+  const [uploadingAlbum, setUploadingAlbum] = useState(false);
+
   useEffect(() => {
     async function fetchClub() {
       setLoading(true);
@@ -30,6 +35,14 @@ export default function ClubDetailPage() {
         const res = await api.getClubBySlug(slug);
         if (res.data?.club) {
           setClub(res.data.club);
+          try {
+            const albumRes = await api.getClubAlbum(res.data.club.id);
+            if (albumRes.data?.medias) {
+              setAlbumImages(albumRes.data.medias);
+            }
+          } catch (albumErr) {
+            console.error('Lỗi tải album:', albumErr);
+          }
         }
       } catch (err) {
         setError(err.message || 'Không tìm thấy câu lạc bộ');
@@ -236,6 +249,47 @@ export default function ClubDetailPage() {
                           {m.user?.studentProfile?.faculty || 'Trường ĐH Nông - Lâm Bắc Giang'}
                         </div>
                       </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Album Hoạt Động & Khoảnh Khắc CLB */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                    <ImageIcon className="w-5 h-5 text-blue-600" /> Album Hoạt Động & Khoảnh Khắc
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-1">Những dấu ấn, sự kiện và khoảnh khắc đáng nhớ của câu lạc bộ.</p>
+                </div>
+              </div>
+
+              {albumImages.length === 0 ? (
+                <div className="p-8 rounded-2xl bg-slate-50 border border-dashed border-slate-200 text-center space-y-2">
+                  <div className="text-3xl">📸</div>
+                  <p className="text-xs font-semibold text-slate-600">Chưa có hình ảnh hoạt động nào được tải lên.</p>
+                  <p className="text-[11px] text-slate-400">Hình ảnh các buổi sinh hoạt, dã ngoại và thi đấu sẽ sớm được ban chủ nhiệm cập nhật.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {albumImages.map((media) => (
+                    <div 
+                      key={media.id} 
+                      onClick={() => setLightboxImage(media)}
+                      className="group relative aspect-4/3 rounded-2xl overflow-hidden cursor-pointer bg-slate-100 border border-slate-200 hover:shadow-md transition-all"
+                    >
+                      <img 
+                        src={media.url} 
+                        alt={media.caption || club.name} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {media.caption && (
+                        <div className="absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white text-[11px] font-medium truncate">
+                          {media.caption}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -453,6 +507,33 @@ export default function ClubDetailPage() {
                   </button>
                 </div>
               </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Modal Lightbox Xem Ảnh Lớn */}
+      {lightboxImage && (
+        <div 
+          onClick={() => setLightboxImage(null)}
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in"
+        >
+          <button
+            onClick={() => setLightboxImage(null)}
+            className="absolute top-4 right-4 p-2.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="max-w-4xl max-h-[85vh] flex flex-col items-center gap-3" onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={lightboxImage.url} 
+              alt={lightboxImage.caption || club.name} 
+              className="max-h-[75vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl"
+            />
+            {lightboxImage.caption && (
+              <p className="text-white text-sm font-medium text-center bg-black/50 px-4 py-2 rounded-xl backdrop-blur-xs">
+                {lightboxImage.caption}
+              </p>
             )}
           </div>
         </div>

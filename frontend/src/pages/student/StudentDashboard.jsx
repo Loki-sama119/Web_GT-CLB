@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 import { 
   User, Shield, Users, Clock, CheckCircle, XCircle, 
-  AlertCircle, ArrowRight, Award, LogOut, Edit3, Send
+  AlertCircle, ArrowRight, Award, LogOut, Edit3, Send, Camera, UploadCloud
 } from 'lucide-react';
 
 export default function StudentDashboard() {
@@ -16,12 +16,36 @@ export default function StudentDashboard() {
 
   // Profile Edit modal
   const [editingProfile, setEditingProfile] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [profileForm, setProfileForm] = useState({
     fullName: user?.studentProfile?.fullName || '',
     phone: user?.studentProfile?.phone || '',
     bio: user?.studentProfile?.bio || '',
     skills: user?.studentProfile?.skills || ''
   });
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Kích thước ảnh đại diện không được vượt quá 2MB!');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    setUploadingAvatar(true);
+    try {
+      await api.uploadAvatar(formData);
+      setSuccessMsg('Cập nhật ảnh đại diện thành công!');
+      refreshMe();
+    } catch (err) {
+      alert(err.message || 'Lỗi tải ảnh đại diện');
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
 
   const fetchMyData = async () => {
     try {
@@ -92,8 +116,28 @@ export default function StudentDashboard() {
       {/* Header Profile Greeting */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-blue-600 text-white font-black text-2xl flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
-            {user?.studentProfile?.fullName?.charAt(0) || 'S'}
+          <div className="relative group shrink-0">
+            {user?.studentProfile?.avatarUrl ? (
+              <img 
+                src={user.studentProfile.avatarUrl} 
+                alt="Avatar" 
+                className="w-16 h-16 rounded-2xl object-cover shadow-md border-2 border-white ring-2 ring-blue-500/20" 
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-blue-600 text-white font-black text-2xl flex items-center justify-center shadow-md shadow-blue-500/20">
+                {user?.studentProfile?.fullName?.charAt(0) || 'S'}
+              </div>
+            )}
+            <label className="absolute -bottom-1 -right-1 p-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-900 text-white cursor-pointer shadow-sm transition-all group-hover:scale-110">
+              <Camera className="w-3.5 h-3.5" />
+              <input 
+                type="file" 
+                accept="image/jpeg,image/png,image/webp" 
+                className="hidden" 
+                disabled={uploadingAvatar}
+                onChange={handleAvatarChange} 
+              />
+            </label>
           </div>
           <div>
             <div className="flex items-center gap-2">

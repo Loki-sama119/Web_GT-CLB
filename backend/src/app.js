@@ -12,10 +12,16 @@ import usersRoutes from './modules/users/users.routes.js';
 import clubsRoutes from './modules/clubs/clubs.routes.js';
 import recruitmentsRoutes from './modules/recruitments/recruitments.routes.js';
 import applicationsRoutes from './modules/applications/applications.routes.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import membershipsRoutes from './modules/memberships/memberships.routes.js';
 import eventsRoutes from './modules/events/events.routes.js';
 import statsRoutes from './modules/stats/stats.routes.js';
 import adminRoutes from './modules/admin/admin.routes.js';
+import mediaRoutes from './modules/media/media.routes.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -46,6 +52,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Static Uploads Folder
+app.use('/uploads', express.static(path.resolve(__dirname, '../uploads')));
+
 // Health Check API
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -60,6 +69,7 @@ apiV1.use('/', recruitmentsRoutes);
 apiV1.use('/', applicationsRoutes);
 apiV1.use('/', membershipsRoutes);
 apiV1.use('/', eventsRoutes);
+apiV1.use('/', mediaRoutes);
 apiV1.use('/stats', statsRoutes);
 apiV1.use('/admin', adminRoutes);
 

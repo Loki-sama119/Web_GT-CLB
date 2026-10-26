@@ -29,6 +29,8 @@ services:
       DATABASE_URL: postgresql://postgres:postgrespassword@postgres:5432/club_portal_db?schema=public
       JWT_SECRET: super-secret-jwt-key-for-university-club-portal-2026
       CORS_ORIGIN: http://localhost:80
+    volumes:
+      - uploads_data:/app/uploads
     ports:
       - "5000:5000"
     depends_on:
@@ -67,3 +69,4 @@ services:
 
 volumes:
   pgdata:
+  uploads_data:

@@ -1,16 +1,19 @@
 const BASE_URL = '/api/v1';
 
 async function request(endpoint, options = {}) {
+  const isFormData = options.body instanceof FormData;
+  const headers = { ...options.headers };
+  if (!isFormData && !headers['Content-Type']) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers
-    },
-    credentials: 'include',
-    ...options
+    ...options,
+    headers,
+    credentials: 'include'
   };
 
-  if (options.body && typeof options.body === 'object') {
+  if (!isFormData && options.body && typeof options.body === 'object') {
     config.body = JSON.stringify(options.body);
   }
 
@@ -84,5 +87,13 @@ export const api = {
   getAdminDashboard: () => request('/admin/dashboard'),
   getAdminUsers: () => request('/admin/users'),
   assignClubAdmin: (body) => request('/admin/assign-club-admin', { method: 'POST', body }),
-  getAuditLogs: () => request('/admin/audit-logs')
+  getAuditLogs: () => request('/admin/audit-logs'),
+
+  // Media & Album Management
+  uploadAvatar: (formData) => request('/users/me/avatar', { method: 'POST', body: formData }),
+  uploadClubLogo: (clubId, formData) => request(`/clubs/${clubId}/logo`, { method: 'POST', body: formData }),
+  uploadClubCover: (clubId, formData) => request(`/clubs/${clubId}/cover`, { method: 'POST', body: formData }),
+  getClubAlbum: (clubId) => request(`/clubs/${clubId}/album`),
+  addClubMedia: (clubId, formData) => request(`/clubs/${clubId}/album`, { method: 'POST', body: formData }),
+  deleteClubMedia: (clubId, mediaId) => request(`/clubs/${clubId}/album/${mediaId}`, { method: 'DELETE' })
 };

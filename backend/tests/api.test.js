@@ -232,4 +232,55 @@ describe('University Club Portal API Integration Tests', () => {
     expect(res.status).toBe(403);
     expect(res.body.success).toBe(false);
   });
+
+  // TC13: Sinh viên upload Avatar thành công
+  it('TC13: Sinh viên upload Avatar thành công và cập nhật profile', async () => {
+    const dummyImageBuffer = Buffer.from('fake-image-binary-data');
+
+    const res = await request(app)
+      .post('/api/v1/users/me/avatar')
+      .set('Authorization', `Bearer ${studentToken}`)
+      .attach('file', dummyImageBuffer, 'avatar.png');
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.avatarUrl).toContain('/uploads/avatars/');
+  });
+
+  // TC14: Club Admin upload ảnh vào Album hoạt động của CLB
+  it('TC14: Club Admin upload ảnh vào Album hoạt động và lấy danh sách album', async () => {
+    const dummyImageBuffer = Buffer.from('fake-activity-image');
+
+    const uploadRes = await request(app)
+      .post(`/api/v1/clubs/${techClubId}/album`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .field('caption', 'Hình ảnh Workshop Lập trình Web')
+      .attach('file', dummyImageBuffer, 'workshop.jpg');
+
+    expect(uploadRes.status).toBe(201);
+    expect(uploadRes.body.success).toBe(true);
+    expect(uploadRes.body.data.media.url).toContain('/uploads/albums/');
+
+    // Lấy danh sách album
+    const listRes = await request(app)
+      .get(`/api/v1/clubs/${techClubId}/album`);
+
+    expect(listRes.status).toBe(200);
+    expect(listRes.body.success).toBe(true);
+    expect(listRes.body.data.medias.length).toBeGreaterThanOrEqual(1);
+  });
+
+  // TC15: Chặn upload định dạng file không hợp lệ (không phải ảnh)
+  it('TC15: Chặn tệp tin độc hại hoặc không đúng định dạng hình ảnh', async () => {
+    const maliciousScriptBuffer = Buffer.from('echo malicious script');
+
+    const res = await request(app)
+      .post('/api/v1/users/me/avatar')
+      .set('Authorization', `Bearer ${studentToken}`)
+      .attach('file', maliciousScriptBuffer, 'script.sh');
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+    expect(res.body.message).toContain('Chỉ chấp nhận các định dạng ảnh');
+  });
 });
