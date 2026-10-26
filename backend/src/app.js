@@ -33,9 +33,10 @@ app.use(cors({
 // Giới hạn tần suất request (Rate Limiting)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 300,
+  max: ENV.RATE_LIMIT_MAX || 2000,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => process.env.NODE_ENV === 'test',
   message: { success: false, message: 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.' }
 });
 app.use(limiter);
