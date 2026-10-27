@@ -7,10 +7,10 @@ export default function PrivacyPolicyPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
       {/* Header */}
       <div className="space-y-3 border-b border-slate-200 pb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#167C66]/10 text-[#167C66] text-xs font-bold border border-[#167C66]/20">
           <ShieldCheck className="w-4 h-4" /> Chính Sách Bảo Mật Dữ Liệu
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-black text-[#142B49] tracking-tight">
           Chính Sách Quyền Riêng Tư & Bảo Vệ Dữ Liệu Cá Nhân
         </h1>
         <p className="text-sm text-slate-500">
@@ -22,8 +22,8 @@ export default function PrivacyPolicyPage() {
       {/* Content */}
       <div className="prose prose-slate max-w-none space-y-8 text-sm leading-relaxed text-slate-700">
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Lock className="w-5 h-5 text-blue-600" /> 1. Mục Đích Thu Thập Thông Tin
+          <h2 className="text-lg font-bold text-[#142B49] flex items-center gap-2">
+            <Lock className="w-5 h-5 text-[#167C66]" /> 1. Mục Đích Thu Thập Thông Tin
           </h2>
           <p>
             Cổng Thông Tin Câu Lạc Bộ Sinh Viên BAFU thu thập và xử lý dữ liệu của người dùng cho các mục đích học tập, sinh hoạt ngoại khóa và quản lý nội bộ của Nhà trường, bao gồm:

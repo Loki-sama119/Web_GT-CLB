@@ -7,10 +7,10 @@ export default function TermsOfServicePage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
       {/* Header */}
       <div className="space-y-3 border-b border-slate-200 pb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#142B49]/10 text-[#142B49] text-xs font-bold border border-[#142B49]/20">
           <FileText className="w-4 h-4" /> Quy Chế & Điều Khoản
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-black text-[#142B49] tracking-tight">
           Điều Khoản Sử Dụng Cổng Thông Tin Câu Lạc Bộ Sinh Viên
         </h1>
         <p className="text-sm text-slate-500">
@@ -21,8 +21,8 @@ export default function TermsOfServicePage() {
       {/* Content */}
       <div className="prose prose-slate max-w-none space-y-8 text-sm leading-relaxed text-slate-700">
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Users className="w-5 h-5 text-blue-600" /> 1. Trách Nhiệm Của Sinh Viên
+          <h2 className="text-lg font-bold text-[#142B49] flex items-center gap-2">
+            <Users className="w-5 h-5 text-[#167C66]" /> 1. Trách Nhiệm Của Sinh Viên
           </h2>
           <ul className="list-disc pl-5 space-y-1.5">
             <li>Sử dụng thông tin sinh viên chính chủ (Họ tên, Mã số sinh viên, Email trường) khi đăng ký tài khoản.</li>
