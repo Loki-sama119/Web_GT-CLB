@@ -7,6 +7,10 @@ node_modules/
 coverage/
 *.lcov
 .nyc_output
+test-results/
+playwright-report/
+e2e/test-results/
+e2e/playwright-report/
 
 # Production Build
 dist/

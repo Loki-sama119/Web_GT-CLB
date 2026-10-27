@@ -7,5 +7,6 @@ export const ENV = {
   DATABASE_URL: process.env.DATABASE_URL,
   JWT_SECRET: process.env.JWT_SECRET || 'club-portal-secret-key-2026',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
-  CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:5173'
+  CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  RATE_LIMIT_MAX: parseInt(process.env.RATE_LIMIT_MAX || '2000', 10)
 };
