@@ -1,19 +1,19 @@
-const BASE_URL = '/api/v1';
+const BASE_URL = "/api/v1";
 
 async function request(endpoint, options = {}) {
   const isFormData = options.body instanceof FormData;
   const headers = { ...options.headers };
-  if (!isFormData && !headers['Content-Type']) {
-    headers['Content-Type'] = 'application/json';
+  if (!isFormData && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
   }
 
   const config = {
     ...options,
     headers,
-    credentials: 'include'
+    credentials: "include",
   };
 
-  if (!isFormData && options.body && typeof options.body === 'object') {
+  if (!isFormData && options.body && typeof options.body === "object") {
     config.body = JSON.stringify(options.body);
   }
 
@@ -24,13 +24,15 @@ async function request(endpoint, options = {}) {
     let errorMsg = data.message;
     if (!errorMsg) {
       if (response.status === 405) {
-        errorMsg = 'Phương thức không được hỗ trợ (405 Method Not Allowed). Vui lòng liên hệ quản trị viên.';
+        errorMsg =
+          "Phương thức không được hỗ trợ (405 Method Not Allowed). Vui lòng liên hệ quản trị viên.";
       } else if (response.status === 404) {
-        errorMsg = 'Tài nguyên hoặc cổng API không tồn tại (404 Not Found)';
+        errorMsg = "Tài nguyên hoặc cổng API không tồn tại (404 Not Found)";
       } else if (response.status >= 500) {
-        errorMsg = 'Máy chủ dịch vụ tạm thời không phản hồi. Vui lòng thử lại sau.';
+        errorMsg =
+          "Máy chủ dịch vụ tạm thời không phản hồi. Vui lòng thử lại sau.";
       } else {
-        errorMsg = 'Đã có lỗi xảy ra từ máy chủ';
+        errorMsg = "Đã có lỗi xảy ra từ máy chủ";
       }
     }
     const error = new Error(errorMsg);
@@ -43,81 +45,121 @@ async function request(endpoint, options = {}) {
 }
 
 export const api = {
+  getManagedClubs: () => request('/management/clubs'),
+  getVerificationQueue: () => request("/admin/verification"),
+  verifyContent: (kind, id, body) =>
+    request(`/admin/verification/${kind}/${id}`, { method: "POST", body }),
+  getCampusAssets: () => request("/media-assets/campus"),
   // Auth
-  register: (body) => request('/auth/register', { method: 'POST', body }),
-  login: (body) => request('/auth/login', { method: 'POST', body }),
-  logout: () => request('/auth/logout', { method: 'POST' }),
-  getMe: () => request('/auth/me'),
+  register: (body) => request("/auth/register", { method: "POST", body }),
+  login: (body) => request("/auth/login", { method: "POST", body }),
+  logout: () => request("/auth/logout", { method: "POST" }),
+  getMe: () => request("/auth/me"),
 
   // Profile
-  getProfile: () => request('/users/profile'),
-  updateProfile: (body) => request('/users/profile', { method: 'PUT', body }),
+  getProfile: () => request("/users/profile"),
+  updateProfile: (body) => request("/users/profile", { method: "PUT", body }),
 
   // Clubs & Categories
-  getCategories: () => request('/categories'),
+  getCategories: () => request("/categories"),
   getClubs: (params = {}) => {
     const query = new URLSearchParams(params).toString();
-    return request(`/clubs${query ? `?${query}` : ''}`);
+    return request(`/clubs${query ? `?${query}` : ""}`);
   },
   getClubBySlug: (slug) => request(`/clubs/${slug}`),
-  createClub: (body) => request('/clubs', { method: 'POST', body }),
-  updateClub: (id, body) => request(`/clubs/${id}`, { method: 'PUT', body }),
+  createClub: (body) => request("/clubs", { method: "POST", body }),
+  updateClub: (id, body) => request(`/clubs/${id}`, { method: "PUT", body }),
 
   // Recruitments
   getClubRecruitments: (clubId) => request(`/clubs/${clubId}/recruitments`),
   getRecruitmentById: (id) => request(`/recruitments/${id}`),
-  createRecruitment: (clubId, body) => request(`/clubs/${clubId}/recruitments`, { method: 'POST', body }),
-  updateRecruitmentStatus: (id, status) => request(`/recruitments/${id}/status`, { method: 'PATCH', body: { status } }),
+  createRecruitment: (clubId, body) =>
+    request(`/clubs/${clubId}/recruitments`, { method: "POST", body }),
+  updateRecruitmentStatus: (id, status) =>
+    request(`/recruitments/${id}/status`, {
+      method: "PATCH",
+      body: { status },
+    }),
 
   // Applications
-  applyRecruitment: (campaignId, answers) => request(`/recruitments/${campaignId}/apply`, { method: 'POST', body: { answers } }),
-  getMyApplications: () => request('/applications/my-applications'),
+  applyRecruitment: (campaignId, answers) =>
+    request(`/recruitments/${campaignId}/apply`, {
+      method: "POST",
+      body: { answers },
+    }),
+  getMyApplications: () => request("/applications/my-applications"),
   getClubApplications: (clubId, params = {}) => {
     const query = new URLSearchParams(params).toString();
-    return request(`/clubs/${clubId}/applications${query ? `?${query}` : ''}`);
+    return request(`/clubs/${clubId}/applications${query ? `?${query}` : ""}`);
   },
   getApplicationById: (id) => request(`/applications/${id}`),
-  reviewApplication: (id, body) => request(`/applications/${id}/status`, { method: 'PATCH', body }),
-  withdrawApplication: (id) => request(`/applications/${id}/withdraw`, { method: 'POST' }),
+  reviewApplication: (id, body) =>
+    request(`/applications/${id}/status`, { method: "PATCH", body }),
+  withdrawApplication: (id) =>
+    request(`/applications/${id}/withdraw`, { method: "POST" }),
 
   // Memberships
   getClubMembers: (clubId, params = {}) => {
     const query = new URLSearchParams(params).toString();
-    return request(`/clubs/${clubId}/members${query ? `?${query}` : ''}`);
+    return request(`/clubs/${clubId}/members${query ? `?${query}` : ""}`);
   },
-  updateMemberRole: (clubId, memberId, role) => request(`/clubs/${clubId}/members/${memberId}/role`, { method: 'PATCH', body: { role } }),
-  removeMember: (clubId, memberId) => request(`/clubs/${clubId}/members/${memberId}`, { method: 'DELETE' }),
+  updateMemberRole: (clubId, memberId, role) =>
+    request(`/clubs/${clubId}/members/${memberId}/role`, {
+      method: "PATCH",
+      body: { role },
+    }),
+  removeMember: (clubId, memberId) =>
+    request(`/clubs/${clubId}/members/${memberId}`, { method: "DELETE" }),
 
   // Events
   getEvents: (params = {}) => {
     const query = new URLSearchParams(params).toString();
-    return request(`/events${query ? `?${query}` : ''}`);
+    return request(`/events${query ? `?${query}` : ""}`);
   },
   getEventById: (id) => request(`/events/${id}`),
-  registerEvent: (eventId) => request(`/events/${eventId}/register`, { method: 'POST' }),
-  cancelEventRegistration: (eventId) => request(`/events/${eventId}/cancel-registration`, { method: 'POST' }),
-  getMyEventRegistrations: () => request('/events/my-registrations'),
-  createEvent: (clubId, body) => request(`/clubs/${clubId}/events`, { method: 'POST', body }),
-  getEventRegistrations: (eventId) => request(`/events/${eventId}/registrations`),
-  updateEventStatus: (eventId, status) => request(`/events/${eventId}/status`, { method: 'PATCH', body: { status } }),
+  registerEvent: (eventId) =>
+    request(`/events/${eventId}/register`, { method: "POST" }),
+  cancelEventRegistration: (eventId) =>
+    request(`/events/${eventId}/cancel-registration`, { method: "POST" }),
+  getMyEventRegistrations: () => request("/events/my-registrations"),
+  createEvent: (clubId, body) =>
+    request(`/clubs/${clubId}/events`, { method: "POST", body }),
+  getEventRegistrations: (eventId) =>
+    request(`/events/${eventId}/registrations`),
+  updateEventStatus: (eventId, status) =>
+    request(`/events/${eventId}/status`, { method: "PATCH", body: { status } }),
 
   // Stats
-  getStatsOverview: () => request('/stats/overview'),
+  getStatsOverview: () => request("/stats/overview"),
 
   // Super Admin
-  getAdminDashboard: () => request('/admin/dashboard'),
-  getAdminUsers: () => request('/admin/users'),
-  assignClubAdmin: (body) => request('/admin/assign-club-admin', { method: 'POST', body }),
-  getAuditLogs: () => request('/admin/audit-logs'),
-  getClubReports: () => request('/admin/reports/clubs'),
-  importClubsCsv: (csvContent) => request('/admin/clubs/import-csv', { method: 'POST', body: { csvContent } }),
-  updateClubStatus: (clubId, status) => request(`/admin/clubs/${clubId}/status`, { method: 'PATCH', body: { status } }),
+  getAdminDashboard: () => request("/admin/dashboard"),
+  getAdminUsers: () => request("/admin/users"),
+  assignClubAdmin: (body) =>
+    request("/admin/assign-club-admin", { method: "POST", body }),
+  getAuditLogs: () => request("/admin/audit-logs"),
+  getClubReports: () => request("/admin/reports/clubs"),
+  importClubsCsv: (csvContent) =>
+    request("/admin/clubs/import-csv", {
+      method: "POST",
+      body: { csvContent },
+    }),
+  updateClubStatus: (clubId, status) =>
+    request(`/admin/clubs/${clubId}/status`, {
+      method: "PATCH",
+      body: { status },
+    }),
 
   // Media & Album Management
-  uploadAvatar: (formData) => request('/users/me/avatar', { method: 'POST', body: formData }),
-  uploadClubLogo: (clubId, formData) => request(`/clubs/${clubId}/logo`, { method: 'POST', body: formData }),
-  uploadClubCover: (clubId, formData) => request(`/clubs/${clubId}/cover`, { method: 'POST', body: formData }),
+  uploadAvatar: (formData) =>
+    request("/users/me/avatar", { method: "POST", body: formData }),
+  uploadClubLogo: (clubId, formData) =>
+    request(`/clubs/${clubId}/logo`, { method: "POST", body: formData }),
+  uploadClubCover: (clubId, formData) =>
+    request(`/clubs/${clubId}/cover`, { method: "POST", body: formData }),
   getClubAlbum: (clubId) => request(`/clubs/${clubId}/album`),
-  addClubMedia: (clubId, formData) => request(`/clubs/${clubId}/album`, { method: 'POST', body: formData }),
-  deleteClubMedia: (clubId, mediaId) => request(`/clubs/${clubId}/album/${mediaId}`, { method: 'DELETE' })
+  addClubMedia: (clubId, formData) =>
+    request(`/clubs/${clubId}/album`, { method: "POST", body: formData }),
+  deleteClubMedia: (clubId, mediaId) =>
+    request(`/clubs/${clubId}/album/${mediaId}`, { method: "DELETE" }),
 };
