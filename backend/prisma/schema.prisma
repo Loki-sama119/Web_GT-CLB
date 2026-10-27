@@ -91,6 +91,7 @@ model User {
   eventRegistrations   EventRegistration[]
   notifications        Notification[]
   auditLogs            AuditLog[]
+  applicationHistories ApplicationHistory[]
 
   @@map("users")
 }
@@ -154,6 +155,7 @@ model Club {
   campaigns        RecruitmentCampaign[]
   posts            ClubPost[]
   events           ClubEvent[]
+  medias           ClubMedia[]
 
   @@map("clubs")
 }
@@ -243,6 +245,7 @@ model Application {
   user             User                @relation("StudentApplications", fields: [userId], references: [id], onDelete: Cascade)
   reviewedBy       User?               @relation("ReviewedApplications", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
   answers          ApplicationAnswer[]
+  histories        ApplicationHistory[]
 
   @@map("applications")
 }
@@ -344,4 +347,33 @@ model AuditLog {
   user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("audit_logs")
+}
+
+model ClubMedia {
+  id          String   @id @default(uuid())
+  clubId      String
+  url         String
+  caption     String?
+  mediaType   String   @default("IMAGE") // IMAGE, VIDEO
+  orderIndex  Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  club        Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  @@map("club_medias")
+}
+
+model ApplicationHistory {
+  id            String            @id @default(uuid())
+  applicationId String
+  changedById   String?
+  fromStatus    ApplicationStatus
+  toStatus      ApplicationStatus
+  notes         String?
+  createdAt     DateTime          @default(now())
+
+  application   Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  changedBy     User?             @relation(fields: [changedById], references: [id], onDelete: SetNull)
+
+  @@map("application_histories")
 }
