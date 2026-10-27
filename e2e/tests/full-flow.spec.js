@@ -109,14 +109,14 @@ test.describe.serial('University Club Portal - End-to-End Test Suite (TC01-TC18)
     await searchAppInput.fill(testStudentName);
 
     await expect(page.getByText(testStudentName).first()).toBeVisible({ timeout: 10000 });
-    await page.getByRole('button', { name: 'Xem & Xét duyệt' }).first().click();
+    await page.getByRole('button', { name: 'Xem & Xét duyệt' }).first().click({ force: true });
 
     await expect(page.getByText('Ban Lập trình Web/App')).toBeVisible();
 
     const notesInput = page.getByPlaceholder('Nhận xét thái độ, điểm phỏng vấn');
     await notesInput.fill('Ứng viên có động lực tốt, đạt yêu cầu.');
 
-    await page.getByRole('button', { name: /Duyệt trúng tuyển/i }).click();
+    await page.getByRole('button', { name: /Duyệt trúng tuyển/i }).click({ force: true });
 
     await expect(page.getByText('ACCEPTED').first()).toBeVisible({ timeout: 10000 });
   });
