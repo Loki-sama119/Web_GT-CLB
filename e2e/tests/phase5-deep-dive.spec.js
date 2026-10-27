@@ -17,7 +17,7 @@ test.describe.serial('Phase 5 & 6 Deep-Dive E2E Suite - Release Hardening', () =
     await expect(page.getByRole('heading', { level: 1 })).toContainText('CLB Lập Trình & Công Nghệ BAFU Tech');
 
     // Tab album hoạt động
-    await expect(page.getByText('Album Hoạt Động')).toBeVisible();
+    await expect(page.getByText('Album Hoạt Động').first()).toBeVisible();
   });
 
   test('03. Club Admin quản lý hội viên, tìm kiếm và nút xuất CSV hội viên', async ({ page }) => {
