@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { Calendar, Clock, MapPin, Users, CheckCircle2, ArrowRight } from 'lucide-react';
+import { CalendarDots, CheckCircle, X } from '@phosphor-icons/react';
+import EditorialHeading from '../../components/editorial/EditorialHeading';
+import EventPoster from '../../components/editorial/EventPoster';
+import EmptyState from '../../components/ui/EmptyState';
 
 export default function EventsPage() {
   const { user } = useAuth();
@@ -45,78 +48,62 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 rounded-3xl p-8 sm:p-12 text-white shadow-lg space-y-3">
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-          Lịch Sự Kiện & Hoạt Động Sinh Viên BAFU
-        </h1>
-        <p className="text-blue-200 text-sm sm:text-base max-w-2xl leading-relaxed">
-          Tham gia các giải thể thao tứ hùng, workshop kỹ năng, đêm nhạc giao lưu và hoạt động tình nguyện do các câu lạc bộ tổ chức.
-        </p>
-      </div>
-
-      {successMsg && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700 flex items-center justify-between">
-          <span>{successMsg}</span>
-          <button onClick={() => setSuccessMsg('')} className="text-emerald-500 hover:text-emerald-700">✕</button>
+    <div className="bg-[#F4F0E7] text-[#181C1B] min-h-screen py-12 lg:py-20 font-sans">
+      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        
+        {/* Editorial Header Banner */}
+        <div className="border-b border-[#D8D5CD] pb-8">
+          <EditorialHeading
+            as="h1"
+            index="01"
+            eyebrow="Phong trào thanh niên & học thuật"
+            title="Lịch Sự Kiện & Hoạt Động BAFU"
+            subtitle="Tham gia các giải thi đấu thể thao, workshop học thuật, đêm nhạc giao lưu và chiến dịch tình nguyện do các câu lạc bộ BAFU tổ chức."
+            size="default"
+          />
         </div>
-      )}
 
-      {loading ? (
-        <div className="py-12 text-center text-xs text-slate-400">Đang tải lịch sự kiện...</div>
-      ) : events.length === 0 ? (
-        <div className="py-12 text-center text-xs text-slate-400">Chưa có sự kiện nào sắp tới.</div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map((ev) => (
-            <div
-              key={ev.id}
-              className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs flex flex-col justify-between card-hover space-y-4"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
-                    {ev.club?.name}
-                  </span>
-                  <span className="text-xs text-slate-400 font-semibold">
-                    {ev._count?.registrations || 0} đã đăng ký
-                  </span>
-                </div>
-
-                <h3 className="font-bold text-slate-900 text-base leading-snug">
-                  {ev.title}
-                </h3>
-
-                <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed">
-                  {ev.description}
-                </p>
-
-                <div className="pt-2 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-blue-600 shrink-0" />
-                    <span>{new Date(ev.startTime).toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' })}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
-                    <span className="truncate">{ev.location}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-slate-100">
-                <button
-                  onClick={() => handleRegisterEvent(ev.id)}
-                  disabled={registeringId === ev.id}
-                  className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2"
-                >
-                  {registeringId === ev.id ? 'Đang đăng ký...' : 'Đăng ký tham gia'}
-                </button>
-              </div>
+        {successMsg && (
+          <div className="p-4 bg-white border border-[#12674D] text-xs font-bold text-[#12674D] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CheckCircle size={18} weight="fill" className="text-[#12674D] shrink-0" />
+              <span>{successMsg}</span>
             </div>
-          ))}
-        </div>
-      )}
+            <button onClick={() => setSuccessMsg('')} className="text-[#575E5B] hover:text-[#181C1B] cursor-pointer">
+              <X size={16} />
+            </button>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-64 bg-white border border-[#D8D5CD] animate-pulse" />
+            ))}
+          </div>
+        ) : events.length === 0 ? (
+          <div className="bg-white border border-[#D8D5CD] p-12 text-center">
+            <EmptyState
+              icon={CalendarDots}
+              title="Chưa có sự kiện nào sắp diễn ra"
+              description="Hiện tại các câu lạc bộ chưa công bố sự kiện mới. Vui lòng quay lại sau."
+            />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-6">
+            {events.map((ev, idx) => (
+              <EventPoster
+                key={ev.id}
+                event={ev}
+                featured={idx === 0}
+                onRegister={handleRegisterEvent}
+                registering={registeringId === ev.id}
+              />
+            ))}
+          </div>
+        )}
+
+      </div>
     </div>
   );
 }

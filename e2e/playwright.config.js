@@ -8,7 +8,7 @@ export default defineConfig({
   workers: 1,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:80', // Chạy qua Nginx reverse proxy hoặc frontend
+    baseURL: process.env.E2E_BASE_URL || 'http://localhost:8080', // Chạy qua Nginx reverse proxy E2E cách ly độc lập (club_portal_e2e)
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'
