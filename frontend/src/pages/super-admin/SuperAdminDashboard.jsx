@@ -8,6 +8,8 @@ import {
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import EmptyState from '../../components/ui/EmptyState';
+import StatusBadge from '../../utils/statusPresentation';
+import ClubLogo from '../../components/ui/ClubLogo';
 
 export default function SuperAdminDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -308,9 +310,7 @@ export default function SuperAdminDashboard() {
                       <td className="p-3.5 text-slate-700">{app.campaign?.club?.name}</td>
                       <td className="p-3.5 text-slate-500">{new Date(app.submittedAt).toLocaleDateString('vi-VN')}</td>
                       <td className="p-3.5">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                          {app.status}
-                        </span>
+                        <StatusBadge status={app.status} />
                       </td>
                     </tr>
                   ))}
@@ -512,7 +512,7 @@ export default function SuperAdminDashboard() {
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold ${
                           u.role === 'SUPER_ADMIN' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-slate-100 text-slate-700'
                         }`}>
-                          {u.role}
+                          {u.role === 'SUPER_ADMIN' ? 'Quản trị viên trường' : 'Sinh viên'}
                         </span>
                       </td>
                     </tr>
@@ -552,7 +552,12 @@ export default function SuperAdminDashboard() {
                 <tbody className="divide-y divide-slate-100">
                   {clubs.map(c => (
                     <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="p-3.5 font-bold text-slate-900">{c.name}</td>
+                      <td className="p-3.5 font-bold text-slate-900">
+                        <div className="flex items-center gap-2.5">
+                          <ClubLogo name={c.name} logoUrl={c.logoUrl} categorySlug={c.category?.slug} size="sm" />
+                          <span>{c.name}</span>
+                        </div>
+                      </td>
                       <td className="p-3.5 text-slate-500 font-mono text-[11px]">{c.slug}</td>
                       <td className="p-3.5 text-slate-600">{c.category?.name || 'Chưa phân loại'}</td>
                       <td className="p-3.5 text-center">

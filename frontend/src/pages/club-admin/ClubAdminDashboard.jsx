@@ -4,11 +4,13 @@ import { api } from '../../services/api';
 import { 
   UsersThree, CheckCircle, XCircle, WarningCircle, 
   Plus, Trash, MagnifyingGlass, ShieldCheck, DownloadSimple, 
-  ClockCounterClockwise, Clock, ClipboardText, UserCheck, UserPlus, Check, X, CaretDown
+  ClockCounterClockwise, Clock, ClipboardText, UserCheck, UserPlus, Check, X, CaretDown, Camera
 } from '@phosphor-icons/react';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import EmptyState from '../../components/ui/EmptyState';
+import StatusBadge from '../../utils/statusPresentation';
+import ClubLogo from '../../components/ui/ClubLogo';
 
 export default function ClubAdminDashboard() {
   const { user } = useAuth();
@@ -245,6 +247,37 @@ export default function ClubAdminDashboard() {
     }
   };
 
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+
+  const handleUploadClubLogo = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !selectedClubId) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Dung lượng tệp logo không được vượt quá 2MB');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('logo', file);
+
+    setUploadingLogo(true);
+    try {
+      const res = await api.uploadClubLogo(selectedClubId, formData);
+      if (res.data?.logoUrl) {
+        setManagedClubs(prev => prev.map(c => 
+          c.id === selectedClubId ? { ...c, logoUrl: res.data.logoUrl } : c
+        ));
+        alert('Cập nhật logo câu lạc bộ thành công!');
+      }
+    } catch (err) {
+      alert(err.message || 'Lỗi khi cập nhật logo câu lạc bộ');
+    } finally {
+      setUploadingLogo(false);
+      e.target.value = '';
+    }
+  };
+
   const currentClub = managedClubs.find(c => c.id === selectedClubId);
 
   const getStatusBadge = (status) => {
@@ -291,17 +324,46 @@ export default function ClubAdminDashboard() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* 1. Header — shadcn/ui Dashboard-01 style */}
       <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#167C66]" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[#167C66]">Bảng Điều Khiển Ban Chủ Nhiệm</span>
+        <div className="flex items-center gap-4">
+          <div className="relative group shrink-0">
+            <ClubLogo
+              name={currentClub?.name}
+              logoUrl={currentClub?.logoUrl}
+              categorySlug={currentClub?.category?.slug}
+              size="lg"
+              className="border-2 border-slate-100 shadow-sm"
+            />
+            <label
+              htmlFor="club-logo-upload"
+              title="Đổi logo câu lạc bộ"
+              className={`absolute inset-0 bg-black/50 text-white rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer text-[10px] font-bold ${
+                uploadingLogo ? 'opacity-100 pointer-events-none' : ''
+              }`}
+            >
+              <Camera size={18} weight="bold" />
+              <span>{uploadingLogo ? 'Đang tải...' : 'Đổi logo'}</span>
+              <input
+                id="club-logo-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                disabled={uploadingLogo}
+                onChange={handleUploadClubLogo}
+              />
+            </label>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#142B49] tracking-tight">
-            Quản Lý: {currentClub?.name || 'Câu Lạc Bộ'}
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500">
-            Hệ thống quản lý nhân sự, xét duyệt hồ sơ ứng tuyển và số hóa hoạt động CLB
-          </p>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#167C66]" />
+              <span className="text-xs font-bold uppercase tracking-wider text-[#167C66]">Bảng Điều Khiển Ban Chủ Nhiệm</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#142B49] tracking-tight">
+              Quản Lý: {currentClub?.name || 'Câu Lạc Bộ'}
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500">
+              Hệ thống quản lý nhân sự, xét duyệt hồ sơ ứng tuyển và số hóa hoạt động CLB
+            </p>
+          </div>
         </div>
 
         {managedClubs.length > 1 && (
@@ -454,56 +516,61 @@ export default function ClubAdminDashboard() {
                 description="Chưa có hồ sơ ứng tuyển nào khớp với tiêu chí tìm kiếm hoặc đợt tuyển hiện tại."
               />
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
-                  <thead>
-                    <tr className="bg-slate-50 border-b border-[#E2E8F0] text-slate-500 font-bold uppercase tracking-wider">
-                      <th className="p-4">Ứng viên</th>
-                      <th className="p-4">Mã sinh viên</th>
-                      <th className="p-4">Khoa / Khóa</th>
-                      <th className="p-4">Đợt tuyển</th>
-                      <th className="p-4">Ngày nộp</th>
-                      <th className="p-4">Trạng thái</th>
-                      <th className="p-4 text-right">Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {applications.map((app) => (
-                      <tr key={app.id} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="p-4 font-bold text-slate-900">
-                          {app.user?.studentProfile?.fullName || 'N/A'}
-                        </td>
-                        <td className="p-4 text-slate-600 font-mono">
-                          {app.user?.studentProfile?.studentCode || 'N/A'}
-                        </td>
-                        <td className="p-4 text-slate-600">
-                          {app.user?.studentProfile?.faculty || 'N/A'}
-                        </td>
-                        <td className="p-4 text-slate-600 font-medium">
-                          {app.campaign?.title}
-                        </td>
-                        <td className="p-4 text-slate-500">
-                          {new Date(app.submittedAt).toLocaleDateString('vi-VN')}
-                        </td>
-                        <td className="p-4">
-                          {getStatusBadge(app.status)}
-                        </td>
-                        <td className="p-4 text-right">
-                          <button
-                            onClick={() => {
-                              setReviewingApp(app);
-                              setInternalNotes(app.internalNotes || '');
-                            }}
-                            className="px-3 py-1.5 rounded-lg bg-[#142B49]/5 hover:bg-[#167C66] hover:text-white text-[#142B49] font-bold transition-colors cursor-pointer"
-                          >
-                            Xem & Xét duyệt
-                          </button>
-                        </td>
+              <>
+                {/* Responsive High-Density Table with Sticky Action Column */}
+                <div className="overflow-x-auto w-full">
+                  <table className="w-full text-left border-collapse text-xs whitespace-nowrap min-w-[760px] lg:min-w-full">
+                    <thead>
+                      <tr className="bg-slate-50 border-b border-[#E2E8F0] text-slate-500 font-bold uppercase tracking-wider">
+                        <th className="p-4 w-44">Ứng viên</th>
+                        <th className="p-4 w-28">Mã SV</th>
+                        <th className="p-4 w-44">Khoa / Khóa</th>
+                        <th className="p-4">Đợt tuyển</th>
+                        <th className="p-4 w-28">Ngày nộp</th>
+                        <th className="p-4 w-36">Trạng thái</th>
+                        <th className="p-4 w-36 text-right sticky right-0 bg-slate-50 z-10 shadow-[-4px_0_8px_-2px_rgba(0,0,0,0.05)]">
+                          Thao tác
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {applications.map((app) => (
+                        <tr key={app.id} className="hover:bg-slate-50/70 transition-colors group">
+                          <td className="p-4 font-bold text-slate-900 truncate max-w-[176px]">
+                            {app.user?.studentProfile?.fullName || 'N/A'}
+                          </td>
+                          <td className="p-4 text-slate-600 font-mono">
+                            {app.user?.studentProfile?.studentCode || 'N/A'}
+                          </td>
+                          <td className="p-4 text-slate-600 truncate max-w-[176px]">
+                            {app.user?.studentProfile?.faculty || 'N/A'}
+                          </td>
+                          <td className="p-4 text-slate-600 font-medium truncate max-w-[220px]">
+                            {app.campaign?.title}
+                          </td>
+                          <td className="p-4 text-slate-500 whitespace-nowrap">
+                            {new Date(app.submittedAt).toLocaleDateString('vi-VN')}
+                          </td>
+                          <td className="p-4">
+                            <StatusBadge status={app.status} />
+                          </td>
+                          <td className="p-4 text-right sticky right-0 bg-white group-hover:bg-slate-50/90 z-10 shadow-[-4px_0_8px_-2px_rgba(0,0,0,0.05)]">
+                            <button
+                              onClick={() => {
+                                setReviewingApp(app);
+                                setInternalNotes(app.internalNotes || '');
+                              }}
+                              className="px-3 py-1.5 rounded-lg bg-[#142B49]/5 hover:bg-[#167C66] hover:text-white text-[#142B49] font-bold transition-colors cursor-pointer text-xs"
+                            >
+                              Xem & Xét duyệt
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         </div>

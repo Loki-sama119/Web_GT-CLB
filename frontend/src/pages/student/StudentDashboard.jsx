@@ -13,6 +13,7 @@ import EmptyState from '../../components/ui/EmptyState';
 import Modal from '../../components/ui/Modal';
 import Input from '../../components/ui/Input';
 import ClubLogo from '../../components/ui/ClubLogo';
+import StatusBadge from '../../utils/statusPresentation';
 
 export default function StudentDashboard() {
   const { user, refreshMe } = useAuth();
@@ -330,7 +331,7 @@ export default function StudentDashboard() {
                           {app.campaign?.title}
                         </h4>
                       </div>
-                      <div className="shrink-0">{getStatusBadge(app.status)}</div>
+                      <div className="shrink-0"><StatusBadge status={app.status} /></div>
                     </div>
 
                     <div className="pt-2 border-t border-slate-200/60 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">

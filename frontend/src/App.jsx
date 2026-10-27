@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import MainLayout from './layouts/MainLayout';
+import AdminLayout from './layouts/AdminLayout';
 import ProtectedRoute from './routes/ProtectedRoute';
 
 // Public Pages
@@ -24,8 +25,8 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Public & Student Portal Routes (MainLayout) */}
           <Route element={<MainLayout />}>
-            {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/clubs" element={<ClubsPage />} />
             <Route path="/clubs/:slug" element={<ClubDetailPage />} />
@@ -40,6 +41,12 @@ export default function App() {
               <Route path="/student/dashboard" element={<StudentDashboard />} />
             </Route>
 
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+
+          {/* Protected Dedicated Admin Shell Routes (AdminLayout) */}
+          <Route element={<AdminLayout />}>
             {/* Protected Club Admin Routes */}
             <Route element={<ProtectedRoute requireClubAdmin={true} />}>
               <Route path="/club-admin" element={<ClubAdminDashboard />} />
@@ -49,9 +56,6 @@ export default function App() {
             <Route element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']} />}>
               <Route path="/admin/dashboard" element={<SuperAdminDashboard />} />
             </Route>
-
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
       </BrowserRouter>
