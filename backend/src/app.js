@@ -12,57 +12,22 @@ import usersRoutes from './modules/users/users.routes.js';
 import clubsRoutes from './modules/clubs/clubs.routes.js';
 import recruitmentsRoutes from './modules/recruitments/recruitments.routes.js';
 import applicationsRoutes from './modules/applications/applications.routes.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import membershipsRoutes from './modules/memberships/memberships.routes.js';
 import eventsRoutes from './modules/events/events.routes.js';
 import statsRoutes from './modules/stats/stats.routes.js';
 import adminRoutes from './modules/admin/admin.routes.js';
-import mediaRoutes from './modules/media/media.routes.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
-
-// Trust reverse proxy (Nginx) for correct client IP detection and rate limiting
-app.set('trust proxy', 1);
 
 // Security Middlewares
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
-const configuredOrigins = (ENV.CORS_ORIGIN || '')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
-
-const defaultDevOrigins = [
-  'http://localhost',
-  'http://localhost:80',
-  'http://localhost:5173',
-  'http://127.0.0.1',
-  'http://127.0.0.1:80',
-  'http://127.0.0.1:5173'
-];
-
-const allowedOrigins = (ENV.NODE_ENV === 'production' && configuredOrigins.length > 0)
-  ? configuredOrigins
-  : Array.from(new Set([...configuredOrigins, ...defaultDevOrigins]));
-
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow non-browser requests (Postman, curl, server-to-server)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
-      return callback(null, true);
-    }
-    return callback(new Error(`CORS policy does not allow access from origin: ${origin}`));
-  },
+  origin: [ENV.CORS_ORIGIN, 'http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:80'],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 }));
 
 // Giới hạn tần suất request (Rate Limiting)
@@ -76,13 +41,10 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Body parsers (Explicit 1MB limit to prevent DoS memory exhaustion while supporting rich club data/applications)
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+// Body parsers
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-// Static Uploads Folder
-app.use('/uploads', express.static(path.resolve(__dirname, '../uploads')));
 
 // Health Check API
 app.get('/health', (req, res) => {
@@ -98,7 +60,6 @@ apiV1.use('/', recruitmentsRoutes);
 apiV1.use('/', applicationsRoutes);
 apiV1.use('/', membershipsRoutes);
 apiV1.use('/', eventsRoutes);
-apiV1.use('/', mediaRoutes);
 apiV1.use('/stats', statsRoutes);
 apiV1.use('/admin', adminRoutes);
 

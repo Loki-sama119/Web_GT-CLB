@@ -524,21 +524,6 @@ async function main() {
     }
   });
 
-  await prisma.clubEvent.create({
-    data: {
-      clubId: techClub.id,
-      title: 'Hội Thảo Công Nghệ AI Cho Nông Nghiệp 2026',
-      slug: 'hoi-thao-cong-nghe-ai-nong-nghiep-2026',
-      description: 'Giới thiệu ứng dụng thị giác máy tính và AI trong quản lý nông trại thông minh.',
-      location: 'Hội trường A1 - BAFU',
-      startTime: new Date('2026-11-20T08:00:00Z'),
-      endTime: new Date('2026-11-20T11:30:00Z'),
-      maxParticipants: 150,
-      isPublic: true,
-      status: EventStatus.UPCOMING
-    }
-  });
-
   // 9. Tạo Bài viết tin tức mẫu (Posts)
   await prisma.clubPost.create({
     data: {
