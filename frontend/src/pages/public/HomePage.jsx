@@ -1,185 +1,206 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { api } from '../../services/api';
-import CampusMasthead from '../../components/editorial/CampusMasthead';
-import EditorialHeading from '../../components/editorial/EditorialHeading';
-import FeatureClubTile from '../../components/editorial/FeatureClubTile';
-import EditorialClubCard from '../../components/editorial/EditorialClubCard';
-import EventPoster from '../../components/editorial/EventPoster';
-import DirectoryRow from '../../components/editorial/DirectoryRow';
-import { ArrowRight } from '@phosphor-icons/react';
-
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "../../services/api";
+import { ArrowUpRight } from "@phosphor-icons/react";
+import CampusMasthead from "../../components/editorial/CampusMasthead";
+import FeatureClubTile from "../../components/editorial/FeatureClubTile";
+import EditorialClubCard from "../../components/editorial/EditorialClubCard";
+import DirectoryRow from "../../components/editorial/DirectoryRow";
+import EventPoster from "../../components/editorial/EventPoster";
+function Heading({ number, title, note, link, to }) {
+  return (
+    <div className="editorial-section-heading">
+      <span className="section-number">{number}</span>
+      <div>
+        <h2>{title}</h2>
+        {note && <p>{note}</p>}
+      </div>
+      {link && (
+        <Link to={to} className="text-link">
+          {link}
+          <ArrowUpRight size={20} />
+        </Link>
+      )}
+    </div>
+  );
+}
 export default function HomePage() {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({
-    totalClubs: 10,
-    totalMembers: 56,
-    totalCampaigns: 2,
-    totalEvents: 5
-  });
-  const [recruitingClubs, setRecruitingClubs] = useState([]);
-  const [featuredClubs, setFeaturedClubs] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [heroSearch, setHeroSearch] = useState('');
-  const [loading, setLoading] = useState(true);
-
+  const [stats, setStats] = useState(null),
+    [clubs, setClubs] = useState([]),
+    [recruiting, setRecruiting] = useState([]),
+    [events, setEvents] = useState([]),
+    [search, setSearch] = useState(""),
+    [loading, setLoading] = useState(true),
+    [error, setError] = useState(""),
+    [asset, setAsset] = useState(null);
   useEffect(() => {
-    async function loadHomeData() {
+    let current = true;
+    (async () => {
       try {
-        const [statsRes, recRes, featRes, evRes] = await Promise.all([
-          api.getStatsOverview().catch(() => null),
-          api.getClubs({ recruiting: 'true', limit: 4 }).catch(() => null),
-          api.getClubs({ limit: 8 }).catch(() => null),
-          api.getEvents({ limit: 3 }).catch(() => null)
+        const [s, c, r, e, a] = await Promise.all([
+          api.getStatsOverview(),
+          api.getClubs({ limit: 12 }),
+          api.getClubs({ recruiting: "true", limit: 4 }),
+          api.getEvents({ limit: 6 }),
+          api.getCampusAssets(),
         ]);
-
-        if (statsRes?.data) setStats(statsRes.data);
-        if (recRes?.data?.clubs) setRecruitingClubs(recRes.data.clubs);
-        if (featRes?.data?.clubs) setFeaturedClubs(featRes.data.clubs);
-        if (evRes?.data?.events) setEvents(evRes.data.events);
+        if (current) {
+          setStats(s.data);
+          setClubs(c.data.clubs);
+          setRecruiting(r.data.clubs);
+          setEvents(e.data.events);
+          setAsset(a.data?.assets?.[0] || null);
+        }
+      } catch {
+        if (current)
+          setError("Chưa tải được dữ liệu. Vui lòng tải lại trang để thử lại.");
       } finally {
-        setLoading(false);
+        if (current) setLoading(false);
       }
-    }
-    loadHomeData();
+    })();
+    return () => {
+      current = false;
+    };
   }, []);
-
-  const handleHeroSearch = (e) => {
-    e.preventDefault();
-    if (heroSearch.trim()) {
-      navigate(`/clubs?search=${encodeURIComponent(heroSearch.trim())}`);
-    } else {
-      navigate('/clubs');
-    }
-  };
-
+  const upcoming = events.filter(
+    (e) => new Date(e.startTime) > new Date() && e.status === "UPCOMING",
+  );
+  const past = events.filter(
+    (e) => new Date(e.startTime) < new Date() && e.status !== "CANCELLED",
+  );
   return (
-    <div className="bg-[#F4F0E7] text-[#181C1B] min-h-screen">
-      {/* 1. HERO SECTION — EDITORIAL CAMPUS MASTHEAD */}
+    <div className="editorial-page">
       <CampusMasthead
-        searchQuery={heroSearch}
-        onSearchChange={setHeroSearch}
-        onSearchSubmit={handleHeroSearch}
+        searchQuery={search}
+        onSearchChange={setSearch}
+        onSearchSubmit={(e) => {
+          e.preventDefault();
+          navigate("/clubs?search=" + encodeURIComponent(search.trim()));
+        }}
         stats={stats}
+        asset={asset}
       />
-
-      {/* 2. SECTION 01 — CÂU LẠC BỘ ĐANG MỞ TUYỂN (MODULAR BENTO GRID) */}
-      <section className="py-20 lg:py-28 border-b border-[#D8D5CD] bg-white">
-        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
-          <EditorialHeading
-            index="01"
-            eyebrow="Đang mở đợt tuyển quân"
-            title="Gia nhập câu lạc bộ"
-            subtitle="Nộp hồ sơ trực tuyến vào các đơn vị đang tuyển thành viên gen mới tại Trường Đại học Nông – Lâm Bắc Giang."
-            action={
-              <Link
-                to="/clubs?recruiting=true"
-                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#EF673F] hover:text-[#D9532B] transition-colors"
-              >
-                <span>Xem tất cả đợt tuyển</span>
-                <ArrowRight size={14} />
-              </Link>
-            }
-            className="mb-12"
-          />
-
-          {/* Asymmetric Bento Grid: 2 Thẻ lớn dẫn đầu (span 6), tiếp theo là thẻ span 3 hoặc 4 */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {recruitingClubs.slice(0, 2).map((club) => (
-              <div key={club.id} className="lg:col-span-6">
-                <FeatureClubTile club={club} />
-              </div>
-            ))}
-          </div>
-
-          {recruitingClubs.length > 2 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-              {recruitingClubs.slice(2, 5).map((club) => (
-                <EditorialClubCard key={club.id} club={club} />
+      {error && (
+        <p role="alert" className="editorial-container data-notice">
+          {error}
+        </p>
+      )}
+      <section id="kham-pha" className="editorial-section editorial-container">
+        <Heading
+          number="01"
+          title="Bạn muốn bắt đầu từ đâu?"
+          note="Những cộng đồng được ghi nhận trong nguồn tin về BAFU."
+          link="Khám phá tất cả"
+          to="/clubs"
+        />
+        {loading ? (
+          <p role="status">Đang tải danh mục…</p>
+        ) : clubs.length ? (
+          <>
+            <div className="featured-grid">
+              {clubs.slice(0, 2).map((c, i) => (
+                <FeatureClubTile key={c.id} club={c} index={i + 1} />
               ))}
+            </div>
+            <div className="compact-grid">
+              {clubs.slice(2, 5).map((c) => (
+                <EditorialClubCard key={c.id} club={c} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className="editorial-empty">
+            Danh mục đang được cập nhật từ các nguồn xác minh.
+          </p>
+        )}
+      </section>
+      <section className="recruitment-section">
+        <div className="editorial-container editorial-section">
+          <Heading
+            number="02"
+            title="Một bước để cùng nhau."
+            note="Các đợt tuyển thành viên đã được xác minh và đang mở."
+            link="Tra cứu đợt tuyển"
+            to="/clubs?recruiting=true"
+          />
+          {recruiting.length ? (
+            <div className="compact-grid">
+              {recruiting.map((c) => (
+                <EditorialClubCard key={c.id} club={c} />
+              ))}
+            </div>
+          ) : (
+            <div className="recruitment-empty">
+              <span className="empty-symbol">↗</span>
+              <div>
+                <h3>Chờ một lời mời phù hợp.</h3>
+                <p>
+                  {loading
+                    ? "Đang tải thông tin tuyển thành viên…"
+                    : "Chưa có đợt tuyển được xác minh đang mở. Bạn vẫn có thể tìm hiểu các CLB trong danh bạ."}
+                </p>
+              </div>
+              <Link to="/clubs" className="text-link">
+                Xem danh bạ <ArrowUpRight size={22} />
+              </Link>
             </div>
           )}
         </div>
       </section>
-
-      {/* 3. SECTION 02 — SỰ KIỆN NỔI BẬT (SWISS EVENT POSTERS ON FOREST BACKGROUND) */}
-      <section className="py-20 lg:py-28 bg-[#12674D] text-white border-b border-[#D8D5CD]">
-        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
-          <EditorialHeading
-            index="02"
-            eyebrow="Lịch hoạt động & phong trào"
-            title="Sự kiện sắp diễn ra"
-            subtitle="Workshop học thuật, giải đấu thể thao và chiến dịch tình nguyện trong khuôn viên trường."
-            dark={true}
-            action={
-              <Link
-                to="/events"
-                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#EF673F] hover:text-white transition-colors"
-              >
-                <span>Xem toàn bộ lịch</span>
-                <ArrowRight size={14} />
-              </Link>
-            }
-            className="mb-12"
-          />
-
-          {/* Event Posters Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-12 gap-6">
-            {events.length > 0 ? (
-              events.map((ev, idx) => (
-                <EventPoster
-                  key={ev.id}
-                  event={ev}
-                  featured={idx === 0}
-                  onRegister={(id) => navigate('/events')}
-                />
-              ))
-            ) : (
-              <div className="col-span-12 p-12 text-center border border-white/20 text-white/70">
-                Chưa có sự kiện mới được công bố.
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. SECTION 03 — DANH BẠ TỔ CHỨC SINH VIÊN (DIRECTORY ROWS) */}
-      <section className="py-20 lg:py-28 bg-[#F4F0E7]">
-        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
-          <EditorialHeading
-            index="03"
-            eyebrow="Khám phá toàn diện"
-            title="Danh bạ câu lạc bộ"
-            subtitle="Tra cứu nhanh thông tin, lĩnh vực hoạt động và số lượng thành viên của từng tổ chức sinh viên BAFU."
-            action={
-              <Link
-                to="/clubs"
-                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#181C1B] hover:text-[#12674D] transition-colors"
-              >
-                <span>Mở thư viện danh mục</span>
-                <ArrowRight size={14} />
-              </Link>
-            }
-            className="mb-12"
-          />
-
-          {/* Directory Rows List */}
-          <div className="border-t border-[#D8D5CD]">
-            {featuredClubs.slice(0, 6).map((club) => (
-              <DirectoryRow key={club.id} club={club} />
+      <section className="editorial-container editorial-section">
+        <Heading
+          number="03"
+          title="Hẹn gặp ở hoạt động tiếp theo."
+          note="Lịch mới được tách riêng với tư liệu hoạt động đã diễn ra."
+          link="Xem lịch sự kiện"
+          to="/events"
+        />
+        {upcoming.length ? (
+          <div className="event-grid">
+            {upcoming.map((e) => (
+              <EventPoster
+                key={e.id}
+                event={e}
+                onRegister={() => navigate("/events")}
+              />
             ))}
           </div>
-
-          <div className="mt-8 text-center">
-            <Link
-              to="/clubs"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#181C1B] hover:bg-[#12674D] text-white font-semibold text-xs uppercase tracking-wider transition-colors cursor-pointer"
-            >
-              <span>Xem đầy đủ {stats.totalClubs} câu lạc bộ BAFU</span>
-              <ArrowRight size={14} />
-            </Link>
+        ) : (
+          <p className="editorial-empty">
+            {loading
+              ? "Đang tải lịch sự kiện…"
+              : "Chưa có sự kiện sắp diễn ra được xác minh. Lịch mới sẽ xuất hiện tại đây khi được công bố."}
+          </p>
+        )}
+      </section>
+      <section className="editorial-container editorial-section directory-section">
+        <Heading
+          number="04"
+          title="Danh bạ câu lạc bộ."
+          note="Tên tổ chức, lĩnh vực và bài viết nguồn trong cùng một nơi."
+        />
+        {clubs.map((c, i) => (
+          <DirectoryRow key={c.id} club={c} index={i} />
+        ))}
+      </section>
+      <section className="editorial-container editorial-section">
+        <Heading
+          number="05"
+          title="Những dấu chân đã để lại."
+          note="Tư liệu lịch sử giữ nguyên ngày diễn ra, có liên kết bài viết nguồn."
+        />
+        {past.length ? (
+          <div className="event-grid">
+            {past.map((e) => (
+              <EventPoster key={e.id} event={e} />
+            ))}
           </div>
-        </div>
+        ) : (
+          <p className="editorial-empty">
+            Tư liệu hoạt động đang được cập nhật.
+          </p>
+        )}
       </section>
     </div>
   );

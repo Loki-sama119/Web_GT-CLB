@@ -1,90 +1,80 @@
-import React from 'react';
-import { MapPin, Clock, ArrowRight } from '@phosphor-icons/react';
-
-/**
- * EventPoster - Áp phích sự kiện phong cách Swiss Poster Design
- * Điểm nhấn ngày tháng kích thước lớn bằng font Oswald, thông tin súc tích
- */
+import React from "react";
+import { ArrowUpRight, MapPin } from "@phosphor-icons/react";
 export default function EventPoster({
   event,
-  featured = false,
   onRegister,
-  registering = false
+  registering = false,
 }) {
   if (!event) return null;
-
-  // Format date
-  const eventDate = new Date(event.startDate || Date.now());
-  const day = eventDate.getDate().toString().padStart(2, '0');
-  const month = `THÁNG ${(eventDate.getMonth() + 1).toString().padStart(2, '0')}`;
-  const year = eventDate.getFullYear();
-
+  const date = new Date(event.startTime),
+    valid = !Number.isNaN(date.getTime());
+  const past = valid && date < new Date();
+  const canRegister =
+    valid && !past && event.status === "UPCOMING" && onRegister;
+  const parts = valid
+    ? new Intl.DateTimeFormat("vi-VN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        timeZone: "Asia/Ho_Chi_Minh",
+      }).format(date)
+    : "Đang cập nhật";
   return (
-    <article className={`group bg-white border border-[#D8D5CD] hover:border-[#181C1B] transition-colors flex flex-col justify-between ${
-      featured ? 'lg:col-span-6' : 'lg:col-span-3 sm:col-span-6 col-span-12'
-    }`}>
-      {/* Top Header: Date Block + Poster Visual */}
-      <div>
-        <div className="p-6 border-b border-[#D8D5CD] flex items-start justify-between bg-[#F4F0E7]">
-          {/* Khối Ngày Tháng Lớn font Oswald */}
-          <div className="flex items-baseline gap-2">
-            <span className="font-display font-bold text-5xl sm:text-6xl text-[#181C1B] leading-none">
-              {day}
-            </span>
-            <div className="flex flex-col text-[11px] font-bold uppercase tracking-wider text-[#12674D]">
-              <span>{month}</span>
-              <span className="text-[#7A827F]">{year}</span>
-            </div>
-          </div>
-
-          <span className="text-[11px] uppercase tracking-wider px-2 py-0.5 bg-[#181C1B] text-white font-semibold">
-            {event.category || 'Hoạt động'}
-          </span>
-        </div>
-
-        {/* Content Details */}
-        <div className="p-6 space-y-3">
-          <div className="text-xs uppercase tracking-wider font-semibold text-[#12674D]">
-            {event.club?.name || 'Ban Tổ Chức BAFU'}
-          </div>
-
-          <h3 className={`font-sans font-bold text-[#181C1B] group-hover:text-[#12674D] transition-colors leading-snug ${
-            featured ? 'text-2xl' : 'text-lg'
-          }`}>
-            {event.title}
-          </h3>
-
-          <div className="space-y-1.5 text-xs text-[#575E5B] pt-2">
-            <div className="flex items-center gap-2">
-              <MapPin size={15} className="text-[#EF673F] shrink-0" />
-              <span className="font-medium">{event.location || 'Hội trường A1 - BAFU'}</span>
-            </div>
-            {event.startTime && (
-              <div className="flex items-center gap-2">
-                <Clock size={15} className="text-[#575E5B] shrink-0" />
-                <span>{event.startTime}</span>
-              </div>
-            )}
-          </div>
-
-          {featured && event.description && (
-            <p className="text-sm text-[#575E5B] line-clamp-2 pt-2 leading-relaxed">
-              {event.description}
-            </p>
-          )}
-        </div>
+    <article className="event-poster">
+      <div className="event-date">
+        <time dateTime={event.startTime}>{parts}</time>
+        <span>
+          {event.status === "CANCELLED"
+            ? "Đã hủy"
+            : past
+              ? "Đã diễn ra"
+              : "Sắp diễn ra"}
+        </span>
       </div>
-
-      {/* Footer CTA */}
-      <div className="p-6 pt-0">
-        <button
-          onClick={() => onRegister && onRegister(event.id)}
-          disabled={registering}
-          className="w-full py-2.5 px-4 bg-[#181C1B] hover:bg-[#12674D] text-white text-xs uppercase tracking-wider font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-        >
-          <span>{registering ? 'Đang xử lý...' : 'Đăng ký tham gia'}</span>
-          <ArrowRight size={14} />
-        </button>
+      <div className="event-body">
+        <p className="eyebrow">
+          {event.organizer ||
+            event.club?.name ||
+            "Đơn vị tổ chức đang cập nhật"}
+        </p>
+        <h3>{event.title}</h3>
+        <p>{event.description}</p>
+        <div className="event-location">
+          <MapPin size={18} />
+          <span>{event.location || "Địa điểm đang cập nhật"}</span>
+        </div>
+        {event.datePrecision !== "DAY" && valid && (
+          <p>
+            {new Intl.DateTimeFormat("vi-VN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              timeZone: "Asia/Ho_Chi_Minh",
+            }).format(date)}
+          </p>
+        )}
+      </div>
+      <div className="event-footer">
+        {event.sourceUrl ? (
+          <a
+            href={event.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-link"
+          >
+            Đọc bài viết nguồn <ArrowUpRight size={19} />
+          </a>
+        ) : (
+          <span>Nguồn đang cập nhật</span>
+        )}
+        {canRegister && (
+          <button
+            onClick={() => onRegister(event.id)}
+            disabled={registering}
+            className="editorial-cta"
+          >
+            {registering ? "Đang xử lý…" : "Đăng ký tham gia"}
+          </button>
+        )}
       </div>
     </article>
   );
