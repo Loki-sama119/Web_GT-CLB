@@ -36,6 +36,7 @@ lerna-debug.log*
 # Database & Uploads
 backups/
 *.sql
+!backend/prisma/migrations/**
 backend/uploads/
 backend/prisma/*.db
 backend/prisma/*.db-journal
