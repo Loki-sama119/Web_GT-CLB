@@ -3,10 +3,10 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { 
-  UsersRound, CalendarDays, Clock, MapPin, Mail, Phone, Flame, 
-  CheckCircle2, AlertCircle, Send, X, ArrowLeft, ShieldCheck, Image as ImageIcon, 
-  UploadCloud, Trash2, Sparkles, GraduationCap, ArrowRight
-} from 'lucide-react';
+  UsersThree, Clock, MapPin, EnvelopeSimple, Phone, Flame, 
+  CheckCircle, WarningCircle, PaperPlaneTilt, X, ArrowLeft, ShieldCheck, 
+  Image as ImageIcon, Sparkle, ArrowRight, CalendarDots
+} from '@phosphor-icons/react';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import ClubLogo from '../../components/ui/ClubLogo';
@@ -122,7 +122,7 @@ export default function ClubDetailPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center space-y-4">
         <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
-          <AlertCircle className="w-6 h-6" />
+          <WarningCircle size={28} weight="duotone" />
         </div>
         <h2 className="text-xl font-bold text-slate-900">{error || 'Không tìm thấy câu lạc bộ'}</h2>
         <Link to="/clubs">
@@ -139,11 +139,14 @@ export default function ClubDetailPage() {
 
   return (
     <div className="pb-20 space-y-8">
-      {/* 1. Header Banner */}
-      <div className="relative campus-hero-gradient text-white py-12 sm:py-16">
+      {/* 1. Header Banner — Real Campus Organization Profile */}
+      <div className="relative bg-[#142B49] text-white py-12 sm:py-16 overflow-hidden">
+        {/* Subtle decorative background pattern */}
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#167C66_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Link to="/clubs" className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white mb-6 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Danh sách câu lạc bộ
+            <ArrowLeft size={16} /> Danh sách câu lạc bộ
           </Link>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
@@ -157,14 +160,19 @@ export default function ClubDetailPage() {
 
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="navy" size="sm" className="bg-white/10 text-white border-white/20">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-white/10 text-white border border-white/20">
                   {club.category?.name}
-                </Badge>
+                </span>
                 {openCampaigns.length > 0 && (
-                  <Badge variant="warning" size="sm" icon={Flame}>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-[#F3B846] text-[#142B49]">
+                    <Flame size={14} weight="fill" className="text-amber-700" />
                     Đang tuyển thành viên
-                  </Badge>
+                  </span>
                 )}
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-emerald-300 bg-emerald-950/40 border border-emerald-500/30">
+                  <ShieldCheck size={14} weight="bold" />
+                  Đoàn Thanh niên BAFU công nhận
+                </span>
               </div>
               <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">{club.name}</h1>
               <p className="text-slate-200 text-xs sm:text-sm max-w-2xl leading-relaxed">{club.shortDescription}</p>
@@ -180,10 +188,10 @@ export default function ClubDetailPage() {
           <div className="lg:col-span-8 space-y-8">
             {/* Đợt tuyển đang mở (Nổi bật) */}
             {openCampaigns.length > 0 && (
-              <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-amber-50/90 via-white to-emerald-50/50 border border-amber-200 shadow-xs space-y-4">
+              <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-amber-50/80 via-white to-emerald-50/40 border border-amber-200 shadow-xs space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-amber-900 font-bold text-xs uppercase tracking-wider">
-                    <Flame className="w-4 h-4 text-amber-600 fill-amber-500" /> Đợt tuyển đang diễn ra
+                    <Flame size={16} weight="fill" className="text-amber-600" /> Đợt tuyển đang diễn ra
                   </div>
                   <span className="text-xs font-semibold text-slate-500">
                     Hạn nộp: {new Date(openCampaigns[0].endDate).toLocaleDateString('vi-VN')}
@@ -198,7 +206,7 @@ export default function ClubDetailPage() {
                     {openCampaigns[0].description}
                   </p>
                   {openCampaigns[0].requirements && (
-                    <div className="mt-3 p-4 bg-white/90 rounded-2xl border border-amber-200/80 text-xs text-slate-700 space-y-1">
+                    <div className="mt-3 p-4 bg-white rounded-xl border border-amber-200/80 text-xs text-slate-700 space-y-1">
                       <div className="font-bold text-slate-900">Yêu cầu & Tiêu chí xét tuyển:</div>
                       <div className="whitespace-pre-line text-slate-600 leading-relaxed">{openCampaigns[0].requirements}</div>
                     </div>
@@ -209,28 +217,27 @@ export default function ClubDetailPage() {
                   <span className="text-xs font-semibold text-slate-600">
                     Chỉ tiêu tuyển sinh: <strong className="text-slate-900">{openCampaigns[0].targetQuantity} sinh viên</strong>
                   </span>
-                  <Button
-                    variant="success"
-                    size="md"
-                    icon={Send}
+                  <button
                     onClick={() => handleOpenApplyModal(openCampaigns[0])}
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs sm:text-sm shadow-xs transition-all cursor-pointer active:scale-98"
                   >
-                    Ứng tuyển vào CLB ngay
-                  </Button>
+                    <PaperPlaneTilt size={16} weight="bold" />
+                    <span>Ứng tuyển vào CLB ngay</span>
+                  </button>
                 </div>
               </div>
             )}
 
             {/* Giới thiệu chi tiết */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-4">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-4">
               <h2 className="text-lg sm:text-xl font-bold text-[#142B49] tracking-tight">Giới Thiệu & Mục Tiêu Hoạt Động</h2>
               <div className="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line">
                 {club.description}
               </div>
 
               {club.meetingSchedule && (
-                <div className="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3">
-                  <Clock className="w-5 h-5 text-[#167C66] shrink-0 mt-0.5" />
+                <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-3">
+                  <Clock size={20} weight="duotone" className="text-[#167C66] shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-bold text-slate-900 text-xs sm:text-sm">Lịch sinh hoạt thường kỳ</h4>
                     <p className="text-xs text-slate-600 mt-0.5">{club.meetingSchedule}</p>
@@ -240,14 +247,14 @@ export default function ClubDetailPage() {
             </div>
 
             {/* Ban Chủ Nhiệm */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-5">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-5">
               <h2 className="text-lg sm:text-xl font-bold text-[#142B49] tracking-tight">Ban Chủ Nhiệm Câu Lạc Bộ</h2>
               {leaders.length === 0 ? (
                 <p className="text-xs text-slate-400">Đang cập nhật danh sách ban điều hành.</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {leaders.map((m) => (
-                    <div key={m.id} className="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/50 flex items-center gap-3.5">
+                    <div key={m.id} className="p-4 rounded-xl border border-[#E2E8F0] bg-slate-50/50 flex items-center gap-3.5">
                       <div className="w-11 h-11 rounded-xl bg-[#142B49] text-white font-bold flex items-center justify-center text-sm shadow-2xs shrink-0">
                         {m.user?.studentProfile?.fullName?.charAt(0) || 'L'}
                       </div>
@@ -269,7 +276,7 @@ export default function ClubDetailPage() {
             </div>
 
             {/* Album Hoạt Động & Khoảnh Khắc CLB */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-5">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-5">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-lg sm:text-xl font-bold text-[#142B49] tracking-tight">
@@ -277,12 +284,14 @@ export default function ClubDetailPage() {
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">Hình ảnh thực tế từ các chương trình, giải đấu và sự kiện thường niên</p>
                 </div>
-                <Badge variant="neutral" size="sm">{albumImages.length} bức ảnh</Badge>
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600">
+                  {albumImages.length} bức ảnh
+                </span>
               </div>
 
               {albumImages.length === 0 ? (
-                <div className="py-10 text-center rounded-2xl bg-slate-50 border border-slate-100 text-slate-400 space-y-2">
-                  <ImageIcon className="w-8 h-8 mx-auto text-slate-300" />
+                <div className="py-10 text-center rounded-xl bg-slate-50 border border-slate-100 text-slate-400 space-y-2">
+                  <ImageIcon size={32} weight="duotone" className="mx-auto text-slate-300" />
                   <p className="text-xs">Chưa có hình ảnh nào trong album hoạt động.</p>
                 </div>
               ) : (
@@ -313,7 +322,7 @@ export default function ClubDetailPage() {
 
           {/* Cột phải: Thông tin liên hệ & Đăng ký nhanh (4 cột) */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-2xs space-y-5 sticky top-20">
+            <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-xs space-y-5 sticky top-24">
               <h3 className="font-bold text-slate-900 text-base border-b border-slate-100 pb-3">
                 Thông Tin Câu Lạc Bộ
               </h3>
@@ -329,40 +338,40 @@ export default function ClubDetailPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500 font-medium">Trạng thái:</span>
-                  <Badge variant="success" size="sm">Đang hoạt động</Badge>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Đang hoạt động
+                  </span>
                 </div>
               </div>
 
               <div className="pt-3 border-t border-slate-100 space-y-2.5 text-xs text-slate-600">
                 {club.contactEmail && (
                   <div className="flex items-center gap-2.5">
-                    <Mail className="w-4 h-4 text-[#167C66] shrink-0" />
+                    <EnvelopeSimple size={16} weight="bold" className="text-[#167C66] shrink-0" />
                     <span className="truncate">{club.contactEmail}</span>
                   </div>
                 )}
                 {club.contactPhone && (
                   <div className="flex items-center gap-2.5">
-                    <Phone className="w-4 h-4 text-[#167C66] shrink-0" />
+                    <Phone size={16} weight="bold" className="text-[#167C66] shrink-0" />
                     <span>{club.contactPhone}</span>
                   </div>
                 )}
                 <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-[#167C66] shrink-0 mt-0.5" />
+                  <MapPin size={16} weight="bold" className="text-[#167C66] shrink-0 mt-0.5" />
                   <span>Khuôn viên Trường ĐH Nông - Lâm Bắc Giang</span>
                 </div>
               </div>
 
               {openCampaigns.length > 0 && (
                 <div className="pt-2">
-                  <Button
-                    variant="success"
-                    size="md"
-                    className="w-full"
-                    icon={Send}
+                  <button
                     onClick={() => handleOpenApplyModal(openCampaigns[0])}
+                    className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-sm shadow-xs transition-all cursor-pointer active:scale-98"
                   >
-                    Nộp đơn ứng tuyển
-                  </Button>
+                    <PaperPlaneTilt size={16} weight="bold" />
+                    <span>Nộp đơn ứng tuyển</span>
+                  </button>
                 </div>
               )}
             </div>
@@ -382,20 +391,25 @@ export default function ClubDetailPage() {
           {submitSuccess ? (
             <div className="py-8 text-center space-y-4">
               <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
-                <CheckCircle2 className="w-8 h-8" />
+                <CheckCircle size={36} weight="fill" />
               </div>
               <h4 className="text-lg font-bold text-slate-900">Nộp Hồ Sơ Thành Công!</h4>
               <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
                 Đơn ứng tuyển của bạn đã được chuyển đến Ban chủ nhiệm {club.name}. Bạn có thể theo dõi tiến độ xét duyệt trực tuyến tại Bảng điều khiển sinh viên.
               </p>
               <div className="pt-2 flex justify-center gap-3">
-                <Button variant="outline" size="sm" onClick={() => setSelectedCampaign(null)}>
+                <button
+                  onClick={() => setSelectedCampaign(null)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs cursor-pointer"
+                >
                   Đóng
-                </Button>
-                <Link to="/student/dashboard">
-                  <Button variant="success" size="sm" icon={ArrowRight} iconPosition="right">
-                    Xem hồ sơ của tôi
-                  </Button>
+                </button>
+                <Link
+                  to="/student/dashboard"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs shadow-xs"
+                >
+                  <span>Xem hồ sơ của tôi</span>
+                  <ArrowRight size={14} weight="bold" />
                 </Link>
               </div>
             </div>
@@ -403,7 +417,7 @@ export default function ClubDetailPage() {
             <form onSubmit={handleSubmitApplication} className="space-y-5">
               {submitError && (
                 <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <WarningCircle size={16} weight="fill" className="shrink-0" />
                   <span>{submitError}</span>
                 </div>
               )}
@@ -499,12 +513,21 @@ export default function ClubDetailPage() {
               })}
 
               <div className="pt-4 flex items-center justify-end gap-2.5 border-t border-slate-100">
-                <Button variant="outline" size="sm" onClick={() => setSelectedCampaign(null)}>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCampaign(null)}
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs cursor-pointer"
+                >
                   Hủy bỏ
-                </Button>
-                <Button type="submit" variant="success" size="sm" loading={submitting} icon={Send}>
-                  Gửi đơn ứng tuyển
-                </Button>
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                >
+                  <PaperPlaneTilt size={16} weight="bold" />
+                  <span>{submitting ? 'Đang gửi...' : 'Gửi đơn ứng tuyển'}</span>
+                </button>
               </div>
             </form>
           )}
@@ -522,7 +545,7 @@ export default function ClubDetailPage() {
             className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors cursor-pointer"
             aria-label="Đóng ảnh"
           >
-            <X className="w-6 h-6" />
+            <X size={24} />
           </button>
           <div className="max-w-4xl max-h-[85vh] flex flex-col items-center gap-3" onClick={(e) => e.stopPropagation()}>
             <img

@@ -1,39 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, GraduationCap, ShieldCheck, Heart } from 'lucide-react';
+import { MapPin, Phone, EnvelopeSimple } from '@phosphor-icons/react';
+import BrandWordmark from './ui/BrandWordmark';
 
 export default function Footer() {
   return (
     <footer className="bg-[#0E1F35] text-slate-300 pt-16 pb-10 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
-          {/* Cột 1: Thông tin trường (5 cột) */}
+          {/* Cột 1: Nhận diện & Thông tin trường (5 cột) */}
           <div className="md:col-span-5 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#142B49] border border-slate-700 flex items-center justify-center text-white">
-                <GraduationCap className="w-6 h-6 text-[#F3B846]" />
-              </div>
-              <div>
-                <span className="text-lg font-black text-white tracking-tight">
-                  BAFU <span className="text-[#167C66]">ClubPortal</span>
-                </span>
-                <div className="text-[11px] text-slate-400 font-medium">Trường Đại học Nông - Lâm Bắc Giang</div>
-              </div>
-            </div>
-            <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
+            <BrandWordmark variant="dark" size="default" />
+            <p className="text-xs text-slate-400 leading-relaxed max-w-sm pt-1">
               Hệ thống kết nối, hỗ trợ tuyển thành viên trực tuyến và số hóa toàn diện hoạt động của các câu lạc bộ, đội, nhóm sinh viên BAFU.
             </p>
             <div className="space-y-2 text-xs text-slate-400 pt-1">
               <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#167C66] shrink-0 mt-0.5" />
+                <MapPin size={16} className="text-[#167C66] shrink-0 mt-0.5" />
                 <span>Thị xã Việt Yên, Tỉnh Bắc Giang</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#167C66] shrink-0" />
+                <Phone size={16} className="text-[#167C66] shrink-0" />
                 <span>(0204) 3874 112 — Văn phòng Đoàn Thanh niên</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#167C66] shrink-0" />
+                <EnvelopeSimple size={16} className="text-[#167C66] shrink-0" />
                 <span>doanthanhnien@bafu.edu.vn</span>
               </div>
             </div>
@@ -98,7 +89,7 @@ export default function Footer() {
         {/* Bản quyền & Tiêu chuẩn */}
         <div className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <div>
-            © {new Date().getFullYear()} Trường Đại học Nông - Lâm Bắc Giang. Hệ thống quản trị nội bộ Đoàn trường.
+            © {new Date().getFullYear()} Trường Đại học Nông - Lâm Bắc Giang. Nhận diện dự án BAFU Club Portal.
           </div>
           <div className="flex items-center gap-4">
             <Link to="/privacy-policy" className="hover:text-slate-300 transition-colors">

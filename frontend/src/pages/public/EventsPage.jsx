@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { CalendarDays, Clock, MapPin, UsersRound, CheckCircle2, ArrowRight, Sparkles, X } from 'lucide-react';
+import { CalendarDots, Clock, MapPin, UsersThree, CheckCircle, ArrowRight, Sparkle, X } from '@phosphor-icons/react';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import EmptyState from '../../components/ui/EmptyState';
@@ -50,9 +50,9 @@ export default function EventsPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Header Banner */}
-      <div className="campus-hero-gradient rounded-3xl p-8 sm:p-12 text-white shadow-md space-y-3 relative overflow-hidden">
+      <div className="bg-[#142B49] rounded-2xl p-8 sm:p-12 text-white shadow-xs space-y-3 relative overflow-hidden">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-semibold uppercase tracking-wider backdrop-blur-md border border-white/20">
-          <Sparkles className="w-3.5 h-3.5 text-[#F3B846]" />
+          <Sparkle size={14} weight="fill" className="text-[#F3B846]" />
           <span>Hoạt động phong trào sinh viên</span>
         </div>
         <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
@@ -64,13 +64,13 @@ export default function EventsPage() {
       </div>
 
       {successMsg && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center justify-between shadow-2xs animate-in fade-in">
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center justify-between shadow-2xs animate-in fade-in">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle size={18} weight="fill" className="text-emerald-600 shrink-0" />
             <span>{successMsg}</span>
           </div>
           <button onClick={() => setSuccessMsg('')} className="text-emerald-500 hover:text-emerald-800 cursor-pointer">
-            <X className="w-4 h-4" />
+            <X size={16} />
           </button>
         </div>
       )}
@@ -83,7 +83,7 @@ export default function EventsPage() {
         </div>
       ) : events.length === 0 ? (
         <EmptyState
-          icon={CalendarDays}
+          icon={CalendarDots}
           title="Chưa có sự kiện nào sắp diễn ra"
           description="Hiện tại các câu lạc bộ chưa công bố sự kiện mới. Vui lòng quay lại sau."
         />
@@ -92,13 +92,13 @@ export default function EventsPage() {
           {events.map((ev) => (
             <div
               key={ev.id}
-              className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-2xs flex flex-col justify-between campus-card-hover space-y-4"
+              className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-xs flex flex-col justify-between hover:border-[#167C66]/50 transition-all space-y-4"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
-                  <Badge variant="navy" size="sm">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-[#142B49]/10 text-[#142B49]">
                     {ev.club?.name}
-                  </Badge>
+                  </span>
                   <span className="text-xs text-slate-500 font-semibold">
                     {ev._count?.registrations || 0} đã đăng ký
                   </span>
@@ -114,26 +114,24 @@ export default function EventsPage() {
 
                 <div className="pt-2 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
                   <div className="flex items-center gap-2">
-                    <CalendarDays className="w-4 h-4 text-[#167C66] shrink-0" />
+                    <CalendarDots size={16} weight="bold" className="text-[#167C66] shrink-0" />
                     <span>{new Date(ev.startTime).toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' })}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-[#167C66] shrink-0" />
+                    <MapPin size={16} weight="bold" className="text-[#167C66] shrink-0" />
                     <span className="truncate">{ev.location}</span>
                   </div>
                 </div>
               </div>
 
               <div className="pt-4 border-t border-slate-100">
-                <Button
-                  variant="success"
-                  size="md"
-                  loading={registeringId === ev.id}
+                <button
+                  disabled={registeringId === ev.id}
                   onClick={() => handleRegisterEvent(ev.id)}
-                  className="w-full"
+                  className="w-full py-2.5 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs shadow-xs transition-colors cursor-pointer disabled:opacity-50"
                 >
-                  Đăng ký tham gia
-                </Button>
+                  {registeringId === ev.id ? 'Đang đăng ký...' : 'Đăng ký tham gia'}
+                </button>
               </div>
             </div>
           ))}

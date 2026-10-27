@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
-  LogIn, AlertCircle, Eye, EyeOff, GraduationCap, ShieldCheck, 
-  UsersRound, Mail, Lock, Sparkles, Compass, ArrowRight, CheckCircle2
-} from 'lucide-react';
-import Button from '../../components/ui/Button';
+  SignIn, WarningCircle, Eye, EyeSlash, ShieldCheck, 
+  UsersThree, EnvelopeSimple, Lock, Sparkle, Compass, ArrowRight, CheckCircle, User
+} from '@phosphor-icons/react';
+import BrandWordmark from '../../components/ui/BrandWordmark';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -13,9 +13,6 @@ export default function LoginPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const redirectPath = searchParams.get('redirect') || '/';
-
-  // Quản lý hiển thị tài khoản demo: Chỉ cho phép trong môi trường development, tuyệt đối không kích hoạt trên production
-  const isDemoMode = Boolean(import.meta.env.DEV);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +22,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return; // Ngăn chặn double submit
+    if (loading) return;
     setError('');
     setLoading(true);
 
@@ -39,7 +36,6 @@ export default function LoginPage() {
     }
   };
 
-  // Helper điền nhanh tài khoản thử nghiệm (chỉ hoạt động khi isDemoMode)
   const fillDemo = (demoEmail, demoPass) => {
     setEmail(demoEmail);
     setPassword(demoPass);
@@ -47,8 +43,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#F5F7FA]">
-      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-xl border border-slate-200/90 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
+    <div className="min-h-[calc(100vh-4.75rem)] flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#F5F7FA]">
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-sm border border-[#E2E8F0] overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
         
         {/* ================= CỘT TRÁI: NHẬN DIỆN & BRANDING (DESKTOP) ================= */}
         <div className="relative hidden lg:flex lg:col-span-5 xl:col-span-5 flex-col justify-between p-10 bg-[#142B49] text-white">
@@ -57,20 +53,15 @@ export default function LoginPage() {
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#F3B846]/10 rounded-full blur-3xl pointer-events-none" />
 
           {/* Top Wordmark */}
-          <div className="relative z-10 flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-[#167C66] flex items-center justify-center text-white shadow-md shadow-[#167C66]/30">
-              <GraduationCap className="w-6 h-6 text-[#F3B846]" />
-            </div>
-            <div>
-              <div className="font-extrabold text-sm uppercase tracking-wider text-white">Đại Học Nông - Lâm</div>
-              <div className="text-xs text-slate-300 font-medium">Bắc Giang (BAFU) Portal</div>
-            </div>
+          <div className="relative z-10">
+            <BrandWordmark variant="dark" />
           </div>
 
           {/* Center Pitch Content */}
           <div className="relative z-10 space-y-5 my-auto py-8">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-[#F3B846] text-xs font-semibold backdrop-blur-xs border border-white/10">
-              <Sparkles className="w-3.5 h-3.5" /> Nền tảng hoạt động sinh viên
+              <Sparkle size={14} weight="fill" />
+              <span>Nền tảng hoạt động sinh viên</span>
             </div>
             <h2 className="text-3xl font-black text-white leading-tight tracking-tight">
               Khám phá đam mê.<br />
@@ -81,11 +72,11 @@ export default function LoginPage() {
             </p>
 
             <div className="grid grid-cols-2 gap-3 pt-3">
-              <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-0.5">
+              <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
                 <div className="text-xl font-black text-white">10+</div>
                 <div className="text-[11px] text-slate-300">CLB trực thuộc trường</div>
               </div>
-              <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-0.5">
+              <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
                 <div className="text-xl font-black text-[#F3B846]">100%</div>
                 <div className="text-[11px] text-slate-300">Ứng tuyển trực tuyến</div>
               </div>
@@ -96,7 +87,8 @@ export default function LoginPage() {
           <div className="relative z-10 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
             <span>© 2026 Đoàn Thanh Niên - BAFU</span>
             <Link to="/clubs" className="text-slate-300 hover:text-white flex items-center gap-1 font-semibold transition-colors">
-              Khám phá CLB <ArrowRight className="w-3.5 h-3.5" />
+              <span>Khám phá CLB</span>
+              <ArrowRight size={14} weight="bold" />
             </Link>
           </div>
         </div>
@@ -106,14 +98,8 @@ export default function LoginPage() {
           
           {/* Header Mobile Brand & Title */}
           <div className="space-y-2">
-            <div className="flex items-center gap-2 lg:hidden mb-4">
-              <div className="w-10 h-10 rounded-xl bg-[#142B49] text-white flex items-center justify-center shadow-xs">
-                <GraduationCap className="w-6 h-6 text-[#F3B846]" />
-              </div>
-              <div>
-                <div className="text-xs font-bold text-slate-800 uppercase">Trường ĐH Nông - Lâm Bắc Giang</div>
-                <div className="text-[11px] text-slate-500">Cổng Thông Tin Câu Lạc Bộ</div>
-              </div>
+            <div className="lg:hidden mb-4">
+              <BrandWordmark variant="light" />
             </div>
 
             <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#167C66] uppercase tracking-wider">
@@ -130,8 +116,8 @@ export default function LoginPage() {
 
           {/* Thông báo lỗi an toàn */}
           {error && (
-            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-start gap-2.5 animate-in fade-in">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
+            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-start gap-2.5 animate-in fade-in">
+              <WarningCircle size={16} weight="fill" className="shrink-0 mt-0.5 text-rose-600" />
               <div className="leading-relaxed font-semibold">{error}</div>
             </div>
           )}
@@ -141,7 +127,7 @@ export default function LoginPage() {
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">Email tài khoản</label>
               <div className="relative">
-                <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <EnvelopeSimple size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="email"
                   required
@@ -149,7 +135,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="ten@bafu.edu.vn"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] transition-all bg-slate-50/50 focus:bg-white"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] transition-all bg-slate-50/50 focus:bg-white"
                 />
               </div>
             </div>
@@ -159,7 +145,7 @@ export default function LoginPage() {
                 <label className="block text-xs font-bold text-slate-700">Mật khẩu</label>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
@@ -167,7 +153,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-11 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] transition-all bg-slate-50/50 focus:bg-white"
+                  className="w-full pl-10 pr-11 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] transition-all bg-slate-50/50 focus:bg-white"
                 />
                 <button
                   type="button"
@@ -175,22 +161,19 @@ export default function LoginPage() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1 rounded-md"
                   aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeSlash size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
 
-            <Button
+            <button
               type="submit"
-              variant="success"
-              size="lg"
-              loading={loading}
               disabled={loading}
-              className="w-full text-sm font-bold shadow-sm mt-2"
-              icon={LogIn}
+              className="w-full py-3 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-sm shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
             >
-              Đăng nhập
-            </Button>
+              <SignIn size={18} weight="bold" />
+              <span>{loading ? 'Đang xác thực...' : 'Đăng nhập'}</span>
+            </button>
           </form>
 
           {/* Links Đăng ký & Khám phá CLB */}
@@ -203,7 +186,8 @@ export default function LoginPage() {
             </div>
             <div>
               <Link to="/clubs" className="inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-800 font-medium transition-colors">
-                <Compass className="w-4 h-4 text-[#167C66]" /> Quay về xem danh sách CLB
+                <Compass size={16} className="text-[#167C66]" />
+                <span>Quay về xem danh sách CLB</span>
               </Link>
             </div>
           </div>
@@ -212,7 +196,8 @@ export default function LoginPage() {
           {import.meta.env.DEV && (
             <div className="pt-4 border-t border-slate-100">
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-[#F3B846]" /> Tài khoản kiểm thử nhanh (Demo / Dev):
+                <Sparkle size={14} weight="fill" className="text-[#F3B846]" />
+                <span>Tài khoản kiểm thử nhanh (Demo / Dev):</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <button
@@ -221,7 +206,7 @@ export default function LoginPage() {
                   className="p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50/70 border border-slate-200 text-slate-700 text-xs font-bold text-left flex flex-col gap-0.5 cursor-pointer transition-colors"
                 >
                   <span className="flex items-center gap-1 text-amber-700 font-bold">
-                    <ShieldCheck className="w-3.5 h-3.5" /> Super Admin
+                    <ShieldCheck size={14} weight="bold" /> Super Admin
                   </span>
                   <span className="text-[10px] text-slate-500 truncate">admin@bafu.edu.vn</span>
                 </button>
@@ -232,7 +217,7 @@ export default function LoginPage() {
                   className="p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-200 text-slate-700 text-xs font-bold text-left flex flex-col gap-0.5 cursor-pointer transition-colors"
                 >
                   <span className="flex items-center gap-1 text-[#167C66] font-bold">
-                    <UsersRound className="w-3.5 h-3.5" /> Club Admin
+                    <UsersThree size={14} weight="bold" /> Club Admin
                   </span>
                   <span className="text-[10px] text-slate-500 truncate">it.leader@bafu.edu.vn</span>
                 </button>
@@ -243,7 +228,7 @@ export default function LoginPage() {
                   className="p-2.5 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200 text-slate-700 text-xs font-bold text-left flex flex-col gap-0.5 cursor-pointer transition-colors"
                 >
                   <span className="flex items-center gap-1 text-[#142B49] font-bold">
-                    <GraduationCap className="w-3.5 h-3.5" /> Sinh viên
+                    <User size={14} weight="bold" /> Sinh viên
                   </span>
                   <span className="text-[10px] text-slate-500 truncate">haidang.sv@bafu.edu.vn</span>
                 </button>

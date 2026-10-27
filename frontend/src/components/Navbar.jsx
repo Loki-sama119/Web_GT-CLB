@@ -2,22 +2,33 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
-  House, Compass, CalendarDays, LogIn, UserPlus, LogOut, 
-  LayoutDashboard, UsersRound, ShieldCheck, ChevronDown, Menu, X, GraduationCap
-} from 'lucide-react';
-import Button from './ui/Button';
+  House, 
+  Compass, 
+  CalendarDots, 
+  SignIn, 
+  UserPlus, 
+  SignOut, 
+  Gauge, 
+  UsersThree, 
+  ShieldCheck, 
+  CaretDown, 
+  List, 
+  X,
+  User
+} from '@phosphor-icons/react';
+import BrandWordmark from './ui/BrandWordmark';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     setDropdownOpen(false);
-    setMobileMenuOpen(false);
+    setMobileDrawerOpen(false);
     navigate('/');
   };
 
@@ -30,106 +41,117 @@ export default function Navbar() {
   const isClubAdmin = user?.role === 'SUPER_ADMIN' || (user?.memberships && user.memberships.some(m => ['LEADER', 'VICE_LEADER'].includes(m.role)));
 
   return (
-    <header className="sticky top-0 z-40 glass-nav border-b border-slate-200/80 shadow-2xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-3 group focus:outline-hidden">
-          <div className="w-10 h-10 rounded-xl bg-[#142B49] text-white flex items-center justify-center font-black text-xl shadow-xs group-hover:bg-[#167C66] transition-colors">
-            <GraduationCap className="w-6 h-6 text-[#F3B846]" />
-          </div>
-          <div>
-            <div className="font-extrabold text-[#142B49] tracking-tight text-lg leading-tight flex items-center gap-1.5">
-              BAFU <span className="text-[#167C66] font-bold text-base">ClubPortal</span>
-            </div>
-            <div className="text-[11px] text-slate-500 font-medium">Đại Học Nông - Lâm Bắc Giang</div>
-          </div>
+    <header className="sticky top-0 z-40 bg-white border-b border-[#E2E8F0] shadow-xs">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[76px] flex items-center justify-between">
+        {/* Brand Logo & Wordmark */}
+        <Link to="/" className="flex items-center focus:outline-hidden">
+          <BrandWordmark size="default" />
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-1.5">
           <Link
             to="/"
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 relative ${
               isActive('/')
-                ? 'text-[#167C66] bg-[#167C66]/10 font-extrabold'
-                : 'text-slate-600 hover:text-[#142B49] hover:bg-slate-100/80'
+                ? 'text-[#167C66] bg-[#167C66]/10 font-bold'
+                : 'text-slate-600 hover:text-[#142B49] hover:bg-slate-100/70'
             }`}
           >
-            <House className="w-4 h-4" />
-            Trang chủ
+            <House size={18} weight={isActive('/') ? 'bold' : 'regular'} />
+            <span>Trang chủ</span>
+            {isActive('/') && (
+              <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-[#167C66] rounded-full" />
+            )}
           </Link>
+
           <Link
             to="/clubs"
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 relative ${
               isActive('/clubs')
-                ? 'text-[#167C66] bg-[#167C66]/10 font-extrabold'
-                : 'text-slate-600 hover:text-[#142B49] hover:bg-slate-100/80'
+                ? 'text-[#167C66] bg-[#167C66]/10 font-bold'
+                : 'text-slate-600 hover:text-[#142B49] hover:bg-slate-100/70'
             }`}
           >
-            <Compass className="w-4 h-4" />
-            Khám phá CLB
+            <Compass size={18} weight={isActive('/clubs') ? 'bold' : 'regular'} />
+            <span>Khám phá CLB</span>
+            {isActive('/clubs') && (
+              <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-[#167C66] rounded-full" />
+            )}
           </Link>
+
           <Link
             to="/events"
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 relative ${
               isActive('/events')
-                ? 'text-[#167C66] bg-[#167C66]/10 font-extrabold'
-                : 'text-slate-600 hover:text-[#142B49] hover:bg-slate-100/80'
+                ? 'text-[#167C66] bg-[#167C66]/10 font-bold'
+                : 'text-slate-600 hover:text-[#142B49] hover:bg-slate-100/70'
             }`}
           >
-            <CalendarDays className="w-4 h-4" />
-            Sự kiện
+            <CalendarDots size={18} weight={isActive('/events') ? 'bold' : 'regular'} />
+            <span>Sự kiện</span>
+            {isActive('/events') && (
+              <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-[#167C66] rounded-full" />
+            )}
           </Link>
         </nav>
 
-        {/* Right Action: Auth Buttons or User Dropdown & Mobile Hamburger */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right Section: Auth Actions or User Profile Menu */}
+        <div className="hidden md:flex items-center gap-3">
           {user ? (
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 rounded-2xl hover:bg-slate-100/80 transition-all border border-slate-200/90 bg-white shadow-2xs cursor-pointer"
+                className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-[#E2E8F0] hover:border-slate-300 bg-slate-50 hover:bg-slate-100/80 transition-all text-left focus:outline-hidden"
               >
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#142B49] text-white font-bold flex items-center justify-center text-xs shadow-2xs">
-                  {user.studentProfile?.fullName?.charAt(0) || user.email.charAt(0).toUpperCase()}
+                <div className="w-8 h-8 rounded-lg bg-[#142B49] text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+                  {user.studentProfile?.fullName ? user.studentProfile.fullName[0].toUpperCase() : 'U'}
                 </div>
-                <div className="text-left hidden sm:block">
-                  <div className="text-xs font-bold text-slate-800 leading-tight max-w-[130px] truncate">
+                <div className="hidden lg:block">
+                  <div className="text-xs font-bold text-[#142B49] truncate max-w-[140px]">
                     {user.studentProfile?.fullName || user.email.split('@')[0]}
                   </div>
-                  <div className="text-[10px] text-slate-500 font-medium capitalize">
-                    {user.role === 'SUPER_ADMIN' ? 'Ban Quản Trị' : (user.studentProfile?.studentCode || 'Sinh viên')}
+                  <div className="text-[10px] text-slate-500 font-medium">
+                    {user.role === 'SUPER_ADMIN' ? 'Ban Quản Trị' : user.studentProfile?.studentCode || 'Sinh viên'}
                   </div>
                 </div>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                <CaretDown size={14} className="text-slate-400" />
               </button>
 
               {/* Dropdown Menu */}
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200/80 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                  <div className="px-4 py-2.5 border-b border-slate-100">
-                    <div className="text-xs font-bold text-slate-900">{user.studentProfile?.fullName || 'Tài khoản'}</div>
-                    <div className="text-[11px] text-slate-500 truncate">{user.email}</div>
+                <div 
+                  className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-150"
+                  onMouseLeave={() => setDropdownOpen(false)}
+                >
+                  <div className="px-4 py-3 border-b border-slate-100">
+                    <p className="text-xs text-slate-400 font-medium">Đăng nhập với tư cách</p>
+                    <p className="text-sm font-bold text-[#142B49] truncate">
+                      {user.studentProfile?.fullName || user.email}
+                    </p>
+                    <span className="inline-block mt-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700">
+                      {user.role === 'SUPER_ADMIN' ? 'Super Admin BAFU' : isClubAdmin ? 'Ban Chủ Nhiệm CLB' : 'Hội Viên Sinh Viên'}
+                    </span>
                   </div>
 
-                  <div className="p-1.5 space-y-0.5">
+                  <div className="py-1">
                     <Link
                       to="/student/dashboard"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-[#167C66]/10 hover:text-[#167C66] transition-colors"
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#167C66] transition-colors"
                     >
-                      <LayoutDashboard className="w-4 h-4 text-slate-400" />
-                      Cổng thông tin sinh viên
+                      <Gauge size={16} />
+                      Dashboard Sinh Viên
                     </Link>
 
                     {isClubAdmin && (
                       <Link
                         to="/club-admin"
                         onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-[#167C66]/10 hover:text-[#167C66] transition-colors"
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#167C66] transition-colors"
                       >
-                        <UsersRound className="w-4 h-4 text-[#167C66]" />
-                        Quản lý CLB (Ban chủ nhiệm)
+                        <UsersThree size={16} />
+                        Quản Lý CLB (Admin)
                       </Link>
                     )}
 
@@ -137,157 +159,220 @@ export default function Navbar() {
                       <Link
                         to="/admin/dashboard"
                         onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-[#142B49]/10 hover:text-[#142B49] transition-colors"
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#167C66] transition-colors"
                       >
-                        <ShieldCheck className="w-4 h-4 text-amber-600" />
-                        Quản trị cấp trường
+                        <ShieldCheck size={16} />
+                        Quản Trị Hệ Thống
                       </Link>
                     )}
                   </div>
 
-                  <div className="my-1 border-t border-slate-100" />
-
-                  <div className="p-1.5">
+                  <div className="border-t border-slate-100 pt-1">
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer text-left"
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors text-left"
                     >
-                      <LogOut className="w-4 h-4" />
-                      Đăng xuất an toàn
+                      <SignOut size={16} />
+                      Đăng xuất
                     </button>
                   </div>
                 </div>
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-1.5 sm:gap-2.5">
+            <div className="flex items-center gap-2.5">
               <Link
                 to="/login"
-                className="px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-bold text-slate-700 hover:text-[#142B49] hover:bg-slate-100 rounded-xl transition-colors flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl text-sm font-semibold text-[#142B49] hover:text-[#167C66] hover:bg-slate-50 transition-colors flex items-center gap-1.5 border border-[#E2E8F0]"
               >
-                <LogIn className="w-3.5 h-3.5 text-slate-500" />
-                Đăng nhập
+                <SignIn size={18} />
+                <span>Đăng nhập</span>
               </Link>
               <Link
                 to="/register"
-                className="hidden sm:flex px-4 py-2 text-xs font-bold text-white bg-[#167C66] hover:bg-[#115E4D] rounded-xl shadow-xs transition-colors items-center gap-1.5"
+                className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-[#167C66] hover:bg-[#115E4D] transition-colors flex items-center gap-1.5 shadow-xs"
               >
-                <UserPlus className="w-4 h-4" />
-                Đăng ký
+                <UserPlus size={18} />
+                <span>Đăng ký</span>
               </Link>
             </div>
           )}
+        </div>
 
-          {/* Mobile Hamburger Button */}
+        {/* Mobile Hamburger Toggle & Quick Login */}
+        <div className="flex md:hidden items-center gap-2">
+          {!user && (
+            <Link
+              to="/login"
+              className="px-3 py-1.5 rounded-xl text-xs font-semibold text-[#142B49] border border-[#E2E8F0] hover:bg-slate-50 flex items-center gap-1"
+            >
+              <SignIn size={16} />
+              <span>Đăng nhập</span>
+            </Link>
+          )}
+          {user && (
+            <Link 
+              to="/student/dashboard" 
+              className="w-8 h-8 rounded-lg bg-[#142B49] text-white flex items-center justify-center font-bold text-xs"
+            >
+              {user.studentProfile?.fullName ? user.studentProfile.fullName[0].toUpperCase() : 'U'}
+            </Link>
+          )}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 cursor-pointer"
+            onClick={() => setMobileDrawerOpen(true)}
+            className="p-2 rounded-xl text-slate-600 hover:text-[#142B49] hover:bg-slate-100 transition-colors focus:outline-hidden"
             aria-label="Mở menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <List size={24} weight="bold" />
           </button>
         </div>
       </div>
 
       {/* Mobile Drawer Navigation */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200/80 bg-white px-4 py-4 space-y-3 shadow-lg animate-in slide-in-from-top-2 duration-200">
-          <div className="space-y-1">
-            <Link
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-bold ${
-                isActive('/') ? 'text-[#167C66] bg-[#167C66]/10' : 'text-slate-700'
-              }`}
-            >
-              <House className="w-4 h-4" />
-              Trang chủ
-            </Link>
-            <Link
-              to="/clubs"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-bold ${
-                isActive('/clubs') ? 'text-[#167C66] bg-[#167C66]/10' : 'text-slate-700'
-              }`}
-            >
-              <Compass className="w-4 h-4" />
-              Khám phá câu lạc bộ
-            </Link>
-            <Link
-              to="/events"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-bold ${
-                isActive('/events') ? 'text-[#167C66] bg-[#167C66]/10' : 'text-slate-700'
-              }`}
-            >
-              <CalendarDays className="w-4 h-4" />
-              Lịch sự kiện BAFU
-            </Link>
-          </div>
+      {mobileDrawerOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity" 
+            onClick={() => setMobileDrawerOpen(false)}
+          />
 
-          <div className="pt-3 border-t border-slate-100">
-            {user ? (
-              <div className="space-y-2">
-                <div className="px-3 py-1">
-                  <div className="text-xs font-bold text-slate-900">{user.studentProfile?.fullName}</div>
-                  <div className="text-[11px] text-slate-500">{user.email}</div>
+          {/* Drawer Panel */}
+          <div className="fixed inset-y-0 right-0 w-full max-w-xs bg-white shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-250">
+            {/* Drawer Header */}
+            <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between">
+              <BrandWordmark size="small" showSubtitle={false} />
+              <button 
+                onClick={() => setMobileDrawerOpen(false)}
+                className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                aria-label="Đóng menu"
+              >
+                <X size={20} weight="bold" />
+              </button>
+            </div>
+
+            {/* Drawer User Info (if logged in) */}
+            {user && (
+              <div className="p-4 bg-slate-50 border-b border-[#E2E8F0]">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#142B49] text-white flex items-center justify-center font-bold text-base shadow-xs">
+                    {user.studentProfile?.fullName ? user.studentProfile.fullName[0].toUpperCase() : 'U'}
+                  </div>
+                  <div className="overflow-hidden">
+                    <div className="text-sm font-bold text-[#142B49] truncate">
+                      {user.studentProfile?.fullName || user.email}
+                    </div>
+                    <div className="text-xs text-slate-500 font-medium">
+                      {user.role === 'SUPER_ADMIN' ? 'Ban Quản Trị Hệ Thống' : user.studentProfile?.studentCode || 'Sinh viên BAFU'}
+                    </div>
+                  </div>
                 </div>
-                <Link
-                  to="/student/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50"
-                >
-                  <LayoutDashboard className="w-4 h-4 text-slate-400" />
-                  Cổng sinh viên
-                </Link>
-                {isClubAdmin && (
-                  <Link
-                    to="/club-admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50"
-                  >
-                    <UsersRound className="w-4 h-4 text-[#167C66]" />
-                    Quản lý CLB
-                  </Link>
-                )}
-                {user.role === 'SUPER_ADMIN' && (
-                  <Link
-                    to="/admin/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50"
-                  >
-                    <ShieldCheck className="w-4 h-4 text-amber-600" />
-                    Quản trị toàn trường
-                  </Link>
-                )}
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Đăng xuất
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 text-xs font-bold text-center border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <LogIn className="w-4 h-4" />
-                  Đăng nhập
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 text-xs font-bold text-center text-white bg-[#167C66] hover:bg-[#115E4D] rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  Đăng ký
-                </Link>
               </div>
             )}
+
+            {/* Drawer Links */}
+            <div className="p-4 flex-1 overflow-y-auto space-y-1">
+              <Link
+                to="/"
+                onClick={() => setMobileDrawerOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                  isActive('/') ? 'text-[#167C66] bg-[#167C66]/10 font-bold' : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                <House size={20} weight={isActive('/') ? 'bold' : 'regular'} />
+                Trang chủ
+              </Link>
+
+              <Link
+                to="/clubs"
+                onClick={() => setMobileDrawerOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                  isActive('/clubs') ? 'text-[#167C66] bg-[#167C66]/10 font-bold' : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                <Compass size={20} weight={isActive('/clubs') ? 'bold' : 'regular'} />
+                Khám phá CLB
+              </Link>
+
+              <Link
+                to="/events"
+                onClick={() => setMobileDrawerOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                  isActive('/events') ? 'text-[#167C66] bg-[#167C66]/10 font-bold' : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                <CalendarDots size={20} weight={isActive('/events') ? 'bold' : 'regular'} />
+                Sự kiện
+              </Link>
+
+              {user && (
+                <div className="pt-4 mt-4 border-t border-[#E2E8F0] space-y-1">
+                  <div className="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    Không gian cá nhân
+                  </div>
+                  <Link
+                    to="/student/dashboard"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  >
+                    <Gauge size={20} />
+                    Dashboard Sinh Viên
+                  </Link>
+                  {isClubAdmin && (
+                    <Link
+                      to="/club-admin"
+                      onClick={() => setMobileDrawerOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                      <UsersThree size={20} />
+                      Quản Lý CLB (Admin)
+                    </Link>
+                  )}
+                  {user.role === 'SUPER_ADMIN' && (
+                    <Link
+                      to="/admin/dashboard"
+                      onClick={() => setMobileDrawerOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                      <ShieldCheck size={20} />
+                      Quản Trị Hệ Thống
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Drawer Footer Actions */}
+            <div className="p-4 border-t border-[#E2E8F0] space-y-2">
+              {user ? (
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-rose-200 text-rose-600 font-semibold text-sm hover:bg-rose-50 transition-colors"
+                >
+                  <SignOut size={18} />
+                  Đăng xuất
+                </button>
+              ) : (
+                <div className="space-y-2">
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-[#E2E8F0] text-[#142B49] font-semibold text-sm hover:bg-slate-50 transition-colors"
+                  >
+                    <SignIn size={18} />
+                    Đăng nhập
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#167C66] text-white font-semibold text-sm hover:bg-[#115E4D] transition-colors shadow-xs"
+                  >
+                    <UserPlus size={18} />
+                    Đăng ký
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 import { 
-  UsersRound, Clock, CheckCircle2, XCircle, 
-  AlertCircle, ArrowRight, Award, Edit3, Send, Camera, CalendarDays, 
-  MapPin, ClipboardList, GraduationCap, Sparkles, X, ChevronRight
-} from 'lucide-react';
+  UsersThree, Clock, CheckCircle, XCircle, 
+  WarningCircle, ArrowRight, PencilSimple, PaperPlaneTilt, Camera, CalendarDots, 
+  MapPin, ClipboardText, Sparkle, X, CaretRight
+} from '@phosphor-icons/react';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import EmptyState from '../../components/ui/EmptyState';
@@ -121,19 +121,52 @@ export default function StudentDashboard() {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'SUBMITTED':
-        return <Badge variant="info" size="sm" icon={Clock}>Đã nộp đơn</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+            <Clock size={14} weight="bold" />
+            Đã nộp đơn
+          </span>
+        );
       case 'UNDER_REVIEW':
-        return <Badge variant="warning" size="sm" icon={Clock}>Đang xét duyệt</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+            <Clock size={14} weight="bold" />
+            Đang xét duyệt
+          </span>
+        );
       case 'NEED_MORE_INFO':
-        return <Badge variant="warning" size="sm" icon={AlertCircle}>Cần bổ sung thông tin</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+            <WarningCircle size={14} weight="bold" />
+            Cần bổ sung thông tin
+          </span>
+        );
       case 'ACCEPTED':
-        return <Badge variant="success" size="sm" icon={CheckCircle2}>Đã trúng tuyển</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <CheckCircle size={14} weight="fill" />
+            Đã trúng tuyển
+          </span>
+        );
       case 'REJECTED':
-        return <Badge variant="danger" size="sm" icon={XCircle}>Chưa phù hợp</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+            <XCircle size={14} weight="fill" />
+            Chưa phù hợp
+          </span>
+        );
       case 'WITHDRAWN':
-        return <Badge variant="neutral" size="sm">Đã rút đơn</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-600">
+            Đã rút đơn
+          </span>
+        );
       default:
-        return <Badge variant="neutral" size="sm">{status}</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-600">
+            {status}
+          </span>
+        );
     }
   };
 
@@ -142,8 +175,8 @@ export default function StudentDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      {/* 1. Header Profile Greeting */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      {/* 1. Header Profile Greeting — Campus Engagement Identity */}
+      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-5">
           <div className="relative group shrink-0">
             {user?.studentProfile?.avatarUrl ? (
@@ -154,11 +187,11 @@ export default function StudentDashboard() {
               />
             ) : (
               <div className="w-18 h-18 rounded-2xl bg-[#142B49] text-white font-black text-2xl flex items-center justify-center shadow-xs">
-                {user?.studentProfile?.fullName?.charAt(0) || user.email.charAt(0).toUpperCase()}
+                {user?.studentProfile?.fullName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}
               </div>
             )}
             <label className="absolute -bottom-1 -right-1 p-1.5 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white cursor-pointer shadow-xs transition-all">
-              <Camera className="w-3.5 h-3.5" />
+              <Camera size={14} weight="bold" />
               <input 
                 type="file" 
                 accept="image/jpeg,image/png,image/webp" 
@@ -174,9 +207,9 @@ export default function StudentDashboard() {
               <h1 className="text-xl sm:text-2xl font-black text-[#142B49]">
                 {user?.studentProfile?.fullName || 'Sinh viên BAFU'}
               </h1>
-              <Badge variant="campus" size="sm">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
                 {user?.studentProfile?.studentCode || 'Sinh viên'}
-              </Badge>
+              </span>
             </div>
             <p className="text-xs text-slate-500">
               {user?.studentProfile?.faculty || 'Trường Đại học Nông - Lâm Bắc Giang'} • {user?.email}
@@ -189,10 +222,7 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          icon={Edit3}
+        <button
           onClick={() => {
             setProfileForm({
               fullName: user?.studentProfile?.fullName || '',
@@ -202,53 +232,55 @@ export default function StudentDashboard() {
             });
             setEditingProfile(true);
           }}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#E2E8F0] hover:bg-slate-50 text-slate-700 font-bold text-xs shadow-2xs transition-all cursor-pointer"
         >
-          Chỉnh sửa hồ sơ
-        </Button>
+          <PencilSimple size={16} weight="bold" />
+          <span>Chỉnh sửa hồ sơ</span>
+        </button>
       </div>
 
       {/* 2. Quick Stat Counters */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs flex items-center justify-between">
           <div>
             <div className="text-xs font-semibold text-slate-500">CLB Đang Tham Gia</div>
             <div className="text-2xl font-black text-[#142B49] mt-1">{activeMemberships.length}</div>
           </div>
           <div className="w-11 h-11 rounded-xl bg-[#142B49]/5 text-[#142B49] flex items-center justify-center font-bold">
-            <UsersRound className="w-5 h-5" />
+            <UsersThree size={22} weight="duotone" />
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs flex items-center justify-between">
           <div>
             <div className="text-xs font-semibold text-slate-500">Hồ Sơ Đã Nộp</div>
             <div className="text-2xl font-black text-[#167C66] mt-1">{applications.length}</div>
           </div>
           <div className="w-11 h-11 rounded-xl bg-[#167C66]/10 text-[#167C66] flex items-center justify-center font-bold">
-            <ClipboardList className="w-5 h-5" />
+            <ClipboardText size={22} weight="duotone" />
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs flex items-center justify-between">
           <div>
             <div className="text-xs font-semibold text-slate-500">Sự Kiện Đã Đăng Ký</div>
             <div className="text-2xl font-black text-amber-700 mt-1">{myEvents.length}</div>
           </div>
           <div className="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
-            <CalendarDays className="w-5 h-5" />
+            <CalendarDots size={22} weight="duotone" />
           </div>
         </div>
       </div>
 
       {/* Success Notification Alert */}
       {successMsg && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center justify-between shadow-2xs animate-in fade-in">
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center justify-between shadow-xs animate-in fade-in">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle size={18} weight="fill" className="text-emerald-600 shrink-0" />
             <span>{successMsg}</span>
           </div>
           <button onClick={() => setSuccessMsg('')} className="text-emerald-500 hover:text-emerald-800 cursor-pointer">
-            <X className="w-4 h-4" />
+            <X size={16} />
           </button>
         </div>
       )}
@@ -257,16 +289,18 @@ export default function StudentDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column: Applications List (8 cols) */}
         <div className="lg:col-span-8 space-y-6">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-5">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-5">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div>
                 <h2 className="text-base sm:text-lg font-bold text-[#142B49] tracking-tight">Hồ Sơ Ứng Tuyển Của Bạn</h2>
                 <p className="text-xs text-slate-500 mt-0.5">Theo dõi kết quả duyệt đơn trực tuyến từ Ban chủ nhiệm</p>
               </div>
-              <Link to="/clubs?recruiting=true">
-                <Button variant="ghost" size="sm" icon={ArrowRight} iconPosition="right">
-                  Ứng tuyển thêm
-                </Button>
+              <Link
+                to="/clubs?recruiting=true"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#167C66] hover:text-[#115E4D]"
+              >
+                <span>Ứng tuyển thêm</span>
+                <ArrowRight size={14} weight="bold" />
               </Link>
             </div>
 
@@ -274,7 +308,7 @@ export default function StudentDashboard() {
               <div className="py-12 text-center text-xs text-slate-400">Đang đồng bộ dữ liệu hồ sơ...</div>
             ) : applications.length === 0 ? (
               <EmptyState
-                icon={ClipboardList}
+                icon={ClipboardText}
                 title="Bạn chưa nộp hồ sơ ứng tuyển nào"
                 description="Khám phá các đợt tuyển thành viên đang mở và nộp đơn để trở thành hội viên chính thức."
                 actionLabel="Khám phá đợt tuyển"
@@ -285,7 +319,7 @@ export default function StudentDashboard() {
                 {applications.map((app) => (
                   <div
                     key={app.id}
-                    className="p-5 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-[#167C66]/40 transition-all space-y-3 shadow-2xs"
+                    className="p-5 rounded-xl border border-[#E2E8F0] bg-slate-50/50 hover:bg-white hover:border-[#167C66]/40 transition-all space-y-3 shadow-2xs"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div className="space-y-0.5">
@@ -301,7 +335,7 @@ export default function StudentDashboard() {
 
                     <div className="pt-2 border-t border-slate-200/60 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
                       <div className="flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-slate-400" />
+                        <Clock size={14} className="text-slate-400" />
                         <span>Nộp lúc: {new Date(app.createdAt).toLocaleDateString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</span>
                       </div>
 
@@ -322,22 +356,24 @@ export default function StudentDashboard() {
           </div>
 
           {/* Sự kiện đã đăng ký */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-5">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-5">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div>
                 <h2 className="text-base sm:text-lg font-bold text-[#142B49] tracking-tight">Sự Kiện Bạn Đã Đăng Ký</h2>
                 <p className="text-xs text-slate-500 mt-0.5">Lịch trình các hoạt động sắp tới của bạn tại trường BAFU</p>
               </div>
-              <Link to="/events">
-                <Button variant="ghost" size="sm" icon={CalendarDays}>
-                  Lịch sự kiện
-                </Button>
+              <Link
+                to="/events"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#167C66] hover:text-[#115E4D]"
+              >
+                <CalendarDots size={16} />
+                <span>Lịch sự kiện</span>
               </Link>
             </div>
 
             {myEvents.length === 0 ? (
               <EmptyState
-                icon={CalendarDays}
+                icon={CalendarDots}
                 title="Chưa đăng ký sự kiện nào"
                 description="Xem danh sách các sự kiện văn nghệ, giải thể thao sắp tới để tham gia cổ vũ hoặc thi đấu."
                 actionLabel="Xem lịch sự kiện"
@@ -348,7 +384,7 @@ export default function StudentDashboard() {
                 {myEvents.map((reg) => (
                   <div
                     key={reg.id}
-                    className="p-4 rounded-2xl border border-slate-200/80 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs"
+                    className="p-4 rounded-xl border border-[#E2E8F0] bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs"
                   >
                     <div className="space-y-1">
                       <h4 className="font-bold text-slate-900 text-sm leading-snug">
@@ -356,11 +392,11 @@ export default function StudentDashboard() {
                       </h4>
                       <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
                         <span className="flex items-center gap-1 text-[#167C66] font-semibold">
-                          <CalendarDays className="w-3.5 h-3.5" />
+                          <CalendarDots size={14} />
                           {new Date(reg.event?.startTime).toLocaleDateString('vi-VN')}
                         </span>
                         <span className="flex items-center gap-1">
-                          <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                          <MapPin size={14} className="text-slate-400" />
                           {reg.event?.location}
                         </span>
                       </div>
@@ -381,21 +417,23 @@ export default function StudentDashboard() {
 
         {/* Right Column: Active Memberships (4 cols) */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-2xs space-y-4">
+          <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-xs space-y-4">
             <h3 className="font-bold text-slate-900 text-base border-b border-slate-100 pb-3 flex items-center justify-between">
               <span>CLB Đang Tham Gia</span>
-              <Badge variant="campus" size="sm">{activeMemberships.length}</Badge>
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-[#167C66] border border-emerald-200">
+                {activeMemberships.length}
+              </span>
             </h3>
 
             {activeMemberships.length === 0 ? (
               <div className="text-center py-6 text-slate-400 space-y-2">
-                <UsersRound className="w-8 h-8 mx-auto text-slate-300" />
+                <UsersThree size={32} weight="duotone" className="mx-auto text-slate-300" />
                 <p className="text-xs">Bạn chưa là hội viên chính thức của câu lạc bộ nào.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {activeMemberships.map((m) => (
-                  <div key={m.id} className="p-3.5 rounded-2xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between gap-3">
+                  <div key={m.id} className="p-3.5 rounded-xl border border-[#E2E8F0] bg-slate-50/50 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <ClubLogo
                         name={m.club?.name}
@@ -415,7 +453,7 @@ export default function StudentDashboard() {
 
                     {m.club?.slug && (
                       <Link to={`/clubs/${m.club.slug}`} className="text-slate-400 hover:text-[#167C66] p-1">
-                        <ChevronRight className="w-4 h-4" />
+                        <CaretRight size={16} />
                       </Link>
                     )}
                   </div>
@@ -473,12 +511,19 @@ export default function StudentDashboard() {
           </div>
 
           <div className="pt-3 flex items-center justify-end gap-2 border-t border-slate-100">
-            <Button variant="outline" size="sm" onClick={() => setEditingProfile(false)}>
+            <button
+              type="button"
+              onClick={() => setEditingProfile(false)}
+              className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs cursor-pointer"
+            >
               Hủy
-            </Button>
-            <Button type="submit" variant="success" size="sm">
+            </button>
+            <button
+              type="submit"
+              className="px-5 py-2.5 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs shadow-xs cursor-pointer"
+            >
               Lưu thay đổi
-            </Button>
+            </button>
           </div>
         </form>
       </Modal>

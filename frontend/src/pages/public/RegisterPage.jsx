@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { UserPlus, AlertCircle, GraduationCap, Eye, EyeOff } from 'lucide-react';
-import Button from '../../components/ui/Button';
+import { UserPlus, WarningCircle, Eye, EyeSlash } from '@phosphor-icons/react';
+import BrandWordmark from '../../components/ui/BrandWordmark';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -48,20 +48,22 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200/90 shadow-xl space-y-6">
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#142B49] text-white font-black text-2xl flex items-center justify-center mx-auto shadow-xs">
-            <GraduationCap className="w-7 h-7 text-[#F3B846]" />
+      <div className="max-w-md w-full bg-white rounded-2xl p-8 border border-[#E2E8F0] shadow-sm space-y-6">
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <BrandWordmark variant="light" />
           </div>
-          <h2 className="text-2xl font-black text-[#142B49] tracking-tight">Tạo Tài Khoản Sinh Viên</h2>
-          <p className="text-xs text-slate-500">
-            Đăng ký để ứng tuyển và quản lý tư cách hội viên CLB tại BAFU
-          </p>
+          <div>
+            <h1 className="text-2xl font-black text-[#142B49] tracking-tight">Tạo Tài Khoản Sinh Viên</h1>
+            <p className="text-xs text-slate-500 mt-1">
+              Đăng ký để ứng tuyển và quản lý tư cách hội viên CLB tại BAFU
+            </p>
+          </div>
         </div>
 
         {error && (
           <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+            <WarningCircle size={16} weight="fill" className="shrink-0 text-rose-600" />
             <span>{error}</span>
           </div>
         )}
@@ -75,7 +77,7 @@ export default function RegisterPage() {
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
               placeholder="Nguyễn Văn A"
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+              className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] bg-slate-50/50 focus:bg-white"
             />
           </div>
 
@@ -88,7 +90,7 @@ export default function RegisterPage() {
                 value={formData.studentCode}
                 onChange={(e) => setFormData({ ...formData, studentCode: e.target.value })}
                 placeholder="SV2026..."
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] bg-slate-50/50 focus:bg-white"
               />
             </div>
             <div>
@@ -98,7 +100,7 @@ export default function RegisterPage() {
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="0987..."
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] bg-slate-50/50 focus:bg-white"
               />
             </div>
           </div>
@@ -108,7 +110,7 @@ export default function RegisterPage() {
             <select
               value={formData.faculty}
               onChange={(e) => setFormData({ ...formData, faculty: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] bg-white cursor-pointer"
+              className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] bg-slate-50/50 focus:bg-white cursor-pointer"
             >
               {faculties.map((f, idx) => (
                 <option key={idx} value={f}>{f}</option>
@@ -124,7 +126,7 @@ export default function RegisterPage() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="sinhvien@bafu.edu.vn"
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+              className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] bg-slate-50/50 focus:bg-white"
             />
           </div>
 
@@ -138,29 +140,27 @@ export default function RegisterPage() {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] pr-10"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66] bg-slate-50/50 focus:bg-white pr-10"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1"
                 aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPassword ? <EyeSlash size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
-          <Button
+          <button
             type="submit"
-            variant="success"
-            size="lg"
-            loading={loading}
-            className="w-full"
-            icon={UserPlus}
+            disabled={loading}
+            className="w-full py-3 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-sm shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            Hoàn tất đăng ký
-          </Button>
+            <UserPlus size={18} weight="bold" />
+            <span>{loading ? 'Đang đăng ký...' : 'Hoàn tất đăng ký'}</span>
+          </button>
         </form>
 
         <div className="text-center text-xs text-slate-500">

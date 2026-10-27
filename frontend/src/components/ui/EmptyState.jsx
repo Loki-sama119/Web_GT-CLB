@@ -1,9 +1,9 @@
 import React from 'react';
-import { Inbox } from 'lucide-react';
+import { Tray } from '@phosphor-icons/react';
 import Button from './Button';
 
 export default function EmptyState({
-  icon: Icon = Inbox,
+  icon: Icon = Tray,
   title = 'Không có dữ liệu',
   description = 'Chưa có thông tin phù hợp với yêu cầu tìm kiếm hoặc bộ lọc hiện tại.',
   actionLabel,

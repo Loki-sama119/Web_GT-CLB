@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2 } from 'lucide-react';
+import { CircleNotch } from '@phosphor-icons/react';
 
 export default function Button({
   children,
@@ -39,7 +39,7 @@ export default function Button({
     >
       {loading ? (
         <>
-          <Loader2 className="w-4 h-4 animate-spin text-current" />
+          <CircleNotch className="w-4 h-4 animate-spin text-current" />
           <span>{children}</span>
         </>
       ) : (

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 import { 
-  UsersRound, CheckCircle2, XCircle, AlertCircle, FileText, 
-  Plus, Edit, Trash2, Search, Filter, ShieldCheck, Send, ArrowRight, Download, 
-  History, Clock, ClipboardList, UserRoundCheck, UserRoundPlus, Check, X, ChevronDown
-} from 'lucide-react';
+  UsersThree, CheckCircle, XCircle, WarningCircle, 
+  Plus, Trash, MagnifyingGlass, ShieldCheck, DownloadSimple, 
+  ClockCounterClockwise, Clock, ClipboardText, UserCheck, UserPlus, Check, X, CaretDown
+} from '@phosphor-icons/react';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import EmptyState from '../../components/ui/EmptyState';
@@ -250,22 +250,47 @@ export default function ClubAdminDashboard() {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'ACCEPTED':
-        return <Badge variant="success" size="sm" icon={CheckCircle2}>Đã trúng tuyển (ACCEPTED)</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <CheckCircle size={14} weight="fill" />
+            Đã trúng tuyển (ACCEPTED)
+          </span>
+        );
       case 'REJECTED':
-        return <Badge variant="danger" size="sm" icon={XCircle}>Từ chối (REJECTED)</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+            <XCircle size={14} weight="fill" />
+            Từ chối (REJECTED)
+          </span>
+        );
       case 'UNDER_REVIEW':
-        return <Badge variant="warning" size="sm" icon={Clock}>Đang xét duyệt (UNDER_REVIEW)</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+            <Clock size={14} weight="bold" />
+            Đang xét duyệt (UNDER_REVIEW)
+          </span>
+        );
       case 'NEED_MORE_INFO':
-        return <Badge variant="warning" size="sm" icon={AlertCircle}>Cần bổ sung</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+            <WarningCircle size={14} weight="bold" />
+            Cần bổ sung
+          </span>
+        );
       default:
-        return <Badge variant="info" size="sm" icon={Clock}>Chờ xét duyệt ({status})</Badge>;
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+            <Clock size={14} weight="bold" />
+            Chờ xét duyệt ({status})
+          </span>
+        );
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      {/* 1. SaaS Dashboard Header */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      {/* 1. Header — shadcn/ui Dashboard-01 style */}
+      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#167C66]" />
@@ -286,35 +311,35 @@ export default function ClubAdminDashboard() {
               <select
                 value={selectedClubId}
                 onChange={(e) => setSelectedClubId(e.target.value)}
-                className="w-full sm:w-72 px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-[#167C66] cursor-pointer appearance-none pr-8"
+                className="w-full sm:w-72 px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-xs font-bold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-[#167C66] cursor-pointer appearance-none pr-8"
               >
                 {managedClubs.map(c => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
-              <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <CaretDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             </div>
           </div>
         )}
       </div>
 
-      {/* 2. KPI Summary Cards */}
+      {/* 2. KPI Summary Cards — Linear / shadcn clean aesthetic */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500">Tổng Đơn Ứng Tuyển</span>
             <div className="w-9 h-9 rounded-xl bg-[#142B49]/5 text-[#142B49] flex items-center justify-center font-bold">
-              <ClipboardList className="w-4 h-4" />
+              <ClipboardText size={18} weight="duotone" />
             </div>
           </div>
           <div className="text-2xl font-black text-[#142B49] mt-2">{applications.length}</div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500">Chờ Xét Duyệt</span>
             <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold">
-              <Clock className="w-4 h-4" />
+              <Clock size={18} weight="duotone" />
             </div>
           </div>
           <div className="text-2xl font-black text-amber-700 mt-2">
@@ -322,29 +347,29 @@ export default function ClubAdminDashboard() {
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500">Hội Viên Chính Thức</span>
             <div className="w-9 h-9 rounded-xl bg-[#167C66]/10 text-[#167C66] flex items-center justify-center font-bold">
-              <UsersRound className="w-4 h-4" />
+              <UsersThree size={18} weight="duotone" />
             </div>
           </div>
           <div className="text-2xl font-black text-[#167C66] mt-2">{members.length || currentClub?._count?.memberships || 0}</div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500">Đợt Tuyển Hoạt Động</span>
             <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold">
-              <UserRoundPlus className="w-4 h-4" />
+              <UserPlus size={18} weight="duotone" />
             </div>
           </div>
           <div className="text-2xl font-black text-purple-700 mt-2">{currentClub?.campaigns?.length || 1}</div>
         </div>
       </div>
 
-      {/* 3. Navigation Tabs */}
-      <div className="flex border-b border-slate-200/90 space-x-2 sm:space-x-4 overflow-x-auto">
+      {/* 3. Navigation Tabs — Linear clean tab bar */}
+      <div className="flex border-b border-[#E2E8F0] space-x-2 sm:space-x-4 overflow-x-auto">
         <button
           onClick={() => setActiveTab('applications')}
           className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
@@ -353,8 +378,8 @@ export default function ClubAdminDashboard() {
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          <ClipboardList className="w-4 h-4" />
-          Xét Duyệt Hồ Sơ Ứng Tuyển
+          <ClipboardText size={18} />
+          <span>Xét Duyệt Hồ Sơ Ứng Tuyển</span>
         </button>
         <button
           onClick={() => setActiveTab('members')}
@@ -364,8 +389,8 @@ export default function ClubAdminDashboard() {
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          <UserRoundCheck className="w-4 h-4" />
-          Danh Sách Hội Viên
+          <UserCheck size={18} />
+          <span>Danh Sách Hội Viên</span>
         </button>
         <button
           onClick={() => setActiveTab('create-campaign')}
@@ -375,8 +400,8 @@ export default function ClubAdminDashboard() {
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          <Plus className="w-4 h-4" />
-          Mở Đợt Tuyển Mới
+          <Plus size={18} />
+          <span>Mở Đợt Tuyển Mới</span>
         </button>
       </div>
 
@@ -386,19 +411,19 @@ export default function ClubAdminDashboard() {
           {/* Filter Bar */}
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative grow">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <MagnifyingGlass size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 placeholder="Tìm ứng viên theo họ tên, MSSV, khoa..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200/90 text-xs sm:text-sm bg-white focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm bg-white focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
               />
             </div>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2.5 rounded-xl border border-slate-200/90 text-xs sm:text-sm font-bold bg-white cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+              className="px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm font-bold bg-white cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
             >
               <option value="">Tất cả trạng thái</option>
               <option value="SUBMITTED">Đã nộp (Chờ duyệt)</option>
@@ -411,20 +436,20 @@ export default function ClubAdminDashboard() {
             <button
               onClick={handleExportCSV}
               disabled={exportingCSV}
-              className="px-4 py-2.5 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs flex items-center justify-center gap-2 shadow-2xs transition-colors shrink-0 cursor-pointer disabled:opacity-50"
+              className="px-4 py-2.5 rounded-xl border border-[#E2E8F0] bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs flex items-center justify-center gap-2 shadow-2xs transition-colors shrink-0 cursor-pointer disabled:opacity-50"
             >
-              <Download className="w-4 h-4 text-[#167C66]" />
-              {exportingCSV ? 'Đang xuất...' : 'Xuất Excel / CSV'}
+              <DownloadSimple size={16} className="text-[#167C66]" />
+              <span>{exportingCSV ? 'Đang xuất...' : 'Xuất Excel / CSV'}</span>
             </button>
           </div>
 
-          {/* Applications View */}
-          <div className="bg-white rounded-3xl border border-slate-200/90 shadow-2xs overflow-hidden">
+          {/* Applications View — Linear High-Density Data Table */}
+          <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-xs overflow-hidden">
             {loadingApps ? (
               <div className="py-16 text-center text-xs text-slate-400">Đang đồng bộ hồ sơ ứng tuyển...</div>
             ) : applications.length === 0 ? (
               <EmptyState
-                icon={ClipboardList}
+                icon={ClipboardText}
                 title="Không có hồ sơ nào"
                 description="Chưa có hồ sơ ứng tuyển nào khớp với tiêu chí tìm kiếm hoặc đợt tuyển hiện tại."
               />
@@ -432,7 +457,7 @@ export default function ClubAdminDashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
                   <thead>
-                    <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
+                    <tr className="bg-slate-50 border-b border-[#E2E8F0] text-slate-500 font-bold uppercase tracking-wider">
                       <th className="p-4">Ứng viên</th>
                       <th className="p-4">Mã sinh viên</th>
                       <th className="p-4">Khoa / Khóa</th>
@@ -486,21 +511,23 @@ export default function ClubAdminDashboard() {
 
       {/* TAB 2: MEMBERS */}
       {activeTab === 'members' && (
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-2xs overflow-hidden p-6 sm:p-8 space-y-6">
+        <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-xs overflow-hidden p-6 sm:p-8 space-y-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div>
               <h3 className="font-black text-[#142B49] text-base sm:text-lg">Danh Sách Hội Viên Chính Thức</h3>
               <p className="text-xs text-slate-500 mt-0.5">Quản lý chức vụ, tìm kiếm và phân quyền nhân sự nội bộ CLB</p>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant="campus" size="md">{members.length} thành viên</Badge>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-[#167C66] border border-emerald-200">
+                {members.length} thành viên
+              </span>
               <button
                 onClick={handleExportMembersCSV}
                 disabled={exportingMembersCSV || !selectedClubId}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs shadow-2xs transition-colors disabled:opacity-50 cursor-pointer"
               >
-                <Download className="w-3.5 h-3.5" />
-                {exportingMembersCSV ? 'Đang xuất CSV...' : 'Xuất Danh Sách (Excel/CSV)'}
+                <DownloadSimple size={16} weight="bold" />
+                <span>{exportingMembersCSV ? 'Đang xuất CSV...' : 'Xuất Danh Sách (Excel/CSV)'}</span>
               </button>
             </div>
           </div>
@@ -508,20 +535,20 @@ export default function ClubAdminDashboard() {
           {/* Search & Filter Bar */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="sm:col-span-2 relative">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <MagnifyingGlass size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 placeholder="Tìm hội viên theo Họ tên, MSSV, Khoa..."
                 value={memberSearch}
                 onChange={(e) => setMemberSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200/90 text-xs sm:text-sm focus:ring-2 focus:ring-[#167C66] bg-slate-50/50 focus:bg-white"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm focus:ring-2 focus:ring-[#167C66] bg-slate-50/50 focus:bg-white"
               />
             </div>
             <div>
               <select
                 value={memberRoleFilter}
                 onChange={(e) => setMemberRoleFilter(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200/90 text-xs sm:text-sm font-bold bg-slate-50/50 focus:bg-white cursor-pointer"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-xs sm:text-sm font-bold bg-slate-50/50 focus:bg-white cursor-pointer"
               >
                 <option value="">Tất cả vai trò</option>
                 <option value="LEADER">Chủ nhiệm (LEADER)</option>
@@ -535,7 +562,7 @@ export default function ClubAdminDashboard() {
             <div className="py-12 text-center text-xs text-slate-400">Đang tải danh sách hội viên...</div>
           ) : members.length === 0 ? (
             <EmptyState
-              icon={UsersRound}
+              icon={UsersThree}
               title="Không tìm thấy hội viên nào"
               description="Chưa có thành viên nào thỏa mãn bộ lọc hiện tại."
             />
@@ -543,7 +570,7 @@ export default function ClubAdminDashboard() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
+                  <tr className="bg-slate-50 border-b border-[#E2E8F0] text-slate-500 font-bold uppercase tracking-wider">
                     <th className="p-4">Thành viên</th>
                     <th className="p-4">MSSV</th>
                     <th className="p-4">Khoa / Khóa</th>
@@ -588,7 +615,7 @@ export default function ClubAdminDashboard() {
                           title="Xóa khỏi CLB"
                           className="text-rose-600 hover:text-rose-800 font-bold p-1 rounded-md transition-colors cursor-pointer"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash size={16} />
                         </button>
                       </td>
                     </tr>
@@ -602,7 +629,7 @@ export default function ClubAdminDashboard() {
 
       {/* TAB 3: CREATE CAMPAIGN */}
       {activeTab === 'create-campaign' && (
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-2xs p-6 sm:p-8 max-w-3xl space-y-6">
+        <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-xs p-6 sm:p-8 max-w-3xl space-y-6">
           <div className="pb-4 border-b border-slate-100">
             <h3 className="font-black text-[#142B49] text-base sm:text-lg">Mở Đợt Tuyển & Biểu Mẫu Câu Hỏi Động</h3>
             <p className="text-xs text-slate-500 mt-0.5">Thiết lập thông tin chiến dịch tuyển sinh viên và bộ câu hỏi cho ứng viên</p>
@@ -674,24 +701,22 @@ export default function ClubAdminDashboard() {
             </div>
 
             <div className="pt-2">
-              <Button
+              <button
                 type="submit"
-                variant="success"
-                size="lg"
-                loading={creatingCampaign}
-                className="w-full"
+                disabled={creatingCampaign}
+                className="w-full py-3 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-sm shadow-xs transition-all cursor-pointer disabled:opacity-50"
               >
-                Công bố đợt tuyển ngay (OPEN)
-              </Button>
+                {creatingCampaign ? 'Đang tạo...' : 'Công bố đợt tuyển ngay (OPEN)'}
+              </button>
             </div>
           </form>
         </div>
       )}
 
-      {/* MODAL XEM CHI TIẾT & XÉT DUYỆT HỒ SƠ */}
+      {/* MODAL XEM CHI TIẾT & XÉT DUYỆT HỒ SƠ — High density & clear separation */}
       {reviewingApp && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/60 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-slate-200 shadow-2xl space-y-6">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#E2E8F0] shadow-2xl space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div>
                 <h3 className="font-black text-[#142B49] text-base sm:text-lg">
@@ -706,7 +731,7 @@ export default function ClubAdminDashboard() {
                 className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100 cursor-pointer"
                 aria-label="Đóng"
               >
-                <X className="w-5 h-5" />
+                <X size={20} />
               </button>
             </div>
 
@@ -714,7 +739,7 @@ export default function ClubAdminDashboard() {
             <div className="space-y-4">
               <div className="font-bold text-slate-800 text-xs sm:text-sm">Nội dung câu trả lời của ứng viên:</div>
               {reviewingApp.answers?.map((ans) => (
-                <div key={ans.id} className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <div key={ans.id} className="p-4 rounded-xl bg-slate-50 border border-[#E2E8F0] space-y-1.5">
                   <div className="font-bold text-slate-700 text-xs">
                     {ans.questionTextSnapshot}
                   </div>
@@ -741,9 +766,10 @@ export default function ClubAdminDashboard() {
 
             {/* Lịch sử trạng thái xét duyệt */}
             {reviewingApp.histories && reviewingApp.histories.length > 0 && (
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div className="p-4 rounded-xl bg-slate-50 border border-[#E2E8F0] space-y-2">
                 <div className="font-bold text-slate-700 text-xs flex items-center gap-1.5">
-                  <History className="w-4 h-4 text-slate-500" /> Lịch sử thay đổi trạng thái hồ sơ:
+                  <ClockCounterClockwise size={16} className="text-slate-500" />
+                  <span>Lịch sử thay đổi trạng thái hồ sơ:</span>
                 </div>
                 <div className="space-y-1.5 divide-y divide-slate-100">
                   {reviewingApp.histories.map((h) => (
@@ -763,30 +789,30 @@ export default function ClubAdminDashboard() {
 
             {/* Action Buttons */}
             <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-end gap-2.5">
-              <Button
-                variant="danger"
-                size="sm"
+              <button
+                type="button"
                 disabled={reviewActionLoading}
                 onClick={() => handleReviewAction('REJECTED')}
+                className="px-4 py-2 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs cursor-pointer transition-colors disabled:opacity-50"
               >
                 Từ chối đơn (REJECTED)
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
+              </button>
+              <button
+                type="button"
                 disabled={reviewActionLoading}
                 onClick={() => handleReviewAction('NEED_MORE_INFO')}
+                className="px-4 py-2 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-xs cursor-pointer transition-colors disabled:opacity-50"
               >
                 Yêu cầu bổ sung
-              </Button>
+              </button>
               <button
                 type="button"
                 onClick={() => handleReviewAction('ACCEPTED')}
                 disabled={reviewActionLoading}
                 className="px-5 py-2 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs shadow-xs transition-colors cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
               >
-                <Check className="w-4 h-4" />
-                ✓ Duyệt trúng tuyển (Tạo thành viên)
+                <Check size={16} weight="bold" />
+                <span>✓ Duyệt trúng tuyển (Tạo thành viên)</span>
               </button>
             </div>
           </div>

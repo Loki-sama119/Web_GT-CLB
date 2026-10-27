@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { 
-  ShieldCheck, UsersRound, Award, FileText, CheckCircle2, 
-  Activity, Plus, UserCheck, AlertCircle, Download, BarChart3, CalendarDays, CheckSquare,
-  Search, UploadCloud, RefreshCw, X, ChevronRight, School, FileSpreadsheet
-} from 'lucide-react';
+  ShieldCheck, UsersThree, Medal, FileText, CheckCircle, 
+  Pulse, Plus, UserCheck, WarningCircle, DownloadSimple, ChartBar, CalendarDots, CheckSquare,
+  MagnifyingGlass, UploadSimple, ArrowsClockwise, X, CaretRight
+} from '@phosphor-icons/react';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import EmptyState from '../../components/ui/EmptyState';
@@ -196,11 +196,11 @@ export default function SuperAdminDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      {/* 1. Header Banner */}
-      <div className="campus-hero-gradient text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-md flex items-center justify-between">
+      {/* 1. Header Banner — Professional Institutional Console */}
+      <div className="bg-[#142B49] text-white rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-xs flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 text-xs font-bold text-[#F3B846] uppercase tracking-wider mb-1">
-            <ShieldCheck className="w-4 h-4 text-[#F3B846]" />
+            <ShieldCheck size={18} weight="fill" className="text-[#F3B846]" />
             <span>Trung Tâm Quản Trị Hệ Thống (Super Admin)</span>
           </div>
           <h1 className="text-xl sm:text-3xl font-black tracking-tight text-white">
@@ -212,50 +212,55 @@ export default function SuperAdminDashboard() {
         </div>
       </div>
 
-      {/* 2. Navigation Tabs */}
-      <div className="flex border-b border-slate-200/90 space-x-2 sm:space-x-4 overflow-x-auto">
+      {/* 2. Navigation Tabs — Linear Clean Density */}
+      <div className="flex border-b border-[#E2E8F0] space-x-2 sm:space-x-4 overflow-x-auto">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'overview' ? 'border-[#167C66] text-[#167C66]' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          Tổng Quan Thống Kê
+          <Pulse size={16} />
+          <span>Tổng Quan Thống Kê</span>
         </button>
         <button
           onClick={() => {
             setActiveTab('reports');
             if (clubReports.length === 0) loadReports();
           }}
-          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'reports' ? 'border-[#167C66] text-[#167C66]' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          Báo Cáo CLB Toàn Trường
+          <ChartBar size={16} />
+          <span>Báo Cáo CLB Toàn Trường</span>
         </button>
         <button
           onClick={() => setActiveTab('users')}
-          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'users' ? 'border-[#167C66] text-[#167C66]' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          Người Dùng & Phân Quyền
+          <UsersThree size={16} />
+          <span>Người Dùng & Phân Quyền</span>
         </button>
         <button
           onClick={() => setActiveTab('clubs')}
-          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'clubs' ? 'border-[#167C66] text-[#167C66]' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          Tạo Câu Lạc Bộ Mới
+          <Plus size={16} />
+          <span>Tạo Câu Lạc Bộ Mới</span>
         </button>
         <button
           onClick={() => setActiveTab('audit')}
-          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
             activeTab === 'audit' ? 'border-[#167C66] text-[#167C66]' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          Nhật Ký Kiểm Toán (Audit Logs)
+          <FileText size={16} />
+          <span>Nhật Ký Kiểm Toán (Audit Logs)</span>
         </button>
       </div>
 
@@ -263,31 +268,31 @@ export default function SuperAdminDashboard() {
       {activeTab === 'overview' && (
         <div className="space-y-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
               <div className="text-3xl font-black text-[#142B49]">{dashboardData?.totalUsers || 0}</div>
               <div className="text-xs font-bold text-slate-500 mt-1">Tổng người dùng</div>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
               <div className="text-3xl font-black text-[#167C66]">{dashboardData?.totalClubs || 0}</div>
               <div className="text-xs font-bold text-slate-500 mt-1">Câu lạc bộ hoạt động</div>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
               <div className="text-3xl font-black text-amber-700">{dashboardData?.totalApplications || 0}</div>
               <div className="text-xs font-bold text-slate-500 mt-1">Đơn ứng tuyển đã nộp</div>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
               <div className="text-3xl font-black text-emerald-700">{dashboardData?.totalMemberships || 0}</div>
               <div className="text-xs font-bold text-slate-500 mt-1">Hội viên chính thức</div>
             </div>
           </div>
 
           {/* Đơn nộp gần đây */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-4">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-4">
             <h3 className="font-black text-[#142B49] text-base">Hồ Sơ Ứng Tuyển Gần Đây</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
+                  <tr className="bg-slate-50 border-b border-[#E2E8F0] text-slate-500 font-bold uppercase tracking-wider">
                     <th className="p-3.5">Họ tên sinh viên</th>
                     <th className="p-3.5">MSSV</th>
                     <th className="p-3.5">CLB ứng tuyển</th>
@@ -303,7 +308,9 @@ export default function SuperAdminDashboard() {
                       <td className="p-3.5 text-slate-700">{app.campaign?.club?.name}</td>
                       <td className="p-3.5 text-slate-500">{new Date(app.submittedAt).toLocaleDateString('vi-VN')}</td>
                       <td className="p-3.5">
-                        <Badge variant="info" size="sm">{app.status}</Badge>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                          {app.status}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -317,73 +324,76 @@ export default function SuperAdminDashboard() {
       {/* TAB 2: SCHOOL-WIDE CLUB REPORTS */}
       {activeTab === 'reports' && (
         <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-2xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-xs">
             <div>
               <h2 className="text-base sm:text-lg font-black text-[#142B49] flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-[#167C66]" /> Báo Cáo Hoạt Động Câu Lạc Bộ Toàn Trường
+                <ChartBar size={20} weight="duotone" className="text-[#167C66]" /> 
+                <span>Báo Cáo Hoạt Động Câu Lạc Bộ Toàn Trường</span>
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
                 Thống kê chi tiết số lượng hội viên, quy mô tuyển quân, tỷ lệ trúng tuyển và các hoạt động sự kiện
               </p>
             </div>
             <div className="flex items-center gap-2.5">
-              <Button
-                variant="outline"
-                size="sm"
-                icon={RefreshCw}
-                loading={loadingReports}
+              <button
+                type="button"
                 onClick={loadReports}
+                disabled={loadingReports}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
               >
-                Làm mới số liệu
-              </Button>
+                <ArrowsClockwise size={14} className={loadingReports ? 'animate-spin' : ''} />
+                <span>Làm mới số liệu</span>
+              </button>
               <button
                 type="button"
                 onClick={handleExportReportsCSV}
                 disabled={exportingReportCSV}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer disabled:opacity-50"
               >
-                <Download className="w-4 h-4" />
-                {exportingReportCSV ? 'Đang xuất file...' : 'Xuất Báo Cáo Excel (CSV)'}
+                <DownloadSimple size={16} weight="bold" />
+                <span>{exportingReportCSV ? 'Đang xuất file...' : 'Xuất Báo Cáo Excel (CSV)'}</span>
               </button>
             </div>
           </div>
 
           {/* Quick Metrics */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
               <div className="flex items-center justify-between">
                 <div className="text-xs font-bold text-slate-500">Tổng sự kiện CLB đã tổ chức</div>
-                <CalendarDays className="w-5 h-5 text-[#142B49]" />
+                <CalendarDots size={20} className="text-[#142B49]" />
               </div>
               <div className="text-3xl font-black text-[#142B49] mt-2">{dashboardData?.totalEvents || 0}</div>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
               <div className="flex items-center justify-between">
                 <div className="text-xs font-bold text-slate-500">Lượt sinh viên đăng ký sự kiện</div>
-                <CheckSquare className="w-5 h-5 text-[#167C66]" />
+                <CheckSquare size={20} className="text-[#167C66]" />
               </div>
               <div className="text-3xl font-black text-[#167C66] mt-2">{dashboardData?.totalRegistrations || 0}</div>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+            <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs">
               <div className="flex items-center justify-between">
                 <div className="text-xs font-bold text-slate-500">Tỷ lệ duyệt trúng tuyển TB</div>
-                <Award className="w-5 h-5 text-amber-600" />
+                <Medal size={20} className="text-amber-600" />
               </div>
               <div className="text-3xl font-black text-amber-700 mt-2">{dashboardData?.overallAcceptanceRate || 0}%</div>
             </div>
           </div>
 
           {/* Reports Table */}
-          <div className="bg-white rounded-3xl border border-slate-200/90 shadow-2xs overflow-hidden p-6 space-y-4">
+          <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-xs overflow-hidden p-6 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-black text-[#142B49] text-base">Thống Kê Chi Tiết Từng Câu Lạc Bộ</h3>
-              <Badge variant="campus" size="sm">{clubReports.length} CLB báo cáo</Badge>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-[#167C66] border border-emerald-200">
+                {clubReports.length} CLB báo cáo
+              </span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
+                  <tr className="bg-slate-50 border-b border-[#E2E8F0] text-slate-500 font-bold uppercase tracking-wider">
                     <th className="p-3.5">Câu lạc bộ</th>
                     <th className="p-3.5">Lĩnh vực</th>
                     <th className="p-3.5 text-center">Hội viên</th>
@@ -417,7 +427,7 @@ export default function SuperAdminDashboard() {
       {/* TAB 3: USERS & ROLES */}
       {activeTab === 'users' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-4 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-4">
+          <div className="lg:col-span-4 bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-4">
             <h3 className="font-black text-[#142B49] text-base">Cấp Quyền Ban Chủ Nhiệm Cho Thành Viên</h3>
             <p className="text-xs text-slate-500">Chỉ định quyền Chủ nhiệm (LEADER) hoặc Phó chủ nhiệm (VICE_LEADER) cho tài khoản</p>
 
@@ -468,18 +478,22 @@ export default function SuperAdminDashboard() {
                 </select>
               </div>
 
-              <Button type="submit" variant="success" size="md" className="w-full" icon={UserCheck}>
-                Xác nhận phân quyền
-              </Button>
+              <button
+                type="submit"
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs shadow-xs cursor-pointer"
+              >
+                <UserCheck size={16} weight="bold" />
+                <span>Xác nhận phân quyền</span>
+              </button>
             </form>
           </div>
 
-          <div className="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-4">
+          <div className="lg:col-span-8 bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-4">
             <h3 className="font-black text-[#142B49] text-base">Danh Sách Người Dùng Toàn Trường ({users.length})</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
+                  <tr className="bg-slate-50 border-b border-[#E2E8F0] text-slate-500 font-bold uppercase tracking-wider">
                     <th className="p-3.5">Họ và tên</th>
                     <th className="p-3.5">MSSV</th>
                     <th className="p-3.5">Email</th>
@@ -495,9 +509,11 @@ export default function SuperAdminDashboard() {
                       <td className="p-3.5 text-slate-600">{u.email}</td>
                       <td className="p-3.5 text-slate-600">{u.studentProfile?.faculty || 'N/A'}</td>
                       <td className="p-3.5">
-                        <Badge variant={u.role === 'SUPER_ADMIN' ? 'danger' : 'neutral'} size="sm">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold ${
+                          u.role === 'SUPER_ADMIN' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-slate-100 text-slate-700'
+                        }`}>
                           {u.role}
-                        </Badge>
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -512,7 +528,7 @@ export default function SuperAdminDashboard() {
       {activeTab === 'clubs' && (
         <div className="space-y-8">
           {/* 1. Bảng Phê Duyệt & Quản Lý Trạng Thái CLB */}
-          <div className="bg-white rounded-3xl border border-slate-200/90 shadow-2xs overflow-hidden p-6 sm:p-8 space-y-4">
+          <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-xs overflow-hidden p-6 sm:p-8 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h3 className="font-black text-[#142B49] text-base sm:text-lg">Danh Sách & Phê Duyệt Câu Lạc Bộ ({clubs.length})</h3>
@@ -525,7 +541,7 @@ export default function SuperAdminDashboard() {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
+                  <tr className="bg-slate-50 border-b border-[#E2E8F0] text-slate-500 font-bold uppercase tracking-wider">
                     <th className="p-3.5">Tên Câu Lạc Bộ</th>
                     <th className="p-3.5">Mã Định Danh (Slug)</th>
                     <th className="p-3.5">Lĩnh Vực</th>
@@ -540,12 +556,13 @@ export default function SuperAdminDashboard() {
                       <td className="p-3.5 text-slate-500 font-mono text-[11px]">{c.slug}</td>
                       <td className="p-3.5 text-slate-600">{c.category?.name || 'Chưa phân loại'}</td>
                       <td className="p-3.5 text-center">
-                        <Badge
-                          variant={c.status === 'ACTIVE' ? 'success' : c.status === 'PENDING' ? 'warning' : 'neutral'}
-                          size="sm"
-                        >
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold ${
+                          c.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                          c.status === 'PENDING' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                          'bg-slate-100 text-slate-700'
+                        }`}>
                           {c.status === 'ACTIVE' ? 'Đang hoạt động' : c.status === 'PENDING' ? 'Chờ duyệt' : 'Tạm dừng'}
-                        </Badge>
+                        </span>
                       </td>
                       <td className="p-3.5 text-right space-x-1.5">
                         {c.status !== 'ACTIVE' && (
@@ -576,7 +593,7 @@ export default function SuperAdminDashboard() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* 2. Nhập CLB từ file CSV */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-4">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-black text-[#142B49] text-base">Nhập Danh Sách CLB Bằng CSV (Batch Import)</h3>
@@ -587,7 +604,8 @@ export default function SuperAdminDashboard() {
                   onClick={handleDownloadTemplateCsv}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 text-xs font-bold transition-colors cursor-pointer"
                 >
-                  <Download className="w-3.5 h-3.5 text-[#167C66]" /> Tải file mẫu CSV
+                  <DownloadSimple size={14} className="text-[#167C66]" /> 
+                  <span>Tải file mẫu CSV</span>
                 </button>
               </div>
 
@@ -608,22 +626,19 @@ export default function SuperAdminDashboard() {
                   placeholder="Dán nội dung CSV vào đây (hoặc mở file mẫu, chỉnh sửa rồi dán)..."
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 font-mono text-xs focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
                 />
-                <Button
+                <button
                   type="submit"
-                  variant="success"
-                  size="md"
-                  loading={importingCsv}
-                  disabled={!importCsvContent.trim()}
-                  icon={UploadCloud}
-                  className="w-full"
+                  disabled={importingCsv || !importCsvContent.trim()}
+                  className="w-full py-2.5 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  Tiến hành Import CLB
-                </Button>
+                  <UploadSimple size={16} weight="bold" />
+                  <span>{importingCsv ? 'Đang import...' : 'Tiến hành Import CLB'}</span>
+                </button>
               </form>
             </div>
 
             {/* 3. Tạo CLB Thủ công */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-4">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-4">
               <h3 className="font-black text-[#142B49] text-base">Thêm Câu Lạc Bộ Thủ Công</h3>
               <p className="text-xs text-slate-500 mt-0.5">Khởi tạo CLB đơn lẻ với thông tin trực tiếp</p>
 
@@ -690,9 +705,13 @@ export default function SuperAdminDashboard() {
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs"
                   />
                 </div>
-                <Button type="submit" variant="primary" size="md" className="w-full" icon={Plus}>
-                  Tạo câu lạc bộ
-                </Button>
+                <button
+                  type="submit"
+                  className="w-full py-2.5 rounded-xl bg-[#142B49] hover:bg-[#0E1F35] text-white font-bold text-xs shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <Plus size={16} weight="bold" />
+                  <span>Tạo câu lạc bộ</span>
+                </button>
               </form>
             </div>
           </div>
@@ -701,14 +720,14 @@ export default function SuperAdminDashboard() {
 
       {/* TAB 5: AUDIT LOGS */}
       {activeTab === 'audit' && (
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-2xs space-y-4">
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2E8F0] shadow-xs space-y-4">
           <h3 className="font-black text-[#142B49] text-base">Nhật Ký Thao Tác Hệ Thống (Audit Logs)</h3>
           <p className="text-xs text-slate-500">Ghi lại toàn bộ các hành động phê duyệt, đổi trạng thái và tác động dữ liệu</p>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
+                <tr className="bg-slate-50 border-b border-[#E2E8F0] text-slate-500 font-bold uppercase tracking-wider">
                   <th className="p-3.5">Thời gian</th>
                   <th className="p-3.5">Người thực hiện</th>
                   <th className="p-3.5">Hành động</th>
