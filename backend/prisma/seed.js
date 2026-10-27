@@ -109,6 +109,7 @@ async function main() {
       meetingSchedule: 'Chiều thứ Ba và thứ Bảy hàng tuần (16:30 - 18:30 tại Sân cỏ nhân tạo trường).',
       email: 'fc@bafu.edu.vn',
       phone: '0981122334',
+      coverUrl: '/images/bafu/students-football-2025.jpg',
       adminUserIndex: 0
     },
     {
@@ -131,6 +132,7 @@ async function main() {
       meetingSchedule: 'Tối thứ Tư (19:30 - 21:30 Online / Phòng Lab 302).',
       email: 'tech@bafu.edu.vn',
       phone: '0981122336',
+      coverUrl: '/images/bafu/bafu-computer-lab.jpg',
       adminUserIndex: 2
     },
     {
@@ -164,6 +166,7 @@ async function main() {
       meetingSchedule: 'Chủ Nhật tuần đầu tiên mỗi tháng (8:00 - 11:00).',
       email: 'tinhnguyen@bafu.edu.vn',
       phone: '0981122339',
+      coverUrl: '/images/bafu/students-welcome-2025.jpg',
       adminUserIndex: 5
     },
     {
@@ -224,6 +227,7 @@ async function main() {
         meetingSchedule: c.meetingSchedule,
         email: c.email,
         phone: c.phone,
+        coverUrl: c.coverUrl || null,
         status: ClubStatus.ACTIVE,
         establishedDate: new Date('2020-09-15')
       }

@@ -16,11 +16,11 @@ async function main() {
   await prisma.club.updateMany({
     where: { slug: 'clb-lap-trinh-bafu-tech' },
     data: {
-      coverUrl: '/images/bafu/students-practical-lab-2025.jpg',
+      coverUrl: '/images/bafu/bafu-computer-lab.jpg',
       shortDescription: 'Cộng đồng Tin học (IT BAFU) & Sáng tạo số — Nghiên cứu công nghệ, lập trình web, AI ứng dụng nông nghiệp.'
     }
   });
-  console.log('✅ Đã gắn ảnh bìa chính thức cho CLB Lập Trình & Công Nghệ BAFU Tech (students-practical-lab-2025.jpg)');
+  console.log('✅ Đã gắn ảnh bìa chính thức cho CLB Lập Trình & Công Nghệ BAFU Tech (bafu-computer-lab.jpg)');
 
   // 2. Đối chiếu và tích hợp các CLB thực tế theo tài liệu trường BAFU
   const startUpCat = await prisma.clubCategory.findUnique({ where: { slug: 'ky-nang-khoi-nghiep' } });
