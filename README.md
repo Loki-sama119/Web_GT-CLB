@@ -1,149 +1,95 @@
-# UNIVERSITY CLUB PORTAL — CỔNG THÔNG TIN CÂU LẠC BỘ SINH VIÊN BAFU
-> **Trường Đại học Nông - Lâm Bắc Giang (Bac Giang Agriculture and Forestry University)**  
-> **Phiên bản:** Phase 6 — Release Hardening, UAT & BAFU Pilot (Branch: `feature/phase6-release-readiness`)  
-> **Repository:** [https://github.com/Loki-sama119/Web_GT-CLB](https://github.com/Loki-sama119/Web_GT-CLB)
+# UNIVERSITY CLUB PORTAL — CỔNG THÔNG TIN CÂU LẠC BỘ SINH VIÊN
 
-Hệ thống giới thiệu, đăng ký tuyển thành viên trực tuyến, quản lý sự kiện, media và số hóa hoạt động toàn diện cho các Câu lạc bộ (CLB) sinh viên Trường Đại học Nông - Lâm Bắc Giang.
+Hệ thống giới thiệu, đăng ký tuyển thành viên trực tuyến và quản lý hoạt động toàn diện cho các Câu lạc bộ (CLB) sinh viên Trường Đại học Nông - Lâm Bắc Giang (BAFU).
 
 ---
 
-## 1. Stack Công Nghệ & Kiến Trúc
+## 1. Stack Công Nghệ
 
 - **Frontend:** React 19, Vite, Tailwind CSS 4, React Router 7, TanStack Query, Lucide Icons, Recharts.
-- **Backend:** Node.js (ES Modules), Express.js 5, Prisma ORM, PostgreSQL 16, Zod, bcryptjs, JWT & HTTP-Only Secure Cookies, Helmet, Express Rate Limit.
-- **Testing:**
-  - **Backend API:** Vitest, Supertest (**35/35 Tests PASS — 100%**).
-  - **E2E Automation:** Playwright (**30/30 Tests PASS — 100%**, bao gồm Desktop Chromium & Mobile Pixel 5).
-- **DevOps & Production:** Docker Compose V2, Nginx Reverse Proxy (TLS 1.2/1.3, OWASP Security Headers), Mailpit SMTP, Volume mount bền vững cho upload và Postgres.
+- **Backend:** Node.js (ES Modules), Express.js 5, Prisma ORM, PostgreSQL 16, Zod, bcryptjs, JWT & Cookie an toàn, Helmet, CORS, Express Rate Limit.
+- **Testing:** Vitest, Supertest (11 Integration Tests kiểm thử phân quyền, nghiệp vụ tuyển sinh, transaction và RBAC).
+- **DevOps:** Docker, Docker Compose, Nginx Reverse Proxy, GitHub Actions CI.
 
 ---
 
-## 2. Tài Khoản Thử Nghiệm Hệ Thống (Demo Accounts)
+## 2. Tài Khoản Demo Hệ Thống
 
 | Vai trò | Email đăng nhập | Mật khẩu mặc định | Ghi chú |
 |---|---|---|---|
-| **Super Admin** | `admin@bafu.edu.vn` | `AdminPassword@2026` | Quản trị viên cấp trường, Phê duyệt CLB, Báo cáo toàn trường |
+| **Super Admin** | `admin@bafu.edu.vn` | `AdminPassword@2026` | Quản trị toàn trường, Đoàn trường - Hội sinh viên |
 | **Club Admin** | `it.leader@bafu.edu.vn` | `12345678` | Chủ nhiệm CLB Lập trình BAFU Tech |
 | **Club Admin** | `caulong.leader@bafu.edu.vn` | `12345678` | Chủ nhiệm CLB Cầu Lông |
-| **Sinh Viên** | `haidang.sv@bafu.edu.vn` | `12345678` | Sinh viên Nguyễn Hải Đăng (Đã có hồ sơ ứng tuyển) |
+| **Sinh Viên** | `haidang.sv@bafu.edu.vn` | `12345678` | Sinh viên Nguyễn Hải Đăng (Đã có đơn ứng tuyển) |
 | **Sinh Viên** | `minhthu.sv@bafu.edu.vn` | `12345678` | Sinh viên Trần Minh Thư (Hội viên chính thức) |
 
-*(Trên giao diện Đăng nhập có sẵn các nút bấm điền nhanh tài khoản demo để tiện nghiệm thu).*
+*(Trên giao diện Đăng nhập có sẵn các nút bấm điền nhanh tài khoản demo).*
 
 ---
 
-## 3. Cấu Hình Cổng Mạng (Port Mapping & Environments)
+## 3. Hướng Dẫn Cài Đặt & Chạy Hệ Thống
 
-Lưu ý quan trọng khi chạy trên Windows và WSL2:
-- **PostgreSQL Container (`club_portal_postgres`):** Ánh xạ `5433:5432` ra máy tính chủ (Windows Host).
-- **Backend chạy trên Windows Host:** Kết nối Database qua `localhost:5433` (để tránh xung đột với cổng Postgres 5432 mặc định của Windows).
-- **Backend chạy trong Docker Container:** Kết nối Database qua mạng nội bộ `postgres:5432`.
-- **Nginx Reverse Proxy:** Cổng `80` (HTTP) và `443` (HTTPS).
-- **Mailpit Web UI (Kiểm tra email):** Cổng `8025` (`http://localhost:8025`).
+### Cách 1: Chạy trực tiếp (Local Development)
 
----
-
-## 4. Hướng Dẫn Cài Đặt & Vận Hành
-
-### Cách 1: Vận hành toàn bộ bằng Docker Compose (Khuyến nghị)
-
+#### Bước 1: Khởi động Database PostgreSQL qua Docker
 ```bash
-# 1. Khởi chạy toàn bộ hệ thống (PostgreSQL, Backend, Frontend, Nginx, Mailpit)
-docker compose up -d --build
-
-# 2. Kiểm tra trạng thái 4 container
-docker compose ps
-
-# 3. Truy cập ứng dụng:
-# - Cổng thông tin CLB: http://localhost
-# - Giao diện kiểm tra Email (Mailpit): http://localhost:8025
+docker compose up -d postgres
 ```
+*(Container Postgres sẽ chạy trên cổng `5433` để tránh xung đột với Postgres mặc định của máy).*
 
-### Cách 2: Vận hành thủ công cho Lập trình viên (Local Development)
-
-#### Bước 1: Khởi động Database & Mailpit
-```bash
-docker compose up -d postgres mailpit
-```
-
-#### Bước 2: Chạy Backend
+#### Bước 2: Cài đặt và chạy Backend
 ```bash
 cd backend
 npm install
-npx prisma migrate deploy
+npx prisma db push
+node prisma/seed.js
 npm run dev
-# Backend chạy tại: http://localhost:5000
 ```
+Backend API sẽ hoạt động tại: `http://localhost:5000` (Endpoints: `/api/v1`).
 
-#### Bước 3: Chạy Frontend
+#### Bước 3: Cài đặt và chạy Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
-# Frontend chạy tại: http://localhost:5173
 ```
+Frontend Web App sẽ hoạt động tại: `http://localhost:5173`.
 
 ---
 
-## 5. Kiểm Thử Hệ Thống (Automated Test Execution)
+### Cách 2: Chạy toàn bộ bằng Docker Compose
 
-### 5.1 Kiểm thử Backend API (35 Test Suites)
+```bash
+docker compose up -d --build
+```
+Hệ thống sẽ chạy thông qua Nginx Reverse Proxy tại cổng `80` (`http://localhost`).
+
+---
+
+## 4. Chạy Kiểm Thử (Tests Verification)
+
+Để chạy bộ kiểm thử tự động 11 kịch bản tích hợp cốt lõi (TC01 -> TC12):
 ```bash
 cd backend
 npm test
 ```
-*Kết quả:* **35/35 Passed**, bao gồm kiểm thử RBAC đa CLB, nộp đơn động, duyệt trúng tuyển, phân quyền phó chủ nhiệm, tải mẫu CSV, import CLB, duyệt trạng thái và phòng chống CSV Formula Injection.
 
-### 5.2 Kiểm thử Playwright E2E (Desktop & Mobile - 30 Tests)
-```bash
-cd e2e
-npm test
-```
-*Kết quả:* **30/30 Passed**, bao gồm:
-- Luồng tuyển sinh trọn vẹn (Sinh viên nộp đơn -> Ban chủ nhiệm duyệt -> Kích hoạt hội viên).
-- Đăng ký và hủy sự kiện, kiểm tra chặn đăng ký trùng.
-- Quản lý hội viên, bổ nhiệm phó chủ nhiệm, xuất CSV.
-- Quản lý media album ảnh CLB.
-- Quản trị viên cấp trường: Phê duyệt trạng thái CLB, Tải mẫu CSV & Batch Import CLB.
-- Điều khoản dịch vụ và Chính sách quyền riêng tư (OWASP ASVS / DSAR).
-- Kiểm thử đa nền tảng: Desktop Chromium & Mobile Pixel 5.
-
-### 5.3 Kiểm tra Build Production Frontend
+Để kiểm tra build production của Frontend:
 ```bash
 cd frontend
 npm run build
 ```
-*Kết quả:* Build thành công 100% trong ~3 giây không có lỗi hoặc cảnh báo gãy bundle.
 
 ---
 
-## 6. Điểm Mới trong Phase 6 (Release Hardening & Pilot Readiness)
+## 5. Kịch Bản Demo End-to-End Nghiệp Vụ Tuyển Sinh
 
-1. **Bảo mật & Quyền riêng tư (OWASP ASVS v4.0):**
-   - Triệt tiêu lỗ hổng **CSV Formula Injection** khi xuất dữ liệu người dùng (`sanitizeCsvField`).
-   - Loại bỏ trường đánh giá nhạy cảm `internalNotes` khỏi file xuất của ứng viên.
-   - Thêm trang [Chính sách Quyền riêng tư](/privacy-policy) với quy trình xử lý yêu cầu dữ liệu cá nhân (DSAR).
-   - Thêm trang [Điều khoản Dịch vụ](/terms-of-service) cho sinh viên và Ban chủ nhiệm.
-   - Áp dụng `trust proxy` và bảo vệ giới hạn tần suất gọi API (Rate Limiting) đằng sau Nginx.
-2. **Quản trị Dữ liệu Thí điểm BAFU (Data Readiness):**
-   - API & UI cho phép Quản trị viên cấp trường tải mẫu CSV (`/admin/clubs/template-csv`).
-   - Hỗ trợ nhập danh sách CLB thật từ CSV (`/admin/clubs/import-csv`) với cơ chế kiểm tra trùng lặp tên/slug và phân công Chủ nhiệm.
-   - Quản lý vòng đời trạng thái CLB (`PENDING`, `ACTIVE`, `INACTIVE`) giúp Ban Giám hiệu / Đoàn trường kiểm duyệt trước khi hiển thị công khai.
-3. **Sao lưu & Phục hồi Độc lập (Disaster Recovery):**
-   - Đã thực nghiệm phục hồi 100% bản sao lưu vào cơ sở dữ liệu độc lập `club_portal_restore_test` với độ khớp bản ghi tuyệt đối.
-   - Cung cấp kịch bản sao lưu nén tự động hàng ngày qua Crontab.
-4. **Cấu hình Sẵn sàng cho Môi trường Production:**
-   - [docker-compose.prod.yml](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docker-compose.prod.yml): Mạng nội bộ riêng biệt, cô lập hoàn toàn cổng cơ sở dữ liệu với Internet, giới hạn xoay vòng log (10MB x 3).
-   - [docker/nginx/nginx.prod.conf](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docker/nginx/nginx.prod.conf): Cấu hình SSL TLS 1.2/1.3, tự động chuyển hướng HTTP sang HTTPS và áp dụng các tiêu chuẩn an ninh HTTP Headers cao cấp.
-
----
-
-## 7. Tài Liệu Nghiệm Thu & Vận Hành (Phase 6 Deliverables)
-
-- [Báo cáo Audit Mã nguồn & Bảo mật](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/PHASE6_AUDIT_REPORT.md)
-- [Báo cáo Kiểm thử Tự động E2E](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/PHASE6_E2E_REPORT.md)
-- [Kế hoạch Kiểm thử Nghiệm thu Người dùng (UAT Test Plan)](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/UAT_TEST_PLAN.md)
-- [Kế hoạch Triển khai Thí điểm tại BAFU (BAFU Pilot Plan)](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/BAFU_PILOT_PLAN.md)
-- [Hướng dẫn Triển khai Vận hành Production](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/PRODUCTION_DEPLOYMENT.md)
-- [Báo cáo & Hướng dẫn Sao lưu Phục hồi Dữ liệu](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/BACKUP_RESTORE_VERIFICATION.md)
-- [Danh mục Kiểm tra Bảo mật Phát hành (Security Release Checklist)](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/SECURITY_RELEASE_CHECKLIST.md)
+1. **Khám phá CLB:** Truy cập trang chủ `http://localhost:5173/`, xem các thống kê thật từ database (10+ CLB, 240+ hội viên, đợt tuyển đang mở). Vào trang `/clubs`, lọc theo lĩnh vực "Học thuật & Công nghệ" hoặc bật "Chỉ xem CLB đang mở tuyển".
+2. **Xem chi tiết CLB:** Bấm vào **CLB Lập Trình & Công Nghệ BAFU Tech**, xem thông tin Ban chủ nhiệm, lịch sinh hoạt tối thứ Tư và đợt tuyển Gen 5 đang mở.
+3. **Đăng ký tài khoản sinh viên:** Bấm "Đăng ký", điền thông tin sinh viên mới và mã sinh viên, hệ thống tự động khởi tạo hồ sơ và đăng nhập.
+4. **Nộp hồ sơ ứng tuyển trực tuyến:** Tại trang chi tiết BAFU Tech, bấm "Ứng tuyển vào CLB ngay", trả lời các câu hỏi động (chọn ban, tick ngôn ngữ lập trình, điền mục tiêu). Bấm gửi đơn -> Hồ sơ chuyển sang trạng thái `SUBMITTED`.
+5. **Kiểm tra chống nộp trùng:** Thử nộp lại một lần nữa vào cùng đợt tuyển -> Hệ thống báo lỗi từ chối ngay lập tức.
+6. **Ban chủ nhiệm xét duyệt:** Đăng xuất, đăng nhập bằng tài khoản BCN BAFU Tech (`it.leader@bafu.edu.vn` / `12345678`). Vào menu **Quản lý CLB (Ban chủ nhiệm)** -> Xem danh sách hồ sơ ứng tuyển, bấm "Xem & Xét duyệt", đọc câu trả lời của ứng viên, nhập ghi chú nội bộ, bấm **✓ Duyệt trúng tuyển (Tạo thành viên)**.
+7. **Kích hoạt hội viên tự động:** Hệ thống chạy database transaction: cập nhật trạng thái đơn thành `ACCEPTED`, tự động tạo bản ghi `ClubMembership`, gán tư cách thành viên chính thức, ghi Audit Log và gửi thông báo.
+8. **Xác minh phân quyền đa CLB:** Đăng nhập tài khoản BCN Cầu Lông (`caulong.leader@bafu.edu.vn`) và thử truy cập tài nguyên của BAFU Tech -> Hệ thống chặn lỗi 403 Forbidden.
+9. **Quản trị toàn trường (Super Admin):** Đăng nhập `admin@bafu.edu.vn` / `AdminPassword@2026`, vào **Quản trị toàn trường** xem số liệu tổng hợp toàn trường, danh sách người dùng, cấp quyền Chủ nhiệm CLB mới và xem nhật ký Audit Logs.

@@ -10,22 +10,18 @@ export const verifyToken = (token) => {
 };
 
 export const setAuthCookie = (res, token) => {
-  const isProduction = ENV.NODE_ENV === 'production';
   res.cookie('token', token, {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: 'lax',
-    path: '/',
+    secure: ENV.NODE_ENV === 'production',
+    sameSite: ENV.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 ngày
   });
 };
 
 export const clearAuthCookie = (res) => {
-  const isProduction = ENV.NODE_ENV === 'production';
   res.clearCookie('token', {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: 'lax',
-    path: '/'
+    secure: ENV.NODE_ENV === 'production',
+    sameSite: ENV.NODE_ENV === 'production' ? 'none' : 'lax'
   });
 };
