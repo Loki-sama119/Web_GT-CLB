@@ -34,7 +34,15 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: [ENV.CORS_ORIGIN, 'http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:80'],
+  origin: [
+    ENV.CORS_ORIGIN,
+    'http://localhost',
+    'http://localhost:80',
+    'http://localhost:5173',
+    'http://127.0.0.1',
+    'http://127.0.0.1:80',
+    'http://127.0.0.1:5173'
+  ].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 }));

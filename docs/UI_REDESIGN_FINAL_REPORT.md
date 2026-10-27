@@ -53,6 +53,25 @@ Dự án Cổng thông tin Câu lạc bộ Sinh viên BAFU đã hoàn thành to�
 - **Nguyên nhân thực tế:** Tiêu đề khối phân quyền trong `SuperAdminDashboard.jsx` bị đổi thành `Phân Quyền Ban Chủ Nhiệm` thay vì `Cấp Quyền Ban Chủ Nhiệm Cho Thành Viên`. Tương tự, tab Audit Log bị đổi thành `Nhật Ký Kiểm Toán Toàn Hệ Thống` thay vì `Nhật Ký Thao Tác Hệ Thống (Audit Logs)`.
 - **Giải pháp xử lý:** Khôi phục chính xác các tiêu đề định danh nghiệp vụ.
 
+### 2.6. Lỗi F: HTTP 405 Method Not Allowed khi đăng nhập qua cổng 5173 (Nginx Static Handler)
+- **Triệu chứng thực tế:** Khi truy cập trang đăng nhập qua `http://localhost:5173/login`, người dùng nhập thông tin và bấm Đăng nhập thì nhận thông báo *"Đã có lỗi xảy ra từ máy chủ"*. Chrome DevTools ghi nhận request `POST /api/v1/auth/login` trả về mã lỗi `405 Method Not Allowed`.
+- **Nguyên nhân thực tế:** 
+  - Trong `docker-compose.yml`, dịch vụ `frontend` ánh xạ cổng host `5173:80`. Container này chạy Nginx phục vụ tệp tĩnh React SPA.
+  - Tệp `frontend/nginx.conf` ban đầu chỉ có cấu hình `location / { try_files $uri $uri/ /index.html; }` mà **không có directive `location /api/`**.
+  - Khi người dùng gửi request `POST /api/v1/auth/login` tới `localhost:5173`, Nginx không tìm thấy proxy cho `/api/` nên đã fallback xử lý request như một yêu cầu tệp tĩnh tới `/index.html`. Theo đặc tả HTTP và cơ chế bảo mật của Nginx, gửi method POST tới tệp tĩnh trên ổ đĩa sẽ bị từ chối với lỗi **HTTP 405 Method Not Allowed**.
+  - Hàm `api.js` khi nhận phản hồi 405 HTML không parse được JSON nên ném ra ngoại lệ mặc định *"Đã có lỗi xảy ra từ máy chủ"*.
+- **Giải pháp xử lý:**
+  1. Thêm cấu hình reverse proxy `location /api/ { proxy_pass http://backend:5000; ... }` và `location /uploads/ { proxy_pass http://backend:5000; ... }` trực tiếp vào [frontend/nginx.conf](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/frontend/nginx.conf).
+  2. Bổ sung các origin `http://localhost`, `http://localhost:80`, `http://localhost:5173`, `http://127.0.0.1` vào cấu hình CORS của [backend/src/app.js](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/backend/src/app.js).
+  3. Cải tiến hàm xử lý lỗi trong [frontend/src/services/api.js](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/frontend/src/services/api.js) để bóc tách mã lỗi HTTP chuẩn xác thay vì luôn hiển thị thông báo lỗi chung chung.
+  4. Bổ sung cờ chặn double submit `if (loading) return;` trong [LoginPage.jsx](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/frontend/src/pages/public/LoginPage.jsx).
+  5. Thiết kế lại toàn diện [LoginPage.jsx](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/frontend/src/pages/public/LoginPage.jsx) theo layout 2 cột đẳng cấp (Desktop) và 1 cột tối ưu ngón tay cái (Mobile), ẩn hoàn toàn các nút tài khoản demo trong môi trường production (`import.meta.env.DEV || ?demo=true`).
+- **Kết quả kiểm chứng:**
+  - `POST http://localhost:5173/api/v1/auth/login` trả về **200 OK** với cookie HttpOnly phiên làm việc an toàn.
+  - `POST http://localhost:80/api/v1/auth/login` trả về **200 OK**.
+  - Đăng nhập thành công cả 3 vai trò: Super Admin, Club Admin, Sinh viên.
+  - Xử lý mật khẩu sai và tài khoản không tồn tại trả về `401 Unauthorized` với thông điệp an toàn, chống lộ danh tính người dùng.
+
 ---
 
 ## 3. DESIGN SYSTEM & KIẾN TRÚC GIAO DIỆN MỚI

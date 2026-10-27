@@ -21,7 +21,19 @@ async function request(endpoint, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    const error = new Error(data.message || 'Đã có lỗi xảy ra từ máy chủ');
+    let errorMsg = data.message;
+    if (!errorMsg) {
+      if (response.status === 405) {
+        errorMsg = 'Phương thức không được hỗ trợ (405 Method Not Allowed). Vui lòng liên hệ quản trị viên.';
+      } else if (response.status === 404) {
+        errorMsg = 'Tài nguyên hoặc cổng API không tồn tại (404 Not Found)';
+      } else if (response.status >= 500) {
+        errorMsg = 'Máy chủ dịch vụ tạm thời không phản hồi. Vui lòng thử lại sau.';
+      } else {
+        errorMsg = 'Đã có lỗi xảy ra từ máy chủ';
+      }
+    }
+    const error = new Error(errorMsg);
     error.status = response.status;
     error.errors = data.errors;
     throw error;
