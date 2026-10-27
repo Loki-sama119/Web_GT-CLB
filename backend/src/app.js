@@ -76,9 +76,9 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Body parsers
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Body parsers (Explicit 1MB limit to prevent DoS memory exhaustion while supporting rich club data/applications)
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 app.use(cookieParser());
 
 // Static Uploads Folder
