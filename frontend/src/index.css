@@ -1,26 +1,40 @@
 @import "tailwindcss";
 
+@theme {
+  --font-display: 'Oswald', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  --color-paper: #F4F0E7;
+  --color-ink: #181C1B;
+  --color-forest: #12674D;
+  --color-forest-hover: #0E523D;
+  --color-coral: #EF673F;
+  --color-coral-hover: #D9532B;
+  --color-neutral-border: #D8D5CD;
+  --color-paper-muted: #EBE6DB;
+}
+
 @layer base {
   :root {
     --brand-navy: #142B49;
     --brand-navy-hover: #0E1F35;
-    --brand-green: #167C66;
-    --brand-green-hover: #115E4D;
-    --brand-gold: #F3B846;
-    --brand-gold-hover: #E0A331;
-    --surface-bg: #F8FAFC;
+    --brand-green: #12674D;
+    --brand-green-hover: #0E523D;
+    --brand-gold: #EF673F;
+    --brand-gold-hover: #D9532B;
+    --surface-bg: #F4F0E7;
     --surface-card: #FFFFFF;
-    --text-primary: #1F2937;
-    --text-secondary: #64748B;
-    --text-muted: #94A3B8;
-    --border-subtle: #E2E8F0;
-    --border-focus: #167C66;
+    --text-primary: #181C1B;
+    --text-secondary: #575E5B;
+    --text-muted: #7A827F;
+    --border-subtle: #D8D5CD;
+    --border-focus: #12674D;
   }
 
   body {
-    background-color: var(--surface-bg);
-    color: var(--text-primary);
-    font-family: 'Be Vietnam Pro', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #F4F0E7;
+    color: #181C1B;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
@@ -29,9 +43,9 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Be Vietnam Pro', 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.02em;
-    color: var(--brand-navy);
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: -0.01em;
+    color: #181C1B;
   }
 }
 
