@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { 
   UsersThree, Clock, MapPin, EnvelopeSimple, Phone, Flame, 
   CheckCircle, WarningCircle, PaperPlaneTilt, X, ArrowLeft, ShieldCheck, 
-  Image as ImageIcon, Sparkle, ArrowRight, CalendarDots
+  Image as ImageIcon, Sparkle, ArrowRight, CalendarDots, FacebookLogo
 } from '@phosphor-icons/react';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
@@ -141,8 +141,19 @@ export default function ClubDetailPage() {
     <div className="pb-20 space-y-8">
       {/* 1. Header Banner — Real Campus Organization Profile */}
       <div className="relative bg-[#142B49] text-white py-12 sm:py-16 overflow-hidden">
-        {/* Subtle decorative background pattern */}
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#167C66_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+        {/* Real Cover Image overlay if available */}
+        {club.coverUrl ? (
+          <div className="absolute inset-0 z-0">
+            <img
+              src={club.coverUrl}
+              alt={club.name}
+              className="w-full h-full object-cover opacity-25 filter blur-xs scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#142B49] via-[#142B49]/85 to-[#142B49]/70" />
+          </div>
+        ) : (
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#167C66_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+        )}
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Link to="/clubs" className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white mb-6 transition-colors">
@@ -171,7 +182,7 @@ export default function ClubDetailPage() {
                 )}
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium text-emerald-300 bg-emerald-950/40 border border-emerald-500/30">
                   <ShieldCheck size={14} weight="bold" />
-                  Đoàn Thanh niên BAFU công nhận
+                  {club.status === 'ACTIVE' ? 'CLB Chính Thức BAFU' : 'Chờ Phê Duyệt'}
                 </span>
               </div>
               <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">{club.name}</h1>
@@ -292,7 +303,7 @@ export default function ClubDetailPage() {
               {albumImages.length === 0 ? (
                 <div className="py-10 text-center rounded-xl bg-slate-50 border border-slate-100 text-slate-400 space-y-2">
                   <ImageIcon size={32} weight="duotone" className="mx-auto text-slate-300" />
-                  <p className="text-xs">Chưa có hình ảnh nào trong album hoạt động.</p>
+                  <p className="text-xs">Chưa có hình ảnh nào trong bộ sưu tập này.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -345,16 +356,29 @@ export default function ClubDetailPage() {
               </div>
 
               <div className="pt-3 border-t border-slate-100 space-y-2.5 text-xs text-slate-600">
-                {club.contactEmail && (
+                {club.fanpageUrl && (
                   <div className="flex items-center gap-2.5">
-                    <EnvelopeSimple size={16} weight="bold" className="text-[#167C66] shrink-0" />
-                    <span className="truncate">{club.contactEmail}</span>
+                    <FacebookLogo size={16} weight="fill" className="text-[#1877F2] shrink-0" />
+                    <a
+                      href={club.fanpageUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="truncate text-[#1877F2] hover:underline font-semibold"
+                    >
+                      Fanpage Facebook chính thức
+                    </a>
                   </div>
                 )}
-                {club.contactPhone && (
+                {(club.email || club.contactEmail) && (
+                  <div className="flex items-center gap-2.5">
+                    <EnvelopeSimple size={16} weight="bold" className="text-[#167C66] shrink-0" />
+                    <span className="truncate">{club.email || club.contactEmail}</span>
+                  </div>
+                )}
+                {(club.phone || club.contactPhone) && (
                   <div className="flex items-center gap-2.5">
                     <Phone size={16} weight="bold" className="text-[#167C66] shrink-0" />
-                    <span>{club.contactPhone}</span>
+                    <span>{club.phone || club.contactPhone}</span>
                   </div>
                 )}
                 <div className="flex items-start gap-2.5">

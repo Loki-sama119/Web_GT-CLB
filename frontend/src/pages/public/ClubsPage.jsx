@@ -205,9 +205,24 @@ export default function ClubsPage() {
                 className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-xs hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between"
               >
                 <div>
-                  {/* Cover Banner 16:9 */}
-                  <div className={`h-36 bg-gradient-to-r ${gradient} relative flex items-start justify-end p-3.5`}>
-                    <div className="flex items-center gap-1.5">
+                  {/* Cover Banner 16:9 với ảnh thực tế hoặc gradient nhận diện */}
+                  <div className="h-36 relative overflow-hidden bg-slate-100 flex items-start justify-end p-3.5">
+                    {club.coverUrl ? (
+                      <img
+                        src={club.coverUrl}
+                        alt={club.name}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className={`absolute inset-0 bg-gradient-to-r ${gradient} flex items-center justify-center p-3 opacity-90`}>
+                        <span className="text-white/20 font-black text-xs tracking-wider uppercase select-none text-center">
+                          {club.name}
+                        </span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent pointer-events-none" />
+                    <div className="flex items-center gap-1.5 relative z-10">
                       <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white/95 text-[#142B49] shadow-2xs">
                         {club.category?.name}
                       </span>

@@ -159,7 +159,7 @@ export default function HomePage() {
               <div className="pt-4 border-t border-[#E2E8F0] flex items-center gap-6 text-xs text-slate-500 font-medium">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle size={16} weight="fill" className="text-emerald-600" />
-                  <span>Xác thực bởi Đoàn trường</span>
+                  <span>Cổng kết nối CLB sinh viên</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CheckCircle size={16} weight="fill" className="text-emerald-600" />
@@ -171,26 +171,26 @@ export default function HomePage() {
             {/* Cột Phải: Photo Collage sinh viên BAFU chân thực (52% - 6 cột) */}
             <div className="lg:col-span-6 relative">
               <div className="relative mx-auto max-w-lg lg:max-w-none">
-                {/* Ảnh chính sinh viên học tập & thảo luận ngoài khuôn viên trường */}
+                {/* Ảnh chính: Hoạt động sinh viên chào tân sinh viên thực tế BAFU */}
                 <div className="rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl bg-slate-100 aspect-4/3 relative">
                   <img
-                    src="/images/bafu_campus_students.jpg"
-                    alt="Sinh viên BAFU thảo luận và làm việc nhóm tại khuôn viên trường"
+                    src="/images/bafu/students-welcome-2025.jpg"
+                    alt="Sinh viên BAFU tham gia hoạt động chào đón tân sinh viên trường Đại học Nông - Lâm Bắc Giang"
                     className="w-full h-full object-cover"
                     loading="eager"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none" />
                   <div className="absolute bottom-4 left-4 right-4 text-white">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">Không Gian Sinh Hoạt BAFU</span>
-                    <p className="text-xs text-slate-200 font-medium line-clamp-1">Khuôn viên xanh, năng động và giàu trải nghiệm thực tế</p>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">Hoạt Động Sinh Viên BAFU</span>
+                    <p className="text-xs text-slate-200 font-medium line-clamp-1">Không gian gắn kết, năng động và giàu trải nghiệm ngoại khóa</p>
                   </div>
                 </div>
 
-                {/* Ảnh phụ lồng ghép (Photo Collage): Sinh viên sinh hoạt CLB trong phòng lab/workshop */}
+                {/* Ảnh phụ lồng ghép (Photo Collage): Khuôn viên tổng quan Trường Đại học Nông - Lâm Bắc Giang */}
                 <div className="hidden sm:block absolute -bottom-6 -left-6 w-48 h-48 rounded-2xl overflow-hidden border-4 border-white shadow-2xl bg-white">
                   <img
-                    src="/images/bafu_club_workshop.jpg"
-                    alt="Buổi sinh hoạt chuyên môn câu lạc bộ sinh viên"
+                    src="/images/bafu/campus-overview.jpg"
+                    alt="Khuôn viên tổng quan Trường Đại học Nông - Lâm Bắc Giang"
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
@@ -361,10 +361,25 @@ export default function HomePage() {
                 className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-xs hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between"
               >
                 <div>
-                  {/* Cover 16:9 với gradient chuyên nghiệp */}
-                  <div className={`h-36 bg-gradient-to-r ${gradient} relative flex items-end p-4`}>
-                    <div className="absolute top-3 right-3">
-                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white/90 text-[#142B49] backdrop-blur-xs">
+                  {/* Cover 16:9 với ảnh thực tế hoặc gradient chuyên nghiệp */}
+                  <div className="h-36 relative overflow-hidden bg-slate-100 flex items-end p-4">
+                    {club.coverUrl ? (
+                      <img
+                        src={club.coverUrl}
+                        alt={club.name}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className={`absolute inset-0 bg-gradient-to-r ${gradient} flex items-center justify-center p-3 opacity-90`}>
+                        <span className="text-white/20 font-black text-xs tracking-wider uppercase select-none text-center">
+                          {club.name}
+                        </span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute top-3 right-3 z-10">
+                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white/95 text-[#142B49] shadow-2xs">
                         {club.category?.name}
                       </span>
                     </div>

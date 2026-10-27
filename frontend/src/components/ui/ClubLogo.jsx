@@ -44,6 +44,12 @@ export default function ClubLogo({
   size = 'md', // sm (36px) | md (48px) | lg (64px) | xl (80px)
   className = ''
 }) {
+  const [imgError, setImgError] = React.useState(false);
+
+  React.useEffect(() => {
+    setImgError(false);
+  }, [logoUrl]);
+
   const sizeClasses = {
     sm: 'w-9 h-9 rounded-xl text-xs font-bold',
     md: 'w-12 h-12 rounded-xl text-sm font-extrabold',
@@ -54,16 +60,13 @@ export default function ClubLogo({
   const monogram = getMonogram(name);
   const gradient = getCategoryGradient(categorySlug, name);
 
-  if (logoUrl) {
+  if (logoUrl && !imgError) {
     return (
       <img
         src={logoUrl}
         alt={`Logo ${name}`}
-        className={`object-cover border border-slate-200/80 shadow-2xs ${sizeClasses[size] || sizeClasses.md} ${className}`}
-        onError={(e) => {
-          // Fallback to monogram if image fails to load
-          e.currentTarget.style.display = 'none';
-        }}
+        className={`object-cover bg-white border border-slate-200/80 shadow-2xs shrink-0 ${sizeClasses[size] || sizeClasses.md} ${className}`}
+        onError={() => setImgError(true)}
       />
     );
   }
@@ -78,3 +81,4 @@ export default function ClubLogo({
     </div>
   );
 }
+
