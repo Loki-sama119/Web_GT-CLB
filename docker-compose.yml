@@ -25,6 +25,7 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
+      DEPLOYMENT_ENV: demo
       PORT: 5000
       DATABASE_URL: postgresql://postgres:postgrespassword@postgres:5432/club_portal_db?schema=public
       JWT_SECRET: super-secret-jwt-key-for-university-club-portal-2026
@@ -37,7 +38,11 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5000/health || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:5000/health || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -55,14 +60,18 @@ services:
       JWT_SECRET: super-secret-jwt-key-for-university-club-portal-2026-e2e
       CORS_ORIGIN: http://localhost,http://localhost:80,http://localhost:5173,http://localhost:8080,http://127.0.0.1,http://127.0.0.1:8080
     volumes:
-      - uploads_data:/app/uploads
+      - uploads_e2e:/app/uploads
     ports:
       - "5001:5001"
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5001/health || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:5001/health || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -98,3 +107,4 @@ services:
 volumes:
   pgdata:
   uploads_data:
+  uploads_e2e:
