@@ -20,6 +20,10 @@ import StudentDashboard from './pages/student/StudentDashboard';
 import ClubAdminDashboard from './pages/club-admin/ClubAdminDashboard';
 import SuperAdminDashboard from './pages/super-admin/SuperAdminDashboard';
 
+// Editorial Prototypes
+import EditorialHomePrototype from './pages/prototype/EditorialHomePrototype';
+import EditorialClubsPrototype from './pages/prototype/EditorialClubsPrototype';
+
 export default function App() {
   return (
     <AuthProvider>
@@ -35,6 +39,10 @@ export default function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+
+            {/* Public Prototypes */}
+            <Route path="/prototype/editorial-home" element={<EditorialHomePrototype />} />
+            <Route path="/prototype/editorial-clubs" element={<EditorialClubsPrototype />} />
 
             {/* Protected Student Routes */}
             <Route element={<ProtectedRoute />}>
