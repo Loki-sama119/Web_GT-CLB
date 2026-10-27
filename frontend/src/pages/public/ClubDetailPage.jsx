@@ -186,7 +186,7 @@ export default function ClubDetailPage() {
           </div>
         )}
 
-        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative z-10 space-y-6">
+        <div className="editorial-container py-12 sm:py-16 relative z-10 space-y-6">
           <Link
             to="/clubs"
             className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.12em] text-[#D8D5CD] hover:text-white transition-colors"
@@ -257,7 +257,7 @@ export default function ClubDetailPage() {
         )}
       </div>
       {/* 2. MAIN EDITORIAL CONTENT (12-COLUMN ASYMMETRICAL GRID) */}
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+      <div className="editorial-container pt-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Cột trái (8/12 cột): Đợt tuyển, Giới thiệu, BCN, Album */}
           <div className="lg:col-span-8 space-y-8">

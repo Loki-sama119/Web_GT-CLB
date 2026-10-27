@@ -56,7 +56,7 @@ export default function EventsPage() {
   );
   return (
     <div className="bg-[#F4F0E7] text-[#181C1B] min-h-screen py-12 lg:py-20 font-sans">
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <div className="editorial-container space-y-10">
         {/* Editorial Header Banner */}
         <div className="border-b border-[#D8D5CD] pb-8">
           <EditorialHeading

@@ -37,9 +37,9 @@ Tình nguyện Xanh, CLB Hiến máu, CLB Tin học, CLB Khởi nghiệp và CLB
 
 Các fanpage do người dùng cung cấp đã được thử đọc công khai:
 
-- [Tình nguyện Xanh](https://www.facebook.com/p/CLB-T%C3%ACnh-Nguy%E1%BB%87n-Xanh-Tr%C6%B0%E1%BB%9Dng-%C4%90%E1%BA%A1i-h%E1%BB%8Dc-N%C3%B4ng-L%C3%A2m-B%E1%BA%AFc-Giang-61552769437618/): nội dung không truy cập được, BLOCKED_BY_SOURCE cho việc lấy tư liệu.
+- [Tình nguyện Xanh](https://www.facebook.com/p/CLB-T%C3%ACnh-Nguy%E1%BB%87n-Xanh-Tr%C6%B0%E1%BB%9Dng-%C4%90%E1%BA%A1i-h%E1%BB%8Dc-N%C3%B4ng-L%C3%A2m-B%E1%BA%AFc-Giang-61552769437618/): UNAVAILABLE_IN_READER, công cụ trả cache miss; chưa xác định được nguyên nhân từ phía Facebook.
 - [maubafu](https://www.facebook.com/maubafu/): trả “You’re Temporarily Blocked”; BLOCKED_BY_SOURCE. Không khẳng định cùng danh tính với hồ sơ Hiến máu.
-- [CLB Tin học](https://www.facebook.com/Clbtinhocitbafu/): không truy xuất được nội dung/ảnh gốc; BLOCKED_BY_SOURCE. Không khẳng định cùng danh tính với BAFU Tech.
+- [CLB Tin học](https://www.facebook.com/Clbtinhocitbafu/): UNAVAILABLE_IN_READER, công cụ trả cache miss; không truy xuất được nội dung/ảnh gốc. Không khẳng định cùng danh tính với BAFU Tech.
 - [Fanpage trường](https://www.facebook.com/bafu.university): robots từ chối. Không vượt đăng nhập/chống thu thập.
 
 Browser control Windows cũng bị công cụ dừng do không xác định URL đủ tin cậy; không tiếp tục điều khiển UI sau thông báo đó. Nghiên cứu nguồn dùng web reader/search công khai làm phương án thay thế. Không lấy screenshot Facebook mờ làm logo.

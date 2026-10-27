@@ -93,7 +93,7 @@ export default function ClubsPage() {
 
   return (
     <div className="bg-[#F4F0E7] text-[#181C1B] min-h-screen py-12 lg:py-20 font-sans clubs-directory">
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div className="editorial-container space-y-12">
         {/* Editorial Masthead Header */}
         <div className="border-b border-[#D8D5CD] pb-8 space-y-4">
           <EditorialHeading

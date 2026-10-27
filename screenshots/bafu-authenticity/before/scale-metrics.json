@@ -1,0 +1,1232 @@
+[
+  {
+    "width": 1440,
+    "height": 900,
+    "innerWidth": 1440,
+    "outerWidth": 1440,
+    "devicePixelRatio": 1,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "visualViewportScale": 1,
+    "rootFontSize": "16px",
+    "bodyFontSize": "16px",
+    "rootZoom": "1",
+    "bodyZoom": "1",
+    "rootTransform": "none",
+    "mainWidth": 1440,
+    "containerWidth": 1320,
+    "viewport": "width=device-width, initial-scale=1.0",
+    "h1Font": "74px",
+    "fonts": [
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      }
+    ],
+    "scaledElements": []
+  },
+  {
+    "width": 1366,
+    "height": 768,
+    "innerWidth": 1366,
+    "outerWidth": 1366,
+    "devicePixelRatio": 1,
+    "clientWidth": 1366,
+    "scrollWidth": 1366,
+    "visualViewportScale": 1,
+    "rootFontSize": "16px",
+    "bodyFontSize": "16px",
+    "rootZoom": "1",
+    "bodyZoom": "1",
+    "rootTransform": "none",
+    "mainWidth": 1366,
+    "containerWidth": 1320,
+    "viewport": "width=device-width, initial-scale=1.0",
+    "h1Font": "74px",
+    "fonts": [
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      }
+    ],
+    "scaledElements": []
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "innerWidth": 768,
+    "outerWidth": 768,
+    "devicePixelRatio": 1,
+    "clientWidth": 768,
+    "scrollWidth": 768,
+    "visualViewportScale": 1,
+    "rootFontSize": "16px",
+    "bodyFontSize": "16px",
+    "rootZoom": "1",
+    "bodyZoom": "1",
+    "rootTransform": "none",
+    "mainWidth": 768,
+    "containerWidth": 768,
+    "viewport": "width=device-width, initial-scale=1.0",
+    "h1Font": "60px",
+    "fonts": [
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      }
+    ],
+    "scaledElements": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "innerWidth": 390,
+    "outerWidth": 390,
+    "devicePixelRatio": 1,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "visualViewportScale": 1,
+    "rootFontSize": "16px",
+    "bodyFontSize": "16px",
+    "rootZoom": "1",
+    "bodyZoom": "1",
+    "rootTransform": "none",
+    "mainWidth": 390,
+    "containerWidth": 390,
+    "viewport": "width=device-width, initial-scale=1.0",
+    "h1Font": "48px",
+    "fonts": [
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      }
+    ],
+    "scaledElements": []
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "innerWidth": 375,
+    "outerWidth": 375,
+    "devicePixelRatio": 1,
+    "clientWidth": 375,
+    "scrollWidth": 375,
+    "visualViewportScale": 1,
+    "rootFontSize": "16px",
+    "bodyFontSize": "16px",
+    "rootZoom": "1",
+    "bodyZoom": "1",
+    "rootTransform": "none",
+    "mainWidth": 375,
+    "containerWidth": 375,
+    "viewport": "width=device-width, initial-scale=1.0",
+    "h1Font": "48px",
+    "fonts": [
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Be Vietnam Pro",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "unloaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Oswald",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "unloaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      },
+      {
+        "family": "Plus Jakarta Sans",
+        "status": "loaded"
+      }
+    ],
+    "scaledElements": []
+  }
+]

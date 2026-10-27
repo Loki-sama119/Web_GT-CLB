@@ -45,7 +45,7 @@ export default function Navbar() {
 
   return (
     <header className="site-navbar sticky top-0 z-40 bg-white border-b border-[#D8D5CD] transition-all">
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 h-[68px] flex items-center justify-between">
+      <div className="editorial-container h-[68px] flex items-center justify-between">
         {/* Brand Logo & Wordmark */}
         <Link to="/" className="flex items-center focus-visible:outline-2">
           <BrandWordmark size="default" />

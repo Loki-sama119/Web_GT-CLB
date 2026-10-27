@@ -52,9 +52,13 @@ Các backup dưới `backups/` bị loại khỏi Git vì chứa dữ liệu và
 
 Mỗi dump được kiểm tra `pg_restore --list`, phục hồi vào một database riêng `bafu_restore_<timestamp>`, rồi đối chiếu count và digest toàn bộ hàng của từng bảng. Cả ba khớp. Không xóa database kiểm chứng. Media gốc đã sao lưu ở `backups/uploads-before-authenticity/`.
 
+Backup chốt sau xử lý: `club_portal_db-20261027111212904/database.dump`, SHA-256 `417cc92062eea0387e5ae7217c37ae850a45df14d2c21ace2723a9d89be68d2f`. Đã phục hồi riêng và khớp cả bảng MediaAsset mới; receipt không chứa dữ liệu hàng được lưu tại `docs/qa/final-backup-receipt.json`.
+
 Demo backup chứa `inventory.json`, `receipt.json`, `cleanup-plan.json`, `cleanup-result.json`. Plan liệt kê ID từng bản ghi, ID dự kiến xóa và các tham chiếu ảnh cũ. Script `authenticity-cleanup.mjs` mặc định dry-run, yêu cầu `--environment=demo`, database local đúng tên, backup đã được kiểm tra và `--apply` riêng. Apply dùng transaction, giữ nhật ký, từ chối chạy lại cùng plan và kiểm tra thay đổi so với inventory.
 
 Rollback: phục hồi dump vào một database mới, đối chiếu trước; sau đó operator chuyển cấu hình kết nối sang bản đã kiểm chứng hoặc phục hồi từng bản ghi từ inventory. Không `--clean` lên database đang phục vụ. Không reset PostgreSQL, TRUNCATE, migrate reset hoặc xóa volume. Nếu cần khôi phục 10 hàng media, tệp vẫn có cả trong volume gốc và bản sao backup.
+
+Dump trước migration cần đi cùng phiên bản ứng dụng/Prisma trước migration. Nếu giữ ứng dụng mới, migrate database phục hồi trước và chuyển từng record vào schema hiện hành sau khi phân loại; không tái công bố fixture như dữ liệu thật. Kết quả đối chiếu các trường gốc của hai tài khoản UNKNOWN và toàn bộ profile của họ được lưu tại `docs/qa/data-preservation.json`: không thay đổi.
 
 ## Ngăn tái nhiễm
 
