@@ -14,8 +14,8 @@ export default function LoginPage() {
   const searchParams = new URLSearchParams(location.search);
   const redirectPath = searchParams.get('redirect') || '/';
 
-  // Quản lý hiển thị tài khoản demo: Chỉ hiển thị trong development hoặc khi có cờ ?demo=true
-  const isDemoMode = import.meta.env.DEV || searchParams.get('demo') === 'true';
+  // Quản lý hiển thị tài khoản demo: Chỉ cho phép trong môi trường development, tuyệt đối không kích hoạt trên production
+  const isDemoMode = Boolean(import.meta.env.DEV);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -208,8 +208,8 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Demo Testing Accounts Pill (Chỉ xuất hiện khi ở môi trường DEV hoặc có query ?demo=true) */}
-          {isDemoMode && (
+          {/* Demo Testing Accounts Pill (Chỉ biên dịch và xuất hiện trong môi trường DEV) */}
+          {import.meta.env.DEV && (
             <div className="pt-4 border-t border-slate-100">
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5 text-[#F3B846]" /> Tài khoản kiểm thử nhanh (Demo / Dev):

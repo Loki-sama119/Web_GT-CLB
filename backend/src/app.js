@@ -33,18 +33,36 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
+const configuredOrigins = (ENV.CORS_ORIGIN || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+const defaultDevOrigins = [
+  'http://localhost',
+  'http://localhost:80',
+  'http://localhost:5173',
+  'http://127.0.0.1',
+  'http://127.0.0.1:80',
+  'http://127.0.0.1:5173'
+];
+
+const allowedOrigins = (ENV.NODE_ENV === 'production' && configuredOrigins.length > 0)
+  ? configuredOrigins
+  : Array.from(new Set([...configuredOrigins, ...defaultDevOrigins]));
+
 app.use(cors({
-  origin: [
-    ENV.CORS_ORIGIN,
-    'http://localhost',
-    'http://localhost:80',
-    'http://localhost:5173',
-    'http://127.0.0.1',
-    'http://127.0.0.1:80',
-    'http://127.0.0.1:5173'
-  ].filter(Boolean),
+  origin: (origin, callback) => {
+    // Allow non-browser requests (Postman, curl, server-to-server)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS policy does not allow access from origin: ${origin}`));
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
 
 // Giới hạn tần suất request (Rate Limiting)
