@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bad-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#040F1E"/>
+      <stop offset="50%" stop-color="#0B2545"/>
+      <stop offset="100%" stop-color="#030A14"/>
+    </linearGradient>
+    <linearGradient id="bad-smash" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="50%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <filter id="bad-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#bad-grad)"/>
+
+  <!-- High-Velocity Smash Arc Trails -->
+  <g fill="none" stroke="url(#bad-smash)" filter="url(#bad-glow)">
+    <path d="M 50 600 Q 400 150 1150 100" stroke-width="6" opacity="0.8"/>
+    <path d="M 120 640 Q 450 200 1180 160" stroke-width="2.5" opacity="0.4"/>
+    <path d="M 0 540 Q 350 120 1100 60" stroke-width="1.5" opacity="0.3"/>
+  </g>
+
+  <!-- Speed Shockwave Rings -->
+  <circle cx="1050" cy="110" r="40" fill="none" stroke="#06B6D4" stroke-width="3" filter="url(#bad-glow)"/>
+  <circle cx="1050" cy="110" r="80" fill="none" stroke="#3B82F6" stroke-width="2" stroke-dasharray="8 6" opacity="0.6"/>
+  <circle cx="1050" cy="110" r="140" fill="none" stroke="#8B5CF6" stroke-width="1" opacity="0.3"/>
+
+  <!-- Court Dynamic Geometry Lines -->
+  <g stroke="#06B6D4" stroke-width="1.5" opacity="0.25">
+    <line x1="200" y1="150" x2="1000" y2="150"/>
+    <line x1="150" y1="520" x2="1050" y2="520"/>
+    <line x1="600" y1="80" x2="600" y2="590" stroke-dasharray="10 8"/>
+  </g>
+
+  <!-- Watermark -->
+  <text x="80" y="580" font-family="Arial, sans-serif" font-weight="900" font-size="140" fill="#06B6D4" opacity="0.06" font-style="italic">SMASH ARC</text>
+</svg>

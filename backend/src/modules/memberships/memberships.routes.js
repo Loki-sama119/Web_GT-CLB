@@ -16,6 +16,14 @@ router.get(
   MembershipsController.exportClubMembers
 );
 
+// Thêm thành viên mới trực tiếp vào CLB
+router.post(
+  '/clubs/:clubId/members',
+  authenticate,
+  requireClubAdmin(req => req.params.clubId),
+  MembershipsController.addMember
+);
+
 // Cập nhật chức vụ thành viên
 router.patch(
   '/clubs/:clubId/members/:memberId/role',

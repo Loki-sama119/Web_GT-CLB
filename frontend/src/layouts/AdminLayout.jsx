@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import BrandWordmark from '../components/ui/BrandWordmark';
-import { 
-  UsersThree, ClipboardText, Plus, SignOut, ArrowSquareOut,
-  ChartBar, ShieldCheck, FileText, UserCheck, House, List, X, CaretRight
-} from '@phosphor-icons/react';
+import React, { useState } from "react";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import BrandWordmark from "../components/ui/BrandWordmark";
+import {
+  UsersThree,
+  ClipboardText,
+  Plus,
+  SignOut,
+  ArrowSquareOut,
+  ChartBar,
+  ShieldCheck,
+  FileText,
+  UserCheck,
+  House,
+  List,
+  X,
+  CaretRight,
+} from "@phosphor-icons/react";
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
@@ -13,20 +24,20 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isSuperAdmin = user?.role === 'SUPER_ADMIN';
-  const isClubAdmin = location.pathname.includes('/club-admin');
+  const isSuperAdmin = user?.role === "SUPER_ADMIN";
+  const isClubAdmin = location.pathname.includes("/club-admin");
 
   const handleLogout = async () => {
     try {
       await logout();
-      navigate('/login');
+      navigate("/login");
     } catch (err) {
-      console.error('Logout error:', err);
+      console.error("Logout error:", err);
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-50 text-slate-800">
+    <div className="admin-workspace min-h-screen flex bg-slate-50 text-slate-800">
       {/* 1. DESKTOP SIDEBAR (256px / w-64) */}
       <aside className="hidden lg:flex w-64 bg-[#142B49] text-white flex-col shrink-0 border-r border-slate-800/40 select-none">
         {/* Brand Header */}
@@ -39,10 +50,14 @@ export default function AdminLayout() {
         {/* Role Badge Indicator */}
         <div className="px-6 py-3 border-b border-white/5 bg-white/[0.02]">
           <span className="text-[10px] font-black uppercase tracking-wider text-[#F3B846]">
-            {isSuperAdmin ? 'Trung Tâm Quản Trị Hệ Thống' : 'Không Gian Ban Chủ Nhiệm'}
+            {isSuperAdmin
+              ? "Trung Tâm Quản Trị Hệ Thống"
+              : "Không Gian Ban Chủ Nhiệm"}
           </span>
           <div className="text-xs text-slate-300 font-semibold truncate mt-0.5">
-            {isSuperAdmin ? 'Toàn Trường BAFU' : user?.studentProfile?.fullName || 'Club Admin'}
+            {isSuperAdmin
+              ? "Toàn Trường BAFU"
+              : user?.studentProfile?.fullName || "Club Admin"}
           </div>
         </div>
 
@@ -56,9 +71,9 @@ export default function AdminLayout() {
               <Link
                 to="/admin/dashboard"
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
-                  location.pathname === '/admin/dashboard'
-                    ? 'bg-[#167C66] text-white shadow-xs'
-                    : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                  location.pathname === "/admin/dashboard"
+                    ? "bg-[#167C66] text-white shadow-xs"
+                    : "text-slate-300 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 <ChartBar size={18} weight="duotone" />
@@ -73,9 +88,9 @@ export default function AdminLayout() {
               <Link
                 to="/club-admin"
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
-                  location.pathname === '/club-admin'
-                    ? 'bg-[#167C66] text-white shadow-xs'
-                    : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                  location.pathname === "/club-admin"
+                    ? "bg-[#167C66] text-white shadow-xs"
+                    : "text-slate-300 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 <ClipboardText size={18} weight="duotone" />
@@ -106,11 +121,16 @@ export default function AdminLayout() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-lg bg-[#167C66] text-white font-bold text-xs flex items-center justify-center shrink-0">
-                {user?.studentProfile?.fullName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}
+                {user?.studentProfile?.fullName?.charAt(0) ||
+                  user?.email?.charAt(0).toUpperCase()}
               </div>
               <div className="truncate text-xs">
-                <div className="font-bold text-white truncate">{user?.studentProfile?.fullName || 'Người Dùng'}</div>
-                <div className="text-[10px] text-slate-400 truncate">{user?.email}</div>
+                <div className="font-bold text-white truncate">
+                  {user?.studentProfile?.fullName || "Người Dùng"}
+                </div>
+                <div className="text-[10px] text-slate-400 truncate">
+                  {user?.email}
+                </div>
               </div>
             </div>
             <button
@@ -127,14 +147,14 @@ export default function AdminLayout() {
       {/* 2. MOBILE DRAWER */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
-          <div 
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" 
-            onClick={() => setMobileMenuOpen(false)} 
+          <div
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
           />
           <div className="relative w-64 bg-[#142B49] text-white flex flex-col z-10 p-4">
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <BrandWordmark variant="dark" size="small" />
-              <button 
+              <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-1 rounded-lg text-slate-400 hover:text-white"
               >
@@ -143,7 +163,7 @@ export default function AdminLayout() {
             </div>
             <div className="py-4 space-y-2">
               <Link
-                to={isSuperAdmin ? '/admin/dashboard' : '/club-admin'}
+                to={isSuperAdmin ? "/admin/dashboard" : "/club-admin"}
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold bg-[#167C66] text-white"
               >
@@ -160,7 +180,9 @@ export default function AdminLayout() {
               </Link>
             </div>
             <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between">
-              <span className="text-xs text-slate-400 truncate">{user?.email}</span>
+              <span className="text-xs text-slate-400 truncate">
+                {user?.email}
+              </span>
               <button onClick={handleLogout} className="text-rose-400 p-1">
                 <SignOut size={18} />
               </button>
@@ -182,10 +204,12 @@ export default function AdminLayout() {
               <List size={20} weight="bold" />
             </button>
             <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-              <Link to="/" className="hover:text-slate-800">BAFU Portal</Link>
+              <Link to="/" className="hover:text-slate-800">
+                BAFU Portal
+              </Link>
               <CaretRight size={12} className="text-slate-400" />
               <span className="text-slate-900 font-bold">
-                {isSuperAdmin ? 'Quản Trị Toàn Trường' : 'Ban Chủ Nhiệm CLB'}
+                {isSuperAdmin ? "Quản Trị Toàn Trường" : "Ban Chủ Nhiệm CLB"}
               </span>
             </div>
           </div>

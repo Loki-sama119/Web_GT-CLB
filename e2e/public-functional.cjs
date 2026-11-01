@@ -1,0 +1,44 @@
+const {chromium,expect}=require('@playwright/test');
+const fs=require('node:fs');
+const path=require('node:path');
+(async()=>{
+ const browser=await chromium.launch({headless:true});
+ const results=[];
+ for(const viewport of [{width:1440,height:900},{width:390,height:844}]){
+  const page=await browser.newPage({viewport});
+  page.on('request',r=>{if(new URL(r.url()).origin==='http://localhost'&&!['GET','HEAD'].includes(r.method()))throw new Error('Public acceptance is read-only');});
+  await page.goto('http://localhost/');
+  await page.getByRole('textbox',{name:'Tìm câu lạc bộ',exact:true}).fill('Tin học');
+  await page.getByRole('button',{name:'Tìm kiếm',exact:true}).click();
+  await expect(page).toHaveURL(/search=/);
+  await expect(page.locator('h3').filter({hasText:'CLB Tin học BAFU'})).toBeVisible();
+  await expect(page.locator('.feature-club')).toHaveCount(1);
+  await page.getByRole('textbox',{name:'Tìm câu lạc bộ',exact:true}).fill('zzzz-no-matching-club');
+  await page.getByRole('button',{name:'Tìm kiếm',exact:true}).click();
+  await expect(page.getByText('Không tìm thấy câu lạc bộ phù hợp')).toBeVisible();
+  await page.getByRole('button',{name:'Xóa toàn bộ bộ lọc'}).click();
+  await expect(page.locator('.feature-club')).toHaveCount(2);
+  await expect(page.locator('.compact-club')).toHaveCount(3);
+  await page.getByRole('button',{name:'Nghệ thuật & Văn hóa',exact:true}).click();
+  await expect(page.locator('.feature-club')).toHaveCount(1);
+  await expect(page.locator('h3')).toHaveText('CLB Văn nghệ BAFU');
+  await page.goto('http://localhost/events');
+  await expect(page.getByText('Chưa có sự kiện nào sắp diễn ra')).toBeVisible();
+  await page.getByRole('button',{name:'Đã diễn ra',exact:true}).click();
+  await expect(page.locator('.event-poster')).toHaveCount(2);
+  await expect(page.getByRole('button',{name:'Đăng ký tham gia',exact:true})).toHaveCount(0);
+  await expect(page.locator('.event-date time').filter({hasText:'16/09/2024'})).toBeVisible();
+  await page.goto('http://localhost/clubs/clb-lap-trinh-bafu-tech');
+  await expect(page.getByText('Thông tin câu lạc bộ chưa được công bố hoặc không tồn tại')).toBeVisible();
+  await page.goto('http://localhost/login');
+  await expect(page.getByText('Tài khoản kiểm thử nhanh',{exact:false})).toHaveCount(0);
+  await expect(page.getByText('Cổng thông tin câu lạc bộ chính thức',{exact:false})).toHaveCount(0);
+  results.push({viewport,search:true,reset:true,categoryFilter:true,historicalEvents:true,quarantine404:true,noDemoLogin:true});
+  await page.close();
+ }
+ const api=await (await fetch('http://localhost/api/v1/clubs?limit=50')).json();
+ if(api.data.clubs.length!==5||api.data.clubs.some(c=>c.dataClassification!=='REAL_VERIFIED'||c.logoUrl||c.coverUrl))throw new Error('Public catalogue authenticity failure');
+ await browser.close();
+ fs.writeFileSync(path.resolve(__dirname,'../docs/qa/public-functional.json'),JSON.stringify({pass:true,checkedAt:new Date().toISOString(),results},null,2));
+ console.log('Public functional acceptance PASS (desktop and mobile)');
+})().catch(error=>{console.error(error);process.exit(1);});

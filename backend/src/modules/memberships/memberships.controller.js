@@ -34,6 +34,17 @@ export class MembershipsController {
     }
   }
 
+  static async addMember(req, res, next) {
+    try {
+      const { clubId } = req.params;
+      const { identifier, role } = req.body;
+      const member = await MembershipsService.addMember(clubId, { identifier, role });
+      return sendSuccess(res, 201, 'Thêm thành viên vào câu lạc bộ thành công', { member });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async exportClubMembers(req, res, next) {
     try {
       const { clubId } = req.params;

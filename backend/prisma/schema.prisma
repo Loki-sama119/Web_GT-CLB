@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum DataClassification {
+  REAL_VERIFIED
+  REAL_UNVERIFIED
+  DEMO
+  E2E_TEST
+  PLACEHOLDER
+  UNKNOWN
+}
+
 enum SystemRole {
   STUDENT
   SUPER_ADMIN
@@ -75,6 +84,9 @@ enum PostStatus {
 }
 
 model User {
+  dataClassification DataClassification @default(UNKNOWN)
+  sourceUrl String?
+  verifiedAt DateTime?
   id                   String              @id @default(uuid())
   email                String              @unique
   passwordHash         String
@@ -133,6 +145,12 @@ model ClubCategory {
 }
 
 model Club {
+  activityStatus String @default("NOT_CONFIRMED")
+  identityKey String?
+  assets MediaAsset[]
+  dataClassification DataClassification @default(UNKNOWN)
+  sourceUrl String?
+  verifiedAt DateTime?
   id               String               @id @default(uuid())
   name             String               @unique
   slug             String               @unique
@@ -178,6 +196,9 @@ model ClubMembership {
 }
 
 model RecruitmentCampaign {
+  dataClassification DataClassification @default(UNKNOWN)
+  sourceUrl String?
+  verifiedAt DateTime?
   id             String           @id @default(uuid())
   clubId         String
   title          String
@@ -265,6 +286,9 @@ model ApplicationAnswer {
 }
 
 model ClubPost {
+  dataClassification DataClassification @default(UNKNOWN)
+  sourceUrl String?
+  verifiedAt DateTime?
   id          String     @id @default(uuid())
   clubId      String
   authorId    String
@@ -285,6 +309,12 @@ model ClubPost {
 }
 
 model ClubEvent {
+  datePrecision String @default("TIME")
+  organizer String?
+  assets MediaAsset[]
+  dataClassification DataClassification @default(UNKNOWN)
+  sourceUrl String?
+  verifiedAt DateTime?
   id              String              @id @default(uuid())
   clubId          String
   title           String
@@ -350,6 +380,9 @@ model AuditLog {
 }
 
 model ClubMedia {
+  dataClassification DataClassification @default(UNKNOWN)
+  sourceUrl String?
+  verifiedAt DateTime?
   id          String   @id @default(uuid())
   clubId      String
   url         String
@@ -376,4 +409,25 @@ model ApplicationHistory {
   changedBy     User?             @relation(fields: [changedById], references: [id], onDelete: SetNull)
 
   @@map("application_histories")
+}
+
+model MediaAsset {
+  assetId String @id @default(uuid())
+  filename String
+  url String
+  type String
+  sourceUrl String?
+  sourcePostUrl String?
+  sourcePage String?
+  clubId String?
+  eventId String?
+  publishedAt DateTime?
+  capturedAt DateTime?
+  usagePermission String @default("PENDING")
+  verificationStatus String @default("SOURCE_FOUND_UNVERIFIED")
+  verifiedAt DateTime?
+  altText String
+  club Club? @relation(fields:[clubId],references:[id],onDelete:SetNull)
+  event ClubEvent? @relation(fields:[eventId],references:[id],onDelete:SetNull)
+  @@map("media_assets")
 }

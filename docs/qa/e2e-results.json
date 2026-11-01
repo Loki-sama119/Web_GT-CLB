@@ -1,0 +1,1906 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--reporter=list,json"
+    ],
+    "configFile": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\playwright.config.js",
+    "rootDir": "D:/CLB Sinh Viên BAFU/Web_GT-CLB/e2e/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\isolation.mjs",
+    "globalTeardown": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\isolation-teardown.mjs",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/CLB Sinh Viên BAFU/Web_GT-CLB/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/CLB Sinh Viên BAFU/Web_GT-CLB/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/CLB Sinh Viên BAFU/Web_GT-CLB/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "D:/CLB Sinh Viên BAFU/Web_GT-CLB/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests",
+        "snapshotDir": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://localhost:8080",
+          "trace": "on-first-retry",
+          "screenshot": "only-on-failure",
+          "video": "retain-on-failure",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "mobile",
+        "testDir": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests",
+        "snapshotDir": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://localhost:8080",
+          "trace": "on-first-retry",
+          "screenshot": "only-on-failure",
+          "video": "retain-on-failure",
+          "userAgent": "Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+          "viewport": {
+            "width": 393,
+            "height": 727
+          },
+          "screen": {
+            "width": 393,
+            "height": 851
+          },
+          "deviceScaleFactor": 2.75,
+          "isMobile": true,
+          "hasTouch": true,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "mobile"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "full-flow.spec.js",
+      "file": "full-flow.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "University Club Portal - End-to-End Test Suite (TC01-TC18)",
+          "file": "full-flow.spec.js",
+          "line": 4,
+          "column": 4,
+          "specs": [
+            {
+              "title": "01. Khách xem Landing page, danh mục, thống kê và danh sách CLB",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1437,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:08:45.191Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-e27139266b6fc41bb28e",
+              "file": "full-flow.spec.js",
+              "line": 16,
+              "column": 3
+            },
+            {
+              "title": "02. Xem chi tiết CLB, BCN, lịch sinh hoạt và đợt tuyển",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 835,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:08:46.903Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-e76b891ac08616ab2ab2",
+              "file": "full-flow.spec.js",
+              "line": 43,
+              "column": 3
+            },
+            {
+              "title": "03. Đăng ký tài khoản sinh viên mới",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 890,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:08:47.754Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-98bdebe7b8c50c8f6420",
+              "file": "full-flow.spec.js",
+              "line": 62,
+              "column": 3
+            },
+            {
+              "title": "04. Đăng nhập và nộp đơn ứng tuyển trực tuyến vào BAFU Tech",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1487,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:08:48.657Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-68a2adebd02f3d6b6171",
+              "file": "full-flow.spec.js",
+              "line": 82,
+              "column": 3
+            },
+            {
+              "title": "05. Kiểm tra trạng thái hồ sơ trong Dashboard sinh viên",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1854,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:08:50.166Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-21b0e1b39835cc99b98c",
+              "file": "full-flow.spec.js",
+              "line": 111,
+              "column": 3
+            },
+            {
+              "title": "06. Club Admin duyệt hồ sơ và kích hoạt hội viên",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2164,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:08:52.037Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-62248dea38eae42c2b91",
+              "file": "full-flow.spec.js",
+              "line": 130,
+              "column": 3
+            },
+            {
+              "title": "07. Sinh viên thấy tư cách thành viên đã được kích hoạt",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1843,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:08:54.215Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-7c6d5c4d0484035742b3",
+              "file": "full-flow.spec.js",
+              "line": 172,
+              "column": 3
+            },
+            {
+              "title": "08. Super Admin quản lý toàn trường và xem thống kê",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1598,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:08:56.070Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-a72d60e046658f5fa452",
+              "file": "full-flow.spec.js",
+              "line": 194,
+              "column": 3
+            },
+            {
+              "title": "09. Đăng xuất và bảo đảm phiên bị vô hiệu hóa an toàn",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1231,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:08:57.683Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-6247cc76a4e8fca76b1e",
+              "file": "full-flow.spec.js",
+              "line": 224,
+              "column": 3
+            },
+            {
+              "title": "01. Khách xem Landing page, danh mục, thống kê và danh sách CLB",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2323,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:08.921Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-6a8050c9b0ce5be8b04d",
+              "file": "full-flow.spec.js",
+              "line": 16,
+              "column": 3
+            },
+            {
+              "title": "02. Xem chi tiết CLB, BCN, lịch sinh hoạt và đợt tuyển",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1581,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:11.446Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-c4355170a67d5f84ae76",
+              "file": "full-flow.spec.js",
+              "line": 43,
+              "column": 3
+            },
+            {
+              "title": "03. Đăng ký tài khoản sinh viên mới",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 935,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:13.042Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-cd159ca86b196aab0c25",
+              "file": "full-flow.spec.js",
+              "line": 62,
+              "column": 3
+            },
+            {
+              "title": "04. Đăng nhập và nộp đơn ứng tuyển trực tuyến vào BAFU Tech",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1569,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:14.006Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-5c05105e9b0e5d5f5e59",
+              "file": "full-flow.spec.js",
+              "line": 82,
+              "column": 3
+            },
+            {
+              "title": "05. Kiểm tra trạng thái hồ sơ trong Dashboard sinh viên",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1720,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:15.590Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-b8c39853c80200a2fc1c",
+              "file": "full-flow.spec.js",
+              "line": 111,
+              "column": 3
+            },
+            {
+              "title": "06. Club Admin duyệt hồ sơ và kích hoạt hội viên",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1914,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:17.329Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-c050b66cd97edb9e37b6",
+              "file": "full-flow.spec.js",
+              "line": 130,
+              "column": 3
+            },
+            {
+              "title": "07. Sinh viên thấy tư cách thành viên đã được kích hoạt",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2449,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:19.264Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-38470166bfbe01388782",
+              "file": "full-flow.spec.js",
+              "line": 172,
+              "column": 3
+            },
+            {
+              "title": "08. Super Admin quản lý toàn trường và xem thống kê",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1578,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:21.729Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-114f85bc0d0d4d0d26a7",
+              "file": "full-flow.spec.js",
+              "line": 194,
+              "column": 3
+            },
+            {
+              "title": "09. Đăng xuất và bảo đảm phiên bị vô hiệu hóa an toàn",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1131,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:23.321Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\full-flow.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f732eed279e3cef44c0-9ce3c73fdd2f53dc7bed",
+              "file": "full-flow.spec.js",
+              "line": 224,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "isolation.spec.js",
+      "file": "isolation.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "refuses E2E requests against public port 80",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T11:08:58.947Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a5ab2cba9592855a419f-9f15310ee887b73fca9f",
+          "file": "isolation.spec.js",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "frontend API requests use isolated same-origin 8080",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1895,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T11:08:58.960Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a5ab2cba9592855a419f-b1b9d2e5e688060e45e1",
+          "file": "isolation.spec.js",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "refuses E2E requests against public port 80",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T11:09:24.491Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a5ab2cba9592855a419f-d836b5ecef584ee3ffec",
+          "file": "isolation.spec.js",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "frontend API requests use isolated same-origin 8080",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1217,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T11:09:24.504Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a5ab2cba9592855a419f-1ada93cd64e8226300d4",
+          "file": "isolation.spec.js",
+          "line": 9,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "phase5-deep-dive.spec.js",
+      "file": "phase5-deep-dive.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Phase 5 & 6 Deep-Dive E2E Suite - Release Hardening",
+          "file": "phase5-deep-dive.spec.js",
+          "line": 4,
+          "column": 4,
+          "specs": [
+            {
+              "title": "01. Kiểm tra trang Sự kiện cộng đồng BAFU và bộ lọc",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 879,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:00.891Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-ad1f3b3fd552861b692e",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 5,
+              "column": 3
+            },
+            {
+              "title": "02. Kiểm tra Album Hoạt Động tại trang Chi Tiết Câu Lạc Bộ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 967,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:01.794Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-d9370d4635d4793be743",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 21,
+              "column": 3
+            },
+            {
+              "title": "03. Club Admin quản lý hội viên, tìm kiếm và nút xuất CSV hội viên",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2099,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:02.779Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-c67a8feb5d3906f5d691",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "04. Super Admin kiểm tra Báo Cáo CLB Toàn Trường và bảng số liệu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1688,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:04.895Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-c8ecaed532ec65c7387f",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 61,
+              "column": 3
+            },
+            {
+              "title": "06. Khách kiểm tra trang Chính Sách Quyền Riêng Tư (Privacy Policy) và DSAR",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 832,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:06.598Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-4105ddd82cba20e703ac",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "07. Khách kiểm tra trang Điều Khoản Sử Dụng (Terms of Service)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 793,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:07.443Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-4942f8c761ad99aa39d6",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 122,
+              "column": 3
+            },
+            {
+              "title": "01. Kiểm tra trang Sự kiện cộng đồng BAFU và bộ lọc",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 741,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:25.750Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-115998c913f4a1501a3c",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 5,
+              "column": 3
+            },
+            {
+              "title": "02. Kiểm tra Album Hoạt Động tại trang Chi Tiết Câu Lạc Bộ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1022,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:26.504Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-44722355e8b6ff58d914",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 21,
+              "column": 3
+            },
+            {
+              "title": "03. Club Admin quản lý hội viên, tìm kiếm và nút xuất CSV hội viên",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1963,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:27.541Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-5e11c96b4f75160ddcce",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "04. Super Admin kiểm tra Báo Cáo CLB Toàn Trường và bảng số liệu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1450,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:29.520Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-1fc6f92f5fa775e74a03",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 61,
+              "column": 3
+            },
+            {
+              "title": "06. Khách kiểm tra trang Chính Sách Quyền Riêng Tư (Privacy Policy) và DSAR",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 870,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:30.984Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-573bec90f30a416baedd",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "07. Khách kiểm tra trang Điều Khoản Sử Dụng (Terms of Service)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                        "line": 4,
+                        "column": 4
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 781,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T11:09:31.870Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\CLB Sinh Viên BAFU\\Web_GT-CLB\\e2e\\tests\\phase5-deep-dive.spec.js",
+                            "line": 4,
+                            "column": 4
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e8650bbfbb0d250d2a0e-ebc4b3eb21cc4f41e6fe",
+              "file": "phase5-deep-dive.spec.js",
+              "line": 122,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-27T11:08:44.479Z",
+    "duration": 48362.765,
+    "expected": 34,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

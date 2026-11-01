@@ -1,0 +1,27 @@
+{
+  "verifiedAt": "2026-10-27T11:14:14.219Z",
+  "backend": {
+    "passed": 49,
+    "total": 49,
+    "pass": true
+  },
+  "e2e": {
+    "passed": 34,
+    "failed": 0,
+    "skipped": 0
+  },
+  "responsive": {
+    "cases": 43,
+    "problems": 0,
+    "allFromCurrentBuild": true,
+    "assets": [
+      "http://localhost/assets/index-BWfZOx7C.js",
+      "http://localhost/assets/index-CyVoIG5A.css",
+      "http://localhost:8080/assets/index-BWfZOx7C.js",
+      "http://localhost:8080/assets/index-CyVoIG5A.css"
+    ]
+  },
+  "databaseIsolation": true,
+  "unknownDataPreservation": true,
+  "publicFunctional": true
+}

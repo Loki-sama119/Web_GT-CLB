@@ -9,7 +9,7 @@ async function captureEditorialComparison() {
   }
 
   const browser = await chromium.launch();
-  const baseUrl = 'http://localhost'; // or port 80/5173
+  const baseUrl = 'http://localhost:8080'; // or port 80/5173
 
   console.log('--- ĐANG CHỤP SO SÁNH GIAO DIỆN EDITORIAL (BEFORE & AFTER) ---');
 
