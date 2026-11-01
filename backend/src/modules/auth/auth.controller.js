@@ -48,4 +48,31 @@ export class AuthController {
       next(error);
     }
   }
+
+  static async forgotPassword(req, res, next) {
+    try {
+      const result = await AuthService.forgotPassword(req.body.email);
+      return sendSuccess(res, 200, result.message, result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async resetPassword(req, res, next) {
+    try {
+      const result = await AuthService.resetPassword(req.body);
+      return sendSuccess(res, 200, result.message);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async changePassword(req, res, next) {
+    try {
+      const result = await AuthService.changePassword(req.user.id, req.body);
+      return sendSuccess(res, 200, result.message);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
