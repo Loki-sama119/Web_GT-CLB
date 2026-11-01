@@ -59,6 +59,60 @@ export class MembershipsService {
     });
   }
 
+  // 3.1. Thêm thành viên mới trực tiếp bằng Email hoặc MSSV
+  static async addMember(clubId, { identifier, role = "MEMBER" }) {
+    if (!identifier) {
+      const err = new Error("Vui lòng cung cấp Email hoặc Mã sinh viên");
+      err.statusCode = 400;
+      throw err;
+    }
+    const cleanId = String(identifier).trim();
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: { equals: cleanId, mode: "insensitive" } },
+          { studentProfile: { studentCode: { equals: cleanId, mode: "insensitive" } } },
+        ],
+      },
+      include: { studentProfile: true },
+    });
+
+    if (!user) {
+      const err = new Error("Không tìm thấy sinh viên có Email hoặc MSSV này");
+      err.statusCode = 404;
+      throw err;
+    }
+
+    const existing = await prisma.clubMembership.findUnique({
+      where: {
+        userId_clubId: { userId: user.id, clubId },
+      },
+    });
+
+    if (existing) {
+      if (existing.status === "ACTIVE") {
+        const err = new Error("Sinh viên này đã là thành viên chính thức của CLB");
+        err.statusCode = 400;
+        throw err;
+      }
+      return prisma.clubMembership.update({
+        where: { id: existing.id },
+        data: { status: "ACTIVE", role },
+        include: { user: { include: { studentProfile: true } } },
+      });
+    }
+
+    return prisma.clubMembership.create({
+      data: {
+        clubId,
+        userId: user.id,
+        role,
+        status: "ACTIVE",
+      },
+      include: { user: { include: { studentProfile: true } } },
+    });
+  }
+
   // 4. Xuất danh sách hội viên Excel/CSV với UTF-8 BOM
   static async exportClubMembers(clubId) {
     const club = await prisma.club.findUnique({

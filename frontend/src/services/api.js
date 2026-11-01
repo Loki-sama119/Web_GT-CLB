@@ -103,6 +103,11 @@ export const api = {
     const query = new URLSearchParams(params).toString();
     return request(`/clubs/${clubId}/members${query ? `?${query}` : ""}`);
   },
+  addMember: (clubId, body) =>
+    request(`/clubs/${clubId}/members`, {
+      method: "POST",
+      body,
+    }),
   updateMemberRole: (clubId, memberId, role) =>
     request(`/clubs/${clubId}/members/${memberId}/role`, {
       method: "PATCH",
