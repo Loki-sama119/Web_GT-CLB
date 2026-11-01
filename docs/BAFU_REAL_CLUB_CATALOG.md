@@ -14,7 +14,7 @@ Cả năm: logo và cover được duyệt chưa có; ngày xác minh logo, quy�
 
 ## Chưa đủ bằng chứng để công bố
 
-9 hồ sơ DEMO còn được giữ ở database: BAFU FC, BAFU Badminton, BAFU Tech, Melody, BAFU English Club (BEC), BAFU Hoops, BAFU Lens, tên CLB Võ thuật Taekwondo & Karatedo trong seed, BAFU Voice. Các tên cụ thể này không được suy ra từ việc trường có hoạt động bóng đá, ngoại ngữ, văn nghệ hoặc võ thuật.
+8 hồ sơ DEMO còn được giữ ở database: BAFU FC, BAFU Badminton, BAFU Tech, Melody, BAFU English Club (BEC), BAFU Lens, tên CLB Võ thuật Taekwondo & Karatedo trong seed, BAFU Voice (CLB Bóng rổ BAFU Hoops đã xóa do trường không có câu lạc bộ này). Các tên cụ thể này không được suy ra từ việc trường có hoạt động bóng đá, ngoại ngữ, văn nghệ hoặc võ thuật.
 
 BAFU MEDIA: tìm kiếm chưa xác lập được hồ sơ tổ chức cụ thể và tư liệu đáng tin cậy; không tạo hồ sơ công khai. [Tư liệu trường năm 2015](https://bafu.edu.vn/home/tin-tuc/dao-tao-tuyen-sinh/1335-le-ky-niem-65-nam-ngay-truyen-thong-hoc-sinh-sinh-vien-viet-nam-1950-2015.html) nhắc Bóng bàn, Dance sport và Võ thuật nhưng chưa đủ để gán tên seed hoặc khẳng định hoạt động hiện tại. Giữ ở danh sách cần xác minh, không tự thêm CLB cho đẹp danh mục.
 

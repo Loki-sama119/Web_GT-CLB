@@ -140,12 +140,6 @@ async function main() {
       faculty: "Khoa Tài nguyên Môi trường",
     },
     {
-      email: "bongro.leader@bafu.edu.vn",
-      name: "Bùi Đức Anh",
-      code: "SV2022007",
-      faculty: "Khoa Chăn nuôi Thú y",
-    },
-    {
       email: "nhiepanh.leader@bafu.edu.vn",
       name: "Hoàng Yến Nhi",
       code: "SV2022008",
@@ -271,20 +265,6 @@ async function main() {
       adminUserIndex: 5,
     },
     {
-      name: "CLB Bóng Rổ BAFU Hoops",
-      slug: "clb-bong-ro-bafu-hoops",
-      categorySlug: "the-thao",
-      shortDescription:
-        "Sôi động cùng những pha ném 3 điểm, dẫn bóng điệu nghệ và thể lực đỉnh cao.",
-      description:
-        "CLB quy tụ các bạn sinh viên có niềm đam mê với bóng rổ phong cách đường phố và thi đấu bán chuyên. CLB thường xuyên có các trận đấu giao hữu với các trường đại học lân cận.",
-      meetingSchedule:
-        "Chiều thứ Hai, Tư, Sáu (17:00 - 19:00 tại Sân bóng rổ ngoài trời).",
-      email: "hoops@bafu.edu.vn",
-      phone: "0981122340",
-      adminUserIndex: 6,
-    },
-    {
       name: "CLB Nhiếp Ảnh & Media BAFU Lens",
       slug: "clb-nhiep-anh-bafu-lens",
       categorySlug: "nghe-thuat-van-hoa",
@@ -295,7 +275,7 @@ async function main() {
       meetingSchedule: "Chiều Chủ Nhật (14:30 - 17:00).",
       email: "lens@bafu.edu.vn",
       phone: "0981122341",
-      adminUserIndex: 7,
+      adminUserIndex: 6,
     },
     {
       name: "CLB Võ Thuật Taekwondo & Karatedo",
@@ -309,7 +289,7 @@ async function main() {
         "Tối thứ Ba và Năm (18:30 - 20:30 tại Sảnh Nhà thi đấu).",
       email: "martialarts@bafu.edu.vn",
       phone: "0981122342",
-      adminUserIndex: 8,
+      adminUserIndex: 7,
     },
     {
       name: "CLB Kỹ Năng Thuyết Trình & MC BAFU Voice",
@@ -322,7 +302,7 @@ async function main() {
       meetingSchedule: "Tối thứ Sáu (19:00 - 21:00 tại Phòng Hội thảo 1).",
       email: "voice@bafu.edu.vn",
       phone: "0981122343",
-      adminUserIndex: 9,
+      adminUserIndex: 8,
     },
   ];
 
@@ -356,7 +336,7 @@ async function main() {
 
     createdClubs.push(club);
   }
-  console.log("✅ Đã tạo 10 CLB kèm ban chủ nhiệm quản trị viên");
+  console.log("✅ Đã tạo 9 CLB kèm ban chủ nhiệm quản trị viên");
 
   // 5. Tạo các Sinh viên mẫu (Students)
   const students = [];

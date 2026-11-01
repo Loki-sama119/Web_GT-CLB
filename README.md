@@ -97,7 +97,7 @@ docker compose up -d
 
 ## 🔐 Danh Sách Tài Khoản & Mật Khẩu Đăng Nhập
 
-Hệ thống đã kích hoạt sẵn **100% tài khoản hoạt động thực tế** (1 Super Admin, 10 Ban Chủ Nhiệm, 4 Sinh viên mẫu). Bạn có thể đăng nhập ngay mà không cần tạo mới:
+Hệ thống đã kích hoạt sẵn **100% tài khoản hoạt động thực tế** (1 Super Admin, 9 Ban Chủ Nhiệm, 4 Sinh viên mẫu). Bạn có thể đăng nhập ngay mà không cần tạo mới:
 
 ### 👑 1. Tài khoản Quản Trị Viên Hệ Thống Toàn Trường (Super Admin)
 Dành cho Ban Giám Hiệu, Phòng Công tác sinh viên hoặc Đoàn Thanh niên trường để quản lý toàn bộ hệ thống:
@@ -131,10 +131,9 @@ Dành cho Chủ nhiệm & Ban chấp hành của từng CLB để quản lý ri�
 | 4 | **CLB Cầu Lông BAFU Badminton** | Trần Thị Mai | `caulong.leader@bafu.edu.vn` | `12345678` |
 | 5 | **CLB Guitar & Melody BAFU** | Phạm Minh Tuấn | `guitar.leader@bafu.edu.vn` | `12345678` |
 | 6 | **CLB Tiếng Anh BEC** | Đỗ Thảo Vy | `english.leader@bafu.edu.vn` | `12345678` |
-| 7 | **CLB Bóng Rổ BAFU Hoops** | Bùi Đức Anh | `bongro.leader@bafu.edu.vn` | `12345678` |
-| 8 | **CLB Nhiếp Ảnh BAFU Lens** | Hoàng Yến Nhi | `nhiepanh.leader@bafu.edu.vn` | `12345678` |
-| 9 | **CLB Võ Thuật Taekwondo & Karatedo** | Dương Tấn Đạt | `vothuat.leader@bafu.edu.vn` | `12345678` |
-| 10 | **CLB MC & Kỹ Năng BAFU Voice** | Lê Quỳnh Nga | `truyenthong.leader@bafu.edu.vn` | `12345678` |
+| 7 | **CLB Nhiếp Ảnh BAFU Lens** | Hoàng Yến Nhi | `nhiepanh.leader@bafu.edu.vn` | `12345678` |
+| 8 | **CLB Võ Thuật Taekwondo & Karatedo** | Dương Tấn Đạt | `vothuat.leader@bafu.edu.vn` | `12345678` |
+| 9 | **CLB MC & Kỹ Năng BAFU Voice** | Lê Quỳnh Nga | `truyenthong.leader@bafu.edu.vn` | `12345678` |
 
 #### ✨ Các tính năng quản trị thực thụ của Ban Chủ Nhiệm (`/club-admin`):
 1. 🖼️ **Chỉnh sửa Background & Avatar CLB:**
