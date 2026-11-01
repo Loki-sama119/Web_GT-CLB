@@ -9,7 +9,7 @@ export default function DirectoryRow({ club, index }) {
       <span className="directory-index">
         {index != null ? String(index + 1).padStart(2, "0") : "↳"}
       </span>
-      <ClubLogo logoUrl={club.logoUrl} name={club.name} size="sm" />
+      <ClubLogo logoUrl={club.logoUrl} slug={club.slug} name={club.name} size="sm" />
       <div className="directory-name">
         <h3>
           <Link to={"/clubs/" + club.slug}>{club.name}</Link>

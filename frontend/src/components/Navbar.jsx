@@ -56,9 +56,9 @@ export default function Navbar() {
           <Link
             to="/"
             className={`px-3.5 py-2 text-sm tracking-[0.02em] font-bold transition-colors flex items-center gap-2 border-b-2 ${
-              isActive("/")
-                ? "text-[#12674D] border-[#12674D]"
-                : "text-[#575E5B] border-transparent hover:text-[#181C1B]"
+              isActive("/") && location.pathname === "/"
+                ? "text-[#0F5132] border-[#0F5132]"
+                : "text-[#575E5B] border-transparent hover:text-[#0F5132]"
             }`}
           >
             <House size={16} weight={isActive("/") ? "bold" : "regular"} />
@@ -69,23 +69,31 @@ export default function Navbar() {
             to="/clubs"
             className={`px-3.5 py-2 text-sm tracking-[0.02em] font-bold transition-colors flex items-center gap-2 border-b-2 ${
               isActive("/clubs")
-                ? "text-[#12674D] border-[#12674D]"
-                : "text-[#575E5B] border-transparent hover:text-[#181C1B]"
+                ? "text-[#0F5132] border-[#0F5132]"
+                : "text-[#575E5B] border-transparent hover:text-[#0F5132]"
             }`}
           >
             <Compass
               size={16}
               weight={isActive("/clubs") ? "bold" : "regular"}
             />
-            <span>Khám phá CLB</span>
+            <span>Câu lạc bộ</span>
           </Link>
+
+          <a
+            href="/#hoat-dong"
+            className="px-3.5 py-2 text-sm tracking-[0.02em] font-bold transition-colors flex items-center gap-2 border-b-2 border-transparent text-[#575E5B] hover:text-[#0F5132]"
+          >
+            <Compass size={16} />
+            <span>Hoạt động</span>
+          </a>
 
           <Link
             to="/events"
             className={`px-3.5 py-2 text-sm tracking-[0.02em] font-bold transition-colors flex items-center gap-2 border-b-2 ${
               isActive("/events")
-                ? "text-[#12674D] border-[#12674D]"
-                : "text-[#575E5B] border-transparent hover:text-[#181C1B]"
+                ? "text-[#0F5132] border-[#0F5132]"
+                : "text-[#575E5B] border-transparent hover:text-[#0F5132]"
             }`}
           >
             <CalendarDots
@@ -288,8 +296,8 @@ export default function Navbar() {
                 to="/"
                 onClick={() => setMobileDrawerOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-bold transition-colors ${
-                  isActive("/")
-                    ? "text-[#12674D] bg-[#12674D]/10"
+                  isActive("/") && location.pathname === "/"
+                    ? "text-[#0F5132] bg-[#0F5132]/10"
                     : "text-[#575E5B] hover:bg-[#F4F0E7]"
                 }`}
               >
@@ -302,20 +310,29 @@ export default function Navbar() {
                 onClick={() => setMobileDrawerOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-bold transition-colors ${
                   isActive("/clubs")
-                    ? "text-[#12674D] bg-[#12674D]/10"
+                    ? "text-[#0F5132] bg-[#0F5132]/10"
                     : "text-[#575E5B] hover:bg-[#F4F0E7]"
                 }`}
               >
                 <Compass size={18} />
-                Khám phá CLB
+                Câu lạc bộ
               </Link>
+
+              <a
+                href="/#hoat-dong"
+                onClick={() => setMobileDrawerOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-bold transition-colors text-[#575E5B] hover:bg-[#F4F0E7]"
+              >
+                <Compass size={18} />
+                Hoạt động
+              </a>
 
               <Link
                 to="/events"
                 onClick={() => setMobileDrawerOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-wider font-bold transition-colors ${
                   isActive("/events")
-                    ? "text-[#12674D] bg-[#12674D]/10"
+                    ? "text-[#0F5132] bg-[#0F5132]/10"
                     : "text-[#575E5B] hover:bg-[#F4F0E7]"
                 }`}
               >

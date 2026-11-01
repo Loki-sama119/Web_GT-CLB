@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="music-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E051C"/>
+      <stop offset="50%" stop-color="#240D3D"/>
+      <stop offset="100%" stop-color="#090214"/>
+    </linearGradient>
+    <linearGradient id="mag-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#EC4899"/>
+      <stop offset="50%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <filter id="m-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#music-grad)"/>
+
+  <!-- Stage Spotlight Beams -->
+  <polygon points="300,-50 100,675 600,675" fill="#EC4899" opacity="0.08"/>
+  <polygon points="900,-50 600,675 1100,675" fill="#8B5CF6" opacity="0.08"/>
+
+  <!-- Glowing Audio Equalizer Bars (Vibrant Rhythm) -->
+  <g fill="url(#mag-glow)" opacity="0.75" filter="url(#m-glow)">
+    <rect x="120" y="280" width="14" height="115" rx="7"/>
+    <rect x="150" y="230" width="14" height="215" rx="7"/>
+    <rect x="180" y="320" width="14" height="35" rx="7"/>
+    <rect x="210" y="190" width="14" height="295" rx="7"/>
+    <rect x="240" y="260" width="14" height="155" rx="7"/>
+    <rect x="270" y="210" width="14" height="255" rx="7"/>
+    <rect x="300" y="300" width="14" height="75" rx="7"/>
+    
+    <rect x="880" y="300" width="14" height="75" rx="7"/>
+    <rect x="910" y="220" width="14" height="235" rx="7"/>
+    <rect x="940" y="160" width="14" height="355" rx="7"/>
+    <rect x="970" y="240" width="14" height="195" rx="7"/>
+    <rect x="1000" y="200" width="14" height="275" rx="7"/>
+    <rect x="1030" y="290" width="14" height="95" rx="7"/>
+    <rect x="1060" y="250" width="14" height="175" rx="7"/>
+  </g>
+
+  <!-- Flowing Soundwave Curves -->
+  <path d="M 0 337 Q 150 120 300 337 T 600 337 T 900 337 T 1200 337" fill="none" stroke="url(#mag-glow)" stroke-width="4" opacity="0.8" filter="url(#m-glow)"/>
+  <path d="M 0 337 Q 150 200 300 337 T 600 337 T 900 337 T 1200 337" fill="none" stroke="#EC4899" stroke-width="2" opacity="0.5"/>
+  <path d="M 0 337 Q 150 480 300 337 T 600 337 T 900 337 T 1200 337" fill="none" stroke="#3B82F6" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Concentric Vinyl / Soundwaves -->
+  <circle cx="600" cy="337" r="160" fill="none" stroke="#EC4899" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.3"/>
+  <circle cx="600" cy="337" r="240" fill="none" stroke="#A855F7" stroke-width="1" opacity="0.2"/>
+
+  <!-- Watermark -->
+  <text x="120" y="580" font-family="Arial, sans-serif" font-weight="900" font-size="140" fill="#EC4899" opacity="0.06">MELODY BEATS</text>
+</svg>

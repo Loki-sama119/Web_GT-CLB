@@ -1,9 +1,12 @@
 :root {
-  --paper: #f5f3ed;
-  --ink: #1c2420;
-  --line: #d6d8cf;
-  --muted: #59615b;
-  --accent: #245e43;
+  --paper: #FAF9F5;
+  --ink: #111827;
+  --line: #E2E0D8;
+  --muted: #4B5563;
+  --accent: #0F5132;
+  --accent-light: #EBF5F0;
+  --accent-orange: #EF673F;
+  --brand-navy: #1E3A8A;
 }
 .editorial-page {
   background: var(--paper);
@@ -99,11 +102,11 @@
   flex-shrink: 0;
 }
 .masthead-copy h1 {
-  font-size: clamp(58px, 6.3vw, 91px);
-  font-weight: 800;
-  line-height: 1.16;
-  letter-spacing: -0.065em;
-  margin: 32px 0 28px;
+  font-size: clamp(38px, 4.4vw, 64px);
+  font-weight: 850;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin: 18px 0 16px;
 }
 .masthead-copy h1 span {
   color: var(--accent);
@@ -317,17 +320,26 @@
 }
 .feature-club {
   border: 1px solid var(--line);
+  border-top: 3px solid var(--club-accent, var(--accent));
   background: #fff;
   height: 100%;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.feature-club:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  border-color: #B4B9AE;
 }
 .club-visual {
   width: 100%;
   height: 280px;
   overflow: hidden;
-  background: #eaebe4;
+  background: #0B1218;
+  position: relative;
 }
 .club-visual img {
   width: 100%;
@@ -441,10 +453,18 @@
 .compact-club {
   background: #fff;
   border: 1px solid var(--line);
+  border-top: 3px solid var(--club-accent, var(--accent));
   padding: 24px 24px 0;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.compact-club:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  border-color: #B4B9AE;
 }
 .compact-club > .logo-pending,
 .compact-club > img {
@@ -478,8 +498,8 @@
   letter-spacing: 0;
 }
 .recruitment-section {
-  background: #e9ecdf;
-  border-block: 1px solid var(--line);
+  background: #F0F5F1;
+  border-block: 1px solid #D6E2D8;
 }
 .recruitment-empty {
   display: grid;
@@ -697,18 +717,19 @@
   color: white;
 }
 .campus-feature-photo {
-  height: 460px;
+  min-height: 440px;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 .campus-feature-photo img {
-  height: calc(100% - 36px);
+  height: 100%;
   width: 100%;
   object-fit: cover;
 }
 .campus-feature-photo figcaption {
   font-size: 11px;
-  padding-top: 12px;
 }
 button,
 a,

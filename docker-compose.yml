@@ -93,7 +93,7 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "8080:8080"
+      - "${BAFU_E2E_PORT:-18080}:8080"
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:

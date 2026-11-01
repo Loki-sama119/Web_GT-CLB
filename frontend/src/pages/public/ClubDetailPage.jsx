@@ -18,10 +18,16 @@ import {
   FacebookLogo,
   ArrowRight,
 } from "@phosphor-icons/react";
-import { clubIdentity, activityLabel } from "../../utils/clubIdentity";
+import { clubIdentity, activityLabel, getClubBackground } from "../../utils/clubIdentity";
 import ClubVisual from "../../components/editorial/ClubVisual";
 import ClubLogo from "../../components/ui/ClubLogo";
 import Modal from "../../components/ui/Modal";
+
+function getYouTubeEmbedUrl(url = "") {
+  if (!url) return null;
+  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+  return match ? `https://www.youtube.com/embed/${match[1]}?rel=0&modestbranding=1` : null;
+}
 
 export default function ClubDetailPage() {
   const { slug } = useParams();
@@ -174,17 +180,29 @@ export default function ClubDetailPage() {
       style={{ "--club-accent": identity.accent }}
     >
       {/* 1. EDITORIAL PROFILE HEADER */}
-      <div className="club-profile-header bg-[#181C1B] text-white border-b border-[#2A2F2D] relative overflow-hidden">
-        {club.coverUrl && (
-          <div className="absolute inset-0 z-0 opacity-20">
+      <div className="club-profile-header bg-[#111614] text-white border-b border-[#2A2F2D] relative overflow-hidden">
+        {/* Subtle Category Background or Real Verified Cover */}
+        <div className="absolute inset-0 z-0">
+          {club.coverUrl ? (
             <img
               src={club.coverUrl}
-              alt={club.name}
-              className="w-full h-full object-cover grayscale-[20%]"
+              alt={`Ảnh bìa ${club.name}`}
+              className="w-full h-full object-cover object-center"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#181C1B] via-[#181C1B]/80 to-transparent" />
-          </div>
-        )}
+          ) : (
+            <div
+              className={`w-full h-full bg-gradient-to-r ${identity.gradient || "from-[#0F5132] to-[#16845A]"}`}
+            />
+          )}
+          {/* Subtle overlay for high legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111614] via-[#111614]/80 to-[#111614]/40" />
+          <div
+            className="absolute inset-0 opacity-25 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at 85% 25%, ${identity.accent} 0%, transparent 65%)`,
+            }}
+          />
+        </div>
 
         <div className="editorial-container py-12 sm:py-16 relative z-10 space-y-6">
           <Link
@@ -198,10 +216,11 @@ export default function ClubDetailPage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-2">
             <ClubLogo
               name={club.name}
+              slug={club.slug}
               logoUrl={club.logoUrl}
               categorySlug={club.category?.slug}
               size="xl"
-              className="rounded-none border-2 border-white/20 shrink-0 shadow-none"
+              className="rounded-2xl border-2 border-white/40 shrink-0 shadow-lg bg-white p-2"
             />
 
             <div className="space-y-3">
@@ -425,54 +444,61 @@ export default function ClubDetailPage() {
               )}
             </section>
 
-            {/* Album Hoạt Động & Khoảnh Khắc CLB */}
-            <section className="bg-white border border-[#D8D5CD] p-6 sm:p-8 space-y-5">
-              <div className="flex items-center justify-between pb-3 border-b border-[#D8D5CD]">
-                <div>
-                  <h2 className="font-display font-bold text-xl uppercase tracking-wider text-[#181C1B]">
-                    Album Hoạt Động
-                  </h2>
-                  <p className="text-sm text-[#575E5B] mt-0.5">
-                    Hình ảnh thực tế từ các chương trình, giải đấu và sự kiện
-                    thường niên
-                  </p>
-                </div>
-                <span className="text-sm font-semibold px-2.5 py-1 bg-[#F4F0E7] border border-[#D8D5CD] text-[#181C1B]">
-                  {albumImages.length} bức ảnh
-                </span>
-              </div>
-
-              {albumImages.length === 0 ? (
-                <div className="py-12 text-center border border-[#D8D5CD] bg-[#F4F0E7] text-[#7A827F] space-y-2">
-                  <ImageIcon size={32} className="mx-auto text-[#7A827F]" />
-                  <p className="text-sm">
-                    Chưa có hình ảnh nào trong bộ sưu tập này.
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {albumImages.map((media) => (
-                    <div
-                      key={media.id}
-                      onClick={() => setLightboxImage(media)}
-                      className="group relative aspect-4/3 overflow-hidden bg-[#181C1B] cursor-pointer border border-[#D8D5CD]"
-                    >
-                      <img
-                        src={media.url}
-                        alt={media.caption || club.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
-                        <span className="text-xs text-white font-medium line-clamp-1">
-                          {media.caption || "Xem ảnh lớn"}
-                        </span>
-                      </div>
+            {/* 1. Video & Phóng Sự Quảng Bá CLB */}
+            {albumImages.filter(m => m.mediaType === 'VIDEO' || (m.url && m.url.includes('youtube'))).length > 0 && (
+              <section className="bg-white border border-[#D8D5CD] p-6 sm:p-8 space-y-5 shadow-xs">
+                <div className="flex items-center justify-between pb-3 border-b border-[#D8D5CD]">
+                  <div>
+                    <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#EF673F]">
+                      <span className="w-2 h-2 bg-[#EF673F] rounded-full animate-pulse" />
+                      <span>Phóng sự & Video chính thức</span>
                     </div>
-                  ))}
+                    <h2 className="font-display font-bold text-xl uppercase tracking-wider text-[#181C1B] mt-1">
+                      Video Quảng Bá & Hoạt Động
+                    </h2>
+                  </div>
+                  <span className="text-xs font-bold px-2.5 py-1 bg-[#12674D]/10 text-[#12674D] border border-[#12674D]/20">
+                    BAFU OFFICIAL MEDIA
+                  </span>
                 </div>
-              )}
-            </section>
+
+                <div className="space-y-6">
+                  {albumImages
+                    .filter(m => m.mediaType === 'VIDEO' || (m.url && m.url.includes('youtube')))
+                    .map((vid) => {
+                      const embedUrl = getYouTubeEmbedUrl(vid.url);
+                      return (
+                        <div key={vid.id} className="space-y-3">
+                          {embedUrl ? (
+                            <div className="relative aspect-video w-full overflow-hidden bg-black border border-[#D8D5CD] shadow-sm">
+                              <iframe
+                                src={embedUrl}
+                                title={vid.caption || "Video CLB BAFU"}
+                                className="w-full h-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                              />
+                            </div>
+                          ) : (
+                            <video
+                              src={vid.url}
+                              controls
+                              className="w-full aspect-video bg-black border border-[#D8D5CD]"
+                            />
+                          )}
+                          {vid.caption && (
+                            <p className="text-sm font-semibold text-[#181C1B] flex items-center gap-2">
+                              <span className="w-2 h-2 bg-[#12674D] rounded-full shrink-0" />
+                              <span>{vid.caption}</span>
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+              </section>
+            )}
+
           </div>
 
           {/* Cột phải (4/12 cột): Thông tin CLB & Sidebar đăng ký */}

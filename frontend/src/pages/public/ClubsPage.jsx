@@ -13,21 +13,23 @@ import {
   Rows,
 } from "@phosphor-icons/react";
 
+import { BAFU_DEFAULT_CLUBS } from "../../utils/bafuData";
+
 export default function ClubsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get("category") || "";
   const recruitingParam = searchParams.get("recruiting") === "true";
   const querySearch = searchParams.get("search") || "";
 
-  const [clubs, setClubs] = useState([]);
+  const [clubs, setClubs] = useState(BAFU_DEFAULT_CLUBS);
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState(querySearch);
   const [submittedSearch, setSubmittedSearch] = useState(querySearch);
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(categoryParam);
   const [onlyRecruiting, setOnlyRecruiting] = useState(recruitingParam);
-  const [meta, setMeta] = useState({ page: 1, totalPages: 1, total: 0 });
-  const [loading, setLoading] = useState(true);
+  const [meta, setMeta] = useState({ page: 1, totalPages: 1, total: BAFU_DEFAULT_CLUBS.length });
+  const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState("grid"); // 'grid' | 'rows'
 
   useEffect(() => {
@@ -53,15 +55,41 @@ export default function ClubsPage() {
         page,
         limit: 9,
       });
-      if (res.data?.clubs) {
+      if (res.data?.clubs?.length) {
         setClubs(res.data.clubs);
         setMeta(
           res.meta || { page: 1, totalPages: 1, total: res.data.clubs.length },
         );
+      } else {
+        // Fallback filter
+        let filtered = [...BAFU_DEFAULT_CLUBS];
+        if (submittedSearch) {
+          const q = submittedSearch.toLowerCase();
+          filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || c.shortDescription?.toLowerCase().includes(q));
+        }
+        if (selectedCategory) {
+          filtered = filtered.filter(c => c.category?.slug === selectedCategory);
+        }
+        if (onlyRecruiting) {
+          filtered = filtered.filter(c => c._count?.campaigns > 0);
+        }
+        setClubs(filtered);
+        setMeta({ page: 1, totalPages: 1, total: filtered.length });
       }
     } catch (err) {
-      setError("Chưa tải được danh mục. Vui lòng thử lại.");
-      setClubs([]);
+      let filtered = [...BAFU_DEFAULT_CLUBS];
+      if (submittedSearch) {
+        const q = submittedSearch.toLowerCase();
+        filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || c.shortDescription?.toLowerCase().includes(q));
+      }
+      if (selectedCategory) {
+        filtered = filtered.filter(c => c.category?.slug === selectedCategory);
+      }
+      if (onlyRecruiting) {
+        filtered = filtered.filter(c => c._count?.campaigns > 0);
+      }
+      setClubs(filtered);
+      setMeta({ page: 1, totalPages: 1, total: filtered.length });
     } finally {
       setLoading(false);
     }

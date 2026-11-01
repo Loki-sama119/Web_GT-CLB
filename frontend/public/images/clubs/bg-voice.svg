@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="voice-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0E17"/>
+      <stop offset="50%" stop-color="#1A2035"/>
+      <stop offset="100%" stop-color="#080A10"/>
+    </linearGradient>
+    <linearGradient id="gold-voice" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#FCD34D"/>
+    </linearGradient>
+    <filter id="voi-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#voice-grad)"/>
+
+  <!-- Stage Center Spotlight Cone Beams -->
+  <polygon points="600,-80 150,675 1050,675" fill="url(#gold-voice)" opacity="0.08"/>
+  <polygon points="600,-80 350,675 850,675" fill="#FDE047" opacity="0.06"/>
+
+  <!-- Acoustic Vocal Resonance Rings -->
+  <g fill="none" stroke="#F59E0B" stroke-width="2" filter="url(#voi-glow)" opacity="0.5">
+    <ellipse cx="600" cy="337" rx="120" ry="120"/>
+    <ellipse cx="600" cy="337" rx="220" ry="220" stroke-dasharray="10 8"/>
+    <ellipse cx="600" cy="337" rx="340" ry="340" stroke-width="1.5" opacity="0.3"/>
+  </g>
+
+  <!-- Dynamic Broadcast Amplitude Waves -->
+  <path d="M 100 337 Q 350 200 600 337 T 1100 337" fill="none" stroke="#FDE047" stroke-width="3" opacity="0.6" filter="url(#voi-glow)"/>
+  <path d="M 150 337 Q 375 440 600 337 T 1050 337" fill="none" stroke="#F59E0B" stroke-width="2" opacity="0.4"/>
+
+  <!-- Glowing Stage Horizon Line -->
+  <line x1="0" y1="560" x2="1200" y2="560" stroke="#F59E0B" stroke-width="1.5" opacity="0.25"/>
+
+  <!-- Watermark -->
+  <text x="80" y="580" font-family="Arial, sans-serif" font-weight="900" font-size="140" fill="#F59E0B" opacity="0.06">BAFU VOICE</text>
+</svg>
