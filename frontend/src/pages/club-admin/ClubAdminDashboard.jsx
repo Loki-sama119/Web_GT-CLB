@@ -20,6 +20,8 @@ import {
   X,
   CaretDown,
   Camera,
+  CalendarPlus,
+  Image as ImageIcon,
 } from "@phosphor-icons/react";
 import Button from "../../components/ui/Button";
 import Badge from "../../components/ui/Badge";
@@ -327,6 +329,108 @@ export default function ClubAdminDashboard() {
     }
   };
 
+  const [uploadingCover, setUploadingCover] = useState(false);
+
+  const handleUploadClubCover = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !selectedClubId) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Dung lượng tệp ảnh bìa (background) không được vượt quá 5MB");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("cover", file);
+
+    setUploadingCover(true);
+    try {
+      const res = await api.uploadClubCover(selectedClubId, formData);
+      if (res.data?.coverUrl) {
+        setManagedClubs((prev) =>
+          prev.map((c) =>
+            c.id === selectedClubId ? { ...c, coverUrl: res.data.coverUrl } : c,
+          ),
+        );
+        alert("Cập nhật ảnh bìa / background câu lạc bộ thành công!");
+      }
+    } catch (err) {
+      alert(err.message || "Lỗi khi cập nhật ảnh bìa câu lạc bộ");
+    } finally {
+      setUploadingCover(false);
+      e.target.value = "";
+    }
+  };
+
+  // Add Member Modal State
+  const [showAddMemberModal, setShowAddMemberModal] = useState(false);
+  const [newMemberIdentifier, setNewMemberIdentifier] = useState("");
+  const [newMemberRole, setNewMemberRole] = useState("MEMBER");
+  const [addingMember, setAddingMember] = useState(false);
+
+  const handleAddMember = async (e) => {
+    e.preventDefault();
+    if (!newMemberIdentifier.trim() || !selectedClubId) {
+      alert("Vui lòng nhập Email hoặc Mã sinh viên");
+      return;
+    }
+    setAddingMember(true);
+    try {
+      await api.addMember(selectedClubId, {
+        identifier: newMemberIdentifier.trim(),
+        role: newMemberRole,
+      });
+      alert("Thêm thành viên vào câu lạc bộ thành công!");
+      setNewMemberIdentifier("");
+      setShowAddMemberModal(false);
+      loadMembers();
+    } catch (err) {
+      alert(err.message || "Lỗi khi thêm thành viên");
+    } finally {
+      setAddingMember(false);
+    }
+  };
+
+  // Create Event / Post State
+  const [eventTitle, setEventTitle] = useState("");
+  const [eventDescription, setEventDescription] = useState("");
+  const [eventLocation, setEventLocation] = useState("");
+  const [eventStartTime, setEventStartTime] = useState("");
+  const [eventEndTime, setEventEndTime] = useState("");
+  const [eventMaxParticipants, setEventMaxParticipants] = useState(50);
+  const [creatingEvent, setCreatingEvent] = useState(false);
+
+  const handleCreateEvent = async (e) => {
+    e.preventDefault();
+    if (!eventTitle.trim() || !eventStartTime || !selectedClubId) {
+      alert("Vui lòng điền tiêu đề bài viết sự kiện và thời gian bắt đầu");
+      return;
+    }
+    setCreatingEvent(true);
+    try {
+      await api.createEvent(selectedClubId, {
+        title: eventTitle.trim(),
+        description: eventDescription,
+        location: eventLocation || "Khuôn viên trường BAFU",
+        startTime: new Date(eventStartTime).toISOString(),
+        endTime: eventEndTime ? new Date(eventEndTime).toISOString() : null,
+        maxParticipants: Number(eventMaxParticipants) || 0,
+        isPublic: true,
+      });
+      alert("Đăng bài viết sự kiện / hoạt động CLB thành công!");
+      setEventTitle("");
+      setEventDescription("");
+      setEventLocation("");
+      setEventStartTime("");
+      setEventEndTime("");
+      alert("Hoạt động đã được công bố trên cổng thông tin sinh viên!");
+    } catch (err) {
+      alert(err.message || "Lỗi khi đăng bài sự kiện");
+    } finally {
+      setCreatingEvent(false);
+    }
+  };
+
   const currentClub = managedClubs.find((c) => c.id === selectedClubId);
 
   const getStatusBadge = (status) => {
@@ -415,6 +519,31 @@ export default function ClubAdminDashboard() {
               Hệ thống quản lý nhân sự, xét duyệt hồ sơ ứng tuyển và số hóa hoạt
               động CLB
             </p>
+            <div className="pt-2 flex flex-wrap items-center gap-2">
+              <label
+                htmlFor="club-cover-upload"
+                title="Đổi background / ảnh bìa câu lạc bộ"
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs cursor-pointer shadow-2xs transition-colors ${
+                  uploadingCover ? "opacity-60 pointer-events-none" : ""
+                }`}
+              >
+                <ImageIcon size={15} weight="bold" className="text-[#167C66]" />
+                <span>{uploadingCover ? "Đang tải ảnh bìa..." : "Đổi Background / Ảnh Bìa CLB"}</span>
+                <input
+                  id="club-cover-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={uploadingCover}
+                  onChange={handleUploadClubCover}
+                />
+              </label>
+              {currentClub?.coverUrl && (
+                <span className="text-[11px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                  ✓ Đã có background
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -537,6 +666,17 @@ export default function ClubAdminDashboard() {
         >
           <Plus size={18} />
           <span>Mở Đợt Tuyển Mới</span>
+        </button>
+        <button
+          onClick={() => setActiveTab("create-event")}
+          className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+            activeTab === "create-event"
+              ? "border-[#167C66] text-[#167C66]"
+              : "border-transparent text-slate-500 hover:text-slate-800"
+          }`}
+        >
+          <CalendarPlus size={18} />
+          <span>Đăng Bài / Sự Kiện CLB</span>
         </button>
       </div>
 
@@ -671,11 +811,20 @@ export default function ClubAdminDashboard() {
                 Quản lý chức vụ, tìm kiếm và phân quyền nhân sự nội bộ CLB
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2.5">
               <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-[#167C66] border border-emerald-200">
                 {members.length} thành viên
               </span>
               <button
+                type="button"
+                onClick={() => setShowAddMemberModal(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-2xs transition-colors cursor-pointer"
+              >
+                <Plus size={15} weight="bold" />
+                <span>+ Thêm Thành Viên</span>
+              </button>
+              <button
+                type="button"
                 onClick={handleExportMembersCSV}
                 disabled={exportingMembersCSV || !selectedClubId}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs shadow-2xs transition-colors disabled:opacity-50 cursor-pointer"
@@ -909,6 +1058,190 @@ export default function ClubAdminDashboard() {
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* TAB 4: CREATE EVENT / POST */}
+      {activeTab === "create-event" && (
+        <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-xs p-6 sm:p-8 max-w-3xl space-y-6">
+          <div className="pb-4 border-b border-slate-100">
+            <h3 className="font-black text-[#142B49] text-base sm:text-lg">
+              Tạo Bài Viết / Sự Kiện & Hoạt Động CLB
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Đăng tải các chương trình giao lưu, hội thảo, tập luyện hoặc hoạt động ngoại khóa để sinh viên đăng ký tham gia
+            </p>
+          </div>
+
+          <form onSubmit={handleCreateEvent} className="space-y-4 text-xs">
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                Tiêu đề sự kiện / bài viết *
+              </label>
+              <input
+                type="text"
+                required
+                value={eventTitle}
+                onChange={(e) => setEventTitle(e.target.value)}
+                placeholder="Ví dụ: Workshop Lập Trình Web 2026 / Giao Lưu Âm Nhạc BAFU..."
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                Mô tả chi tiết nội dung sự kiện
+              </label>
+              <textarea
+                rows={4}
+                value={eventDescription}
+                onChange={(e) => setEventDescription(e.target.value)}
+                placeholder="Nội dung, mục đích, diễn giả, quyền lợi và lưu ý dành cho sinh viên tham gia..."
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Địa điểm tổ chức
+                </label>
+                <input
+                  type="text"
+                  value={eventLocation}
+                  onChange={(e) => setEventLocation(e.target.value)}
+                  placeholder="Ví dụ: Hội trường A, Sân đa năng..."
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Số lượng người tham gia tối đa (0 = Không giới hạn)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={eventMaxParticipants}
+                  onChange={(e) => setEventMaxParticipants(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Thời gian bắt đầu *
+                </label>
+                <input
+                  type="datetime-local"
+                  required
+                  value={eventStartTime}
+                  onChange={(e) => setEventStartTime(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Thời gian kết thúc (Tùy chọn)
+                </label>
+                <input
+                  type="datetime-local"
+                  value={eventEndTime}
+                  onChange={(e) => setEventEndTime(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+                />
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={creatingEvent}
+                className="w-full py-3 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-sm shadow-xs transition-all cursor-pointer disabled:opacity-50"
+              >
+                {creatingEvent ? "Đang đăng..." : "Đăng sự kiện / bài viết ngay"}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* MODAL THÊM HỘI VIÊN TRỰC TIẾP */}
+      {showAddMemberModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/60 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full border border-[#E2E8F0] shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div>
+                <h3 className="font-black text-[#142B49] text-base sm:text-lg">
+                  Thêm Thành Viên Vào CLB
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Ghi danh trực tiếp sinh viên vào danh sách chính thức
+                </p>
+              </div>
+              <button
+                onClick={() => setShowAddMemberModal(false)}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100 cursor-pointer"
+                aria-label="Đóng"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddMember} className="space-y-4 text-xs">
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Email hoặc Mã số sinh viên (MSSV) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Ví dụ: haidang.sv@bafu.edu.vn hoặc SV2022001"
+                  value={newMemberIdentifier}
+                  onChange={(e) => setNewMemberIdentifier(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#167C66]"
+                />
+                <p className="text-[11px] text-slate-400 mt-1">
+                  Sinh viên phải có tài khoản trên hệ thống
+                </p>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Chức vụ ban đầu
+                </label>
+                <select
+                  value={newMemberRole}
+                  onChange={(e) => setNewMemberRole(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-bold focus:outline-hidden focus:ring-2 focus:ring-[#167C66] bg-white cursor-pointer"
+                >
+                  <option value="MEMBER">Hội viên (MEMBER)</option>
+                  <option value="VICE_LEADER">Phó chủ nhiệm (VICE_LEADER)</option>
+                  <option value="LEADER">Chủ nhiệm (LEADER)</option>
+                </select>
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setShowAddMemberModal(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs cursor-pointer"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  disabled={addingMember}
+                  className="px-5 py-2 rounded-xl bg-[#167C66] hover:bg-[#115E4D] text-white font-bold text-xs shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  {addingMember ? "Đang thêm..." : "Xác nhận thêm"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 

@@ -15,8 +15,10 @@ import {
   List,
   X,
   User,
+  Lock,
 } from "@phosphor-icons/react";
 import BrandWordmark from "./ui/BrandWordmark";
+import ChangePasswordModal from "./ChangePasswordModal";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -24,6 +26,7 @@ export default function Navbar() {
   const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -183,6 +186,17 @@ export default function Navbar() {
                         Quản Trị Hệ Thống
                       </Link>
                     )}
+
+                    <button
+                      onClick={() => {
+                        setDropdownOpen(false);
+                        setChangePasswordOpen(true);
+                      }}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-[#181C1B] hover:bg-[#F4F0E7] transition-colors text-left cursor-pointer"
+                    >
+                      <Lock size={16} />
+                      Đổi Mật Khẩu
+                    </button>
                   </div>
 
                   <div className="border-t border-[#D8D5CD] pt-1">
@@ -373,6 +387,16 @@ export default function Navbar() {
                       Quản Trị Hệ Thống
                     </Link>
                   )}
+                  <button
+                    onClick={() => {
+                      setMobileDrawerOpen(false);
+                      setChangePasswordOpen(true);
+                    }}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold text-[#181C1B] hover:bg-[#F4F0E7] text-left cursor-pointer"
+                  >
+                    <Lock size={16} />
+                    Đổi Mật Khẩu
+                  </button>
                 </div>
               )}
             </div>
@@ -410,6 +434,12 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* Modal Đổi mật khẩu dùng chung cho mọi role */}
+      <ChangePasswordModal
+        isOpen={changePasswordOpen}
+        onClose={() => setChangePasswordOpen(false)}
+      />
     </header>
   );
 }

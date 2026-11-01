@@ -57,7 +57,75 @@ class EmailService {
     }
   }
 
-  // 1. Email xác nhận nộp hồ sơ
+  // 1. Email xác thực đặt lại mật khẩu (OTP Reset Password)
+  async sendPasswordResetOtp(to, userName, otpCode) {
+    const subject = `[BAFU Club Portal] Mã xác thực OTP đặt lại mật khẩu: ${otpCode}`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1e293b; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background-color: #ffffff;">
+        <div style="background: linear-gradient(135deg, #0F5132, #16845A); padding: 24px; text-align: center; color: white;">
+          <h2 style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">CỔNG THÔNG TIN CÂU LẠC BỘ BAFU</h2>
+          <p style="margin: 6px 0 0; opacity: 0.9; font-size: 13px;">Trường Đại học Nông – Lâm Bắc Giang</p>
+        </div>
+        <div style="padding: 28px 24px;">
+          <p style="font-size: 15px; margin-top: 0;">Xin chào <strong>${userName || 'Sinh viên BAFU'}</strong>,</p>
+          <p style="font-size: 14px; color: #475569;">Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản liên kết với địa chỉ email này. Dưới đây là mã xác thực OTP của bạn:</p>
+          
+          <div style="background-color: #f0fdf4; border: 2px dashed #16845A; border-radius: 10px; padding: 18px; text-align: center; margin: 24px 0;">
+            <span style="font-size: 32px; font-weight: 800; letter-spacing: 8px; color: #0F5132; display: inline-block;">${otpCode}</span>
+            <p style="margin: 8px 0 0; font-size: 12px; color: #166534; font-weight: 500;">Mã OTP có hiệu lực trong vòng 15 phút</p>
+          </div>
+
+          <div style="background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin: 0; font-size: 13px; color: #92400e;">
+              <strong>Lưu ý bảo mật:</strong> Tuyệt đối không chia sẻ mã xác thực này cho bất kỳ ai, kể cả quản trị viên hệ thống. Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email hoặc đổi mật khẩu ngay để bảo vệ tài khoản.
+            </p>
+          </div>
+
+          <p style="margin-top: 24px; font-size: 13px; color: #64748b;">Trân trọng,<br><strong style="color: #0F5132;">Ban Quản Trị Hệ Thống BAFU Club Portal</strong></p>
+        </div>
+        <div style="background-color: #f8fafc; padding: 14px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #f1f5f9;">
+          Email tự động được gửi từ Cổng Thông Tin CLB Sinh Viên - Đại học Nông – Lâm Bắc Giang.
+        </div>
+      </div>
+    `;
+    return this.sendMail({
+      to,
+      subject,
+      html,
+      text: `Mã OTP đặt lại mật khẩu của bạn là: ${otpCode} (có hiệu lực trong 15 phút). Vui lòng không chia sẻ mã này cho ai.`
+    });
+  }
+
+  // 2. Email thông báo đổi mật khẩu thành công
+  async sendPasswordChangedNotification(to, userName) {
+    const subject = `[BAFU Club Portal] Mật khẩu tài khoản đã được thay đổi thành công`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1e293b; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background-color: #ffffff;">
+        <div style="background: linear-gradient(135deg, #0F5132, #16845A); padding: 24px; text-align: center; color: white;">
+          <h2 style="margin: 0; font-size: 20px; font-weight: 700;">CỔNG THÔNG TIN CÂU LẠC BỘ BAFU</h2>
+        </div>
+        <div style="padding: 28px 24px;">
+          <p style="font-size: 15px; margin-top: 0;">Xin chào <strong>${userName || 'Sinh viên BAFU'}</strong>,</p>
+          <p style="font-size: 14px; color: #475569;">Mật khẩu tài khoản của bạn trên Cổng thông tin CLB BAFU vừa được cập nhật thành công vào lúc <strong>${new Date().toLocaleString('vi-VN')}</strong>.</p>
+          <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin: 0; font-size: 13px; color: #1e40af;">
+              Nếu bạn chính là người thực hiện thay đổi này, bạn có thể yên tâm sử dụng mật khẩu mới để đăng nhập.
+            </p>
+          </div>
+          <p style="font-size: 13px; color: #dc2626;">Nếu bạn KHÔNG thực hiện thay đổi này, vui lòng sử dụng chức năng <strong>Quên mật khẩu</strong> ngay lập tức hoặc liên hệ quản trị viên.</p>
+          <p style="margin-top: 24px; font-size: 13px; color: #64748b;">Trân trọng,<br><strong style="color: #0F5132;">Ban Quản Trị Hệ Thống BAFU Club Portal</strong></p>
+        </div>
+      </div>
+    `;
+    return this.sendMail({
+      to,
+      subject,
+      html,
+      text: `Mật khẩu tài khoản của bạn tại BAFU Club Portal đã được thay đổi thành công vào ${new Date().toLocaleString('vi-VN')}.`
+    });
+  }
+
+  // 3. Email xác nhận nộp hồ sơ
   async sendApplicationSubmitted(to, applicantName, clubName, campaignTitle) {
     const subject = `[BAFU Club Portal] Xác nhận nộp hồ sơ thành công vào CLB ${clubName}`;
     const html = `
@@ -80,7 +148,7 @@ class EmailService {
     return this.sendMail({ to, subject, html, text: `Xin chào ${applicantName}, hồ sơ ứng tuyển vào CLB ${clubName} đã được nộp thành công.` });
   }
 
-  // 2. Email thông báo trúng tuyển (ACCEPTED)
+  // 4. Email thông báo trúng tuyển (ACCEPTED)
   async sendApplicationAccepted(to, applicantName, clubName) {
     const subject = `🎉 [CHÚC MỪNG] Bạn đã chính thức trúng tuyển vào CLB ${clubName}!`;
     const html = `
@@ -103,7 +171,7 @@ class EmailService {
     return this.sendMail({ to, subject, html, text: `Chúc mừng ${applicantName}! Bạn đã trúng tuyển vào CLB ${clubName}.` });
   }
 
-  // 3. Email thông báo chưa phù hợp (REJECTED)
+  // 5. Email thông báo chưa phù hợp (REJECTED)
   async sendApplicationRejected(to, applicantName, clubName) {
     const subject = `[BAFU Club Portal] Thông báo kết quả ứng tuyển CLB ${clubName}`;
     const html = `
@@ -123,7 +191,7 @@ class EmailService {
     return this.sendMail({ to, subject, html, text: `Thân gửi ${applicantName}, cảm ơn bạn đã quan tâm ứng tuyển CLB ${clubName}.` });
   }
 
-  // 4. Email yêu cầu bổ sung thông tin
+  // 6. Email yêu cầu bổ sung thông tin
   async sendApplicationNeedMoreInfo(to, applicantName, clubName) {
     const subject = `[BAFU Club Portal] Yêu cầu bổ sung thông tin hồ sơ CLB ${clubName}`;
     const html = `
@@ -142,7 +210,7 @@ class EmailService {
     return this.sendMail({ to, subject, html, text: `Xin chào ${applicantName}, vui lòng bổ sung thông tin hồ sơ ứng tuyển CLB ${clubName}.` });
   }
 
-  // 5. Email xác nhận đăng ký sự kiện
+  // 7. Email xác nhận đăng ký sự kiện
   async sendEventRegistrationConfirmed(to, studentName, eventTitle, clubName, location, startTime) {
     const subject = `[BAFU Club Portal] Xác nhận đăng ký tham gia sự kiện: ${eventTitle}`;
     const html = `

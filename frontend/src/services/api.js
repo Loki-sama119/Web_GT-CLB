@@ -55,6 +55,9 @@ export const api = {
   login: (body) => request("/auth/login", { method: "POST", body }),
   logout: () => request("/auth/logout", { method: "POST" }),
   getMe: () => request("/auth/me"),
+  forgotPassword: (email) => request("/auth/forgot-password", { method: "POST", body: { email } }),
+  resetPassword: (body) => request("/auth/reset-password", { method: "POST", body }),
+  changePassword: (body) => request("/auth/change-password", { method: "POST", body }),
 
   // Profile
   getProfile: () => request("/users/profile"),
@@ -103,6 +106,11 @@ export const api = {
     const query = new URLSearchParams(params).toString();
     return request(`/clubs/${clubId}/members${query ? `?${query}` : ""}`);
   },
+  addMember: (clubId, body) =>
+    request(`/clubs/${clubId}/members`, {
+      method: "POST",
+      body,
+    }),
   updateMemberRole: (clubId, memberId, role) =>
     request(`/clubs/${clubId}/members/${memberId}/role`, {
       method: "PATCH",

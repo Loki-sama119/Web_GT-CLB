@@ -18,6 +18,7 @@ import {
   Sparkle,
   X,
   CaretRight,
+  Lock,
 } from "@phosphor-icons/react";
 import Button from "../../components/ui/Button";
 import Badge from "../../components/ui/Badge";
@@ -26,6 +27,7 @@ import Modal from "../../components/ui/Modal";
 import Input from "../../components/ui/Input";
 import ClubLogo from "../../components/ui/ClubLogo";
 import StatusBadge from "../../utils/statusPresentation";
+import ChangePasswordModal from "../../components/ChangePasswordModal";
 
 export default function StudentDashboard() {
   const { user, refreshMe } = useAuth();
@@ -34,6 +36,7 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true);
   const [withdrawingId, setWithdrawingId] = useState(null);
   const [successMsg, setSuccessMsg] = useState("");
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   // Profile Edit modal
   const [editingProfile, setEditingProfile] = useState(false);
@@ -249,21 +252,31 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        <button
-          onClick={() => {
-            setProfileForm({
-              fullName: user?.studentProfile?.fullName || "",
-              phone: user?.studentProfile?.phone || "",
-              bio: user?.studentProfile?.bio || "",
-              skills: user?.studentProfile?.skills || "",
-            });
-            setEditingProfile(true);
-          }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#E2E8F0] hover:bg-slate-50 text-slate-700 font-bold text-xs shadow-2xs transition-all cursor-pointer"
-        >
-          <PencilSimple size={16} weight="bold" />
-          <span>Chỉnh sửa hồ sơ</span>
-        </button>
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => {
+              setProfileForm({
+                fullName: user?.studentProfile?.fullName || "",
+                phone: user?.studentProfile?.phone || "",
+                bio: user?.studentProfile?.bio || "",
+                skills: user?.studentProfile?.skills || "",
+              });
+              setEditingProfile(true);
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#E2E8F0] hover:bg-slate-50 text-slate-700 font-bold text-xs shadow-2xs transition-all cursor-pointer"
+          >
+            <PencilSimple size={16} weight="bold" />
+            <span>Chỉnh sửa hồ sơ</span>
+          </button>
+
+          <button
+            onClick={() => setShowChangePassword(true)}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#E2E8F0] hover:bg-slate-50 text-slate-700 font-bold text-xs shadow-2xs transition-all cursor-pointer"
+          >
+            <Lock size={16} weight="bold" />
+            <span>Đổi mật khẩu</span>
+          </button>
+        </div>
       </div>
 
       {/* 2. Quick Stat Counters */}
@@ -627,6 +640,12 @@ export default function StudentDashboard() {
           </div>
         </form>
       </Modal>
+
+      {/* Modal Đổi mật khẩu */}
+      <ChangePasswordModal
+        isOpen={showChangePassword}
+        onClose={() => setShowChangePassword(false)}
+      />
     </div>
   );
 }

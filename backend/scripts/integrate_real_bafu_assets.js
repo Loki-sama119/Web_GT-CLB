@@ -87,16 +87,6 @@ const ALL_CLUBS_CONFIG = [
     }
   },
   {
-    slugs: ["clb-bong-ro-bafu-hoops"],
-    nameFallback: "CLB Bóng Rổ BAFU Hoops",
-    logoUrl: "/images/clubs/logo-basketball.svg",
-    coverUrl: "/images/backgrounds/bg_galaxy_basketball.jpg",
-    video: {
-      url: BAFU_VIDEO_URL,
-      caption: "Video quảng bá: Năng động - Bứt phá - Đam mê cùng BAFU Basketball Hoops"
-    }
-  },
-  {
     slugs: ["clb-nhiep-anh-bafu-lens"],
     nameFallback: "CLB Nhiếp Ảnh & Media BAFU Lens",
     logoUrl: "/images/clubs/logo-photo.svg",
