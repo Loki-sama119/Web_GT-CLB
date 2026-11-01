@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="hoops-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#140804"/>
+      <stop offset="50%" stop-color="#331406"/>
+      <stop offset="100%" stop-color="#0F0401"/>
+    </linearGradient>
+    <linearGradient id="orange-burn" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F97316"/>
+      <stop offset="100%" stop-color="#FACC15"/>
+    </linearGradient>
+    <filter id="h-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#hoops-grad)"/>
+
+  <!-- Basketball Key & Court Geometry Arc Lines -->
+  <g fill="none" stroke="#F97316" stroke-width="2.5" opacity="0.35">
+    <path d="M 1200 100 L 900 100 A 240 240 0 0 0 900 580 L 1200 580"/>
+    <circle cx="900" cy="340" r="100" stroke-dasharray="8 6"/>
+    <circle cx="1060" cy="340" r="35" stroke-width="4" stroke="#FACC15" filter="url(#h-glow)"/>
+    
+    <path d="M 0 100 L 300 100 A 240 240 0 0 1 300 580 L 0 580" opacity="0.2"/>
+    <circle cx="300" cy="340" r="100" stroke-dasharray="8 6" opacity="0.2"/>
+  </g>
+
+  <!-- Dynamic Slash Energy Trails -->
+  <g stroke="url(#orange-burn)" stroke-linecap="round" filter="url(#h-glow)">
+    <line x1="150" y1="620" x2="850" y2="120" stroke-width="6" opacity="0.7"/>
+    <line x1="280" y1="660" x2="980" y2="160" stroke-width="3" opacity="0.5"/>
+    <line x1="40" y1="560" x2="650" y2="120" stroke-width="2" opacity="0.4"/>
+  </g>
+
+  <!-- Glowing Orange Core Aura -->
+  <circle cx="1060" cy="340" r="160" fill="#F97316" opacity="0.12" filter="url(#h-glow)"/>
+
+  <!-- Watermark -->
+  <text x="80" y="580" font-family="Arial, sans-serif" font-weight="900" font-size="140" fill="#F97316" opacity="0.06" font-style="italic">HOOPS</text>
+</svg>

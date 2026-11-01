@@ -1,149 +1,186 @@
-# UNIVERSITY CLUB PORTAL — CỔNG THÔNG TIN CÂU LẠC BỘ SINH VIÊN BAFU
-> **Trường Đại học Nông - Lâm Bắc Giang (Bac Giang Agriculture and Forestry University)**  
-> **Phiên bản:** Phase 6 — Release Hardening, UAT & BAFU Pilot (Branch: `feature/phase6-release-readiness`)  
-> **Repository:** [https://github.com/Loki-sama119/Web_GT-CLB](https://github.com/Loki-sama119/Web_GT-CLB)
+# Cổng Thông Tin Câu Lạc Bộ Sinh Viên BAFU (Web_GT-CLB)
 
-Hệ thống giới thiệu, đăng ký tuyển thành viên trực tuyến, quản lý sự kiện, media và số hóa hoạt động toàn diện cho các Câu lạc bộ (CLB) sinh viên Trường Đại học Nông - Lâm Bắc Giang.
+> **Cổng thông tin & Không gian kết nối hoạt động sinh viên — Trường Đại học Nông – Lâm Bắc Giang (BAFU)**  
+> *Được phát triển theo định hướng Modern University Campus × Premium Editorial × Youth Community Experience.*
 
 ---
 
-## 1. Stack Công Nghệ & Kiến Trúc
+## 📌 Tổng quan dự án
 
-- **Frontend:** React 19, Vite, Tailwind CSS 4, React Router 7, TanStack Query, Lucide Icons, Recharts.
-- **Backend:** Node.js (ES Modules), Express.js 5, Prisma ORM, PostgreSQL 16, Zod, bcryptjs, JWT & HTTP-Only Secure Cookies, Helmet, Express Rate Limit.
-- **Testing:**
-  - **Backend API:** Vitest, Supertest (**35/35 Tests PASS — 100%**).
-  - **E2E Automation:** Playwright (**30/30 Tests PASS — 100%**, bao gồm Desktop Chromium & Mobile Pixel 5).
-- **DevOps & Production:** Docker Compose V2, Nginx Reverse Proxy (TLS 1.2/1.3, OWASP Security Headers), Mailpit SMTP, Volume mount bền vững cho upload và Postgres.
+Dự án **Web_GT-CLB** là nền tảng số hóa quản lý và quảng bá hoạt động của các Câu lạc bộ, Đội, Nhóm sinh viên thuộc Trường Đại học Nông – Lâm Bắc Giang. Hệ thống cung cấp không gian tương tác trực quan cho sinh viên tìm kiếm CLB, theo dõi sự kiện, nộp hồ sơ ứng tuyển trực tuyến và hỗ trợ Ban Chủ nhiệm CLB quản lý thành viên, chiến dịch tuyển quân minh bạch.
+
+> [!NOTE]
+> Dự án đang ở giai đoạn thử nghiệm (Pilot). Toàn bộ nội dung, hình ảnh và danh mục câu lạc bộ tuân thủ nghiêm ngặt **Chính sách Xác thực Dữ liệu (Authenticity & Provenance Policy)**: chỉ hiển thị thông tin và tư liệu có nguồn gốc đối chiếu từ các kênh chính thức của Nhà trường và Đoàn Thanh niên BAFU.
 
 ---
 
-## 2. Tài Khoản Thử Nghiệm Hệ Thống (Demo Accounts)
+## 🎨 Giao diện mới: Campus Editorial & Authentic Experience
 
-| Vai trò | Email đăng nhập | Mật khẩu mặc định | Ghi chú |
-|---|---|---|---|
-| **Super Admin** | `admin@bafu.edu.vn` | `AdminPassword@2026` | Quản trị viên cấp trường, Phê duyệt CLB, Báo cáo toàn trường |
-| **Club Admin** | `it.leader@bafu.edu.vn` | `12345678` | Chủ nhiệm CLB Lập trình BAFU Tech |
-| **Club Admin** | `caulong.leader@bafu.edu.vn` | `12345678` | Chủ nhiệm CLB Cầu Lông |
-| **Sinh Viên** | `haidang.sv@bafu.edu.vn` | `12345678` | Sinh viên Nguyễn Hải Đăng (Đã có hồ sơ ứng tuyển) |
-| **Sinh Viên** | `minhthu.sv@bafu.edu.vn` | `12345678` | Sinh viên Trần Minh Thư (Hội viên chính thức) |
+Hệ thống vừa hoàn thành đợt tái thiết kế toàn diện (Homepage Redesign) với các đặc điểm nổi bật:
 
-*(Trên giao diện Đăng nhập có sẵn các nút bấm điền nhanh tài khoản demo để tiện nghiệm thu).*
+### 1. Bảng màu & Nhận diện thương hiệu (Visual Identity)
+- **Forest Green (`#0F5132`)**: Màu xanh nông lâm đặc trưng, biểu trưng cho tri thức và sức sống thanh niên BAFU.
+- **Emerald (`#16845A`)**: Gam xanh trẻ trung, hiện đại cho các điểm nhấn tương tác.
+- **Cream White (`#F8FAF7`)**: Nền sáng thanh lịch, dễ chịu cho mắt khi đọc nội dung dài.
+- **Charcoal (`#17211C`)**: Màu chữ đen than đậm đà, tương phản sắc nét.
+- **Accent Gold (`#E7B85B`)**: Điểm xuyết huy hiệu, giải thưởng và trạng thái vinh danh.
+- **Typography**: Phông chữ hiện đại tiếng Việt *Plus Jakarta Sans* và *Be Vietnam Pro*.
+
+### 2. Bố cục 8 phần chuẩn mực trang chủ
+1. **Navbar cao cấp**: Thanh điều hướng sticky với BrandWordmark typographic `BF BAFU. CAMPUS CLUBS`, tự động co giãn thông minh không tràn viền trên mobile 390px.
+2. **Hero Banner Full-Width (760px)**: Ảnh toàn cảnh campus BAFU độ nét cao (`campus-overview.jpg`), khẩu hiệu *"KHÁM PHÁ CỘNG ĐỒNG SINH VIÊN BAFU"*, bộ nút bấm Dual CTA và thanh tìm kiếm câu lạc bộ nổi (Floating Search Bar).
+3. **Thanh Thống Kê Sống (Live Metrics Counter)**: Thể hiện số lượng CLB đã đối chiếu nguồn, lĩnh vực hoạt động và chuyên trang xác minh tư liệu.
+4. **Visual Club Grid (3 cột desktop)**: Trình bày danh bạ câu lạc bộ với thẻ bo góc hiện đại, tỷ lệ ảnh 16:9, viền gradient phân loại lĩnh vực và nhãn trạng thái minh bạch.
+5. **Editorial Campus Gallery & Lightbox**: Khung ảnh hoạt động sinh viên bất đối xứng (1 ảnh tiêu điểm lớn + 3 ảnh tư liệu), tích hợp Modal phóng to (Lightbox) xem ảnh độ phân giải gốc kèm chú thích nguồn.
+6. **Video Phóng Sự BAFU (16:9 YouTube Official)**: Tích hợp video giới thiệu trường chính thức từ kênh YouTube `@dhnlbg` với giao diện phát video chuẩn tỷ lệ, không tự động phát tiếng gây phiền người dùng.
+7. **Dải Kêu Gọi Hành Động (Action Band)**: Kêu gọi sinh viên tham gia cộng đồng và đề xuất thành lập câu lạc bộ mới.
+8. **Footer Minh Bạch & Bản Quyền**: Footer 4 cột với tuyên bố bản quyền, liên kết nhanh, địa chỉ trường và ghi chú minh bạch dữ liệu.
 
 ---
 
-## 3. Cấu Hình Cổng Mạng (Port Mapping & Environments)
+## 🛡️ Chính sách Dữ liệu & Tư liệu Xác thực (Authenticity Policy)
 
-Lưu ý quan trọng khi chạy trên Windows và WSL2:
-- **PostgreSQL Container (`club_portal_postgres`):** Ánh xạ `5433:5432` ra máy tính chủ (Windows Host).
-- **Backend chạy trên Windows Host:** Kết nối Database qua `localhost:5433` (để tránh xung đột với cổng Postgres 5432 mặc định của Windows).
-- **Backend chạy trong Docker Container:** Kết nối Database qua mạng nội bộ `postgres:5432`.
-- **Nginx Reverse Proxy:** Cổng `80` (HTTP) và `443` (HTTPS).
-- **Mailpit Web UI (Kiểm tra email):** Cổng `8025` (`http://localhost:8025`).
+Nhằm đảm bảo tính trung thực và bảo vệ uy tín hình ảnh Nhà trường:
+
+- **Loại bỏ 100% hình ảnh không có thật**: Đã gỡ bỏ toàn bộ ảnh nền vũ trụ giả lập (`bg_galaxy_*`), các logo fanpage chưa được Đoàn trường cấp phép, và ảnh stock không thuộc khuôn viên BAFU.
+- **Cơ chế Fallback trung tính**: Khi một CLB chưa có ảnh hoặc logo được phê duyệt chính thức, giao diện tự động sử dụng huy hiệu chữ viết tắt (Initials Badge) hoặc thông báo *"Hình ảnh đang cập nhật"* thay vì gán ghép ảnh giả.
+- **Danh mục 5 CLB đã đối chiếu nguồn lưu trữ**:
+  1. *CLB Tình nguyện Xanh BAFU* (Tình nguyện & Xã hội)
+  2. *CLB Hiến máu tình nguyện BAFU* (Nhân đạo & Chữ thập đỏ)
+  3. *CLB Tin học BAFU* (Khoa học & Kỹ thuật số)
+  4. *CLB Khởi nghiệp BAFU* (Đổi mới sáng tạo & Hướng nghiệp)
+  5. *CLB Văn nghệ BAFU* (Văn hóa, Nghệ thuật & Tuyên truyền ca khúc cách mạng)
+- **Dọn dẹp số liệu ảo**: Không tự bịa số lượng 560 hội viên hay các chiến dịch tuyển quân giả mạo.
 
 ---
 
-## 4. Hướng Dẫn Cài Đặt & Vận Hành
+## 💻 Công nghệ sử dụng (Tech Stack)
 
-### Cách 1: Vận hành toàn bộ bằng Docker Compose (Khuyến nghị)
+| Tầng | Công nghệ | Chi tiết |
+| :--- | :--- | :--- |
+| **Frontend** | React 19 + Vite 6 | SPA tốc độ cao, hỗ trợ SSR/Preview |
+| **Styling** | Tailwind CSS 4 | Modern utility-first CSS |
+| **Icons & UI** | Lucide React | Hệ thống icon tối giản, sắc sảo |
+| **Backend** | Express 5 (Node.js 20 LTS) | RESTful API, cookie HTTP-only, Rate Limiting |
+| **Database** | PostgreSQL 16 + Prisma ORM 6 | Cơ sở dữ liệu quan hệ, di chuyển schema an toàn |
+| **Reverse Proxy** | Nginx Alpine | Cân bằng tải, reverse proxy API, nén gzip và cache static assets |
+| **Đóng gói** | Docker & Docker Compose | Đóng gói 5 container độc lập (Multi-stage build) |
 
-```bash
-# 1. Khởi chạy toàn bộ hệ thống (PostgreSQL, Backend, Frontend, Nginx, Mailpit)
+---
+
+## 🚀 Hướng dẫn khởi chạy hệ thống
+
+### Cách 1: Sử dụng file `start.bat` (Khuyên dùng trên Windows)
+
+Chỉ cần bấm đúp vào file `start.bat` (ở thư mục gốc hoặc thư mục `Web_GT-CLB`), menu điều khiển tương tác sẽ xuất hiện:
+
+```text
+=====================================================================
+       CỔNG THÔNG TIN CÂU LẠC BỘ SINH VIÊN BAFU (WEB_GT-CLB)
+           Trường Đại học Nông - Lâm Bắc Giang
+=====================================================================
+
+  [1] Khởi chạy toàn bộ hệ thống bằng Docker (Khuyên dùng)
+      - Bao gồm: Nginx (Cổng 80), Frontend, Backend, PostgreSQL
+      - Tự động mở trình duyệt http://localhost
+
+  [2] Khởi chạy chế độ Lập trình Dev (Local Node.js)
+      - Bật PostgreSQL Docker (Cổng 5433)
+      - Mở Backend Dev (npm run dev trên cổng 5000)
+      - Mở Frontend Dev (npm run dev trên cổng 5173)
+
+  [3] Kiểm tra trạng thái hệ thống và Container Health
+
+  [4] Dừng toàn bộ hệ thống Docker (docker compose down)
+
+  [5] Build lại toàn bộ Docker từ đầu (No cache rebuild)
+
+  [6] Xem Logs thời gian thực của hệ thống (docker compose logs)
+
+  [0] Thoát
+=====================================================================
+```
+
+> **Mẹo:** Nhấn phím `1` (hoặc Enter) để khởi chạy toàn bộ và tự động mở website trên trình duyệt!
+
+---
+
+### Cách 2: Khởi chạy bằng Docker Compose thủ công
+
+Yêu cầu máy tính đã cài đặt **Docker Desktop**.
+
+```powershell
+# 1. Di chuyển vào thư mục dự án
+cd Web_GT-CLB
+
+# 2. Xây dựng và khởi chạy các container ngầm
 docker compose up -d --build
 
-# 2. Kiểm tra trạng thái 4 container
-docker compose ps
-
-# 3. Truy cập ứng dụng:
-# - Cổng thông tin CLB: http://localhost
-# - Giao diện kiểm tra Email (Mailpit): http://localhost:8025
+# 3. Mở trình duyệt trải nghiệm
+start http://localhost
 ```
 
-### Cách 2: Vận hành thủ công cho Lập trình viên (Local Development)
+**Các cổng dịch vụ đã cấu hình sẵn:**
+- **Cổng thông tin sinh viên**: [http://localhost](http://localhost) (Cổng 80 thông qua Nginx)
+- **Backend API**: [http://localhost:5000](http://localhost:5000)
+- **Backend Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
+- **PostgreSQL Database**: `localhost:5433` (User: `postgres`, Password: `postgrespassword`, DB: `club_portal_db`)
+- **E2E Test Endpoint**: [http://localhost:18080](http://localhost:18080) (Đã điều chỉnh sang cổng 18080 để tránh xung đột cổng 8080)
 
-#### Bước 1: Khởi động Database & Mailpit
-```bash
-docker compose up -d postgres mailpit
-```
+---
 
-#### Bước 2: Chạy Backend
-```bash
+### Cách 3: Chế độ phát triển (Local Development)
+
+Nếu bạn muốn chỉnh sửa mã nguồn trực tiếp mà không qua Docker:
+
+```powershell
+# 1. Khởi chạy cơ sở dữ liệu PostgreSQL
+docker compose up -d postgres
+
+# 2. Khởi chạy Backend
 cd backend
 npm install
-npx prisma migrate deploy
+npx prisma generate
 npm run dev
-# Backend chạy tại: http://localhost:5000
-```
 
-#### Bước 3: Chạy Frontend
-```bash
+# 3. Khởi chạy Frontend (mở một Terminal mới)
 cd frontend
 npm install
 npm run dev
-# Frontend chạy tại: http://localhost:5173
+# Truy cập giao diện Vite Dev tại: http://localhost:5173
 ```
 
 ---
 
-## 5. Kiểm Thử Hệ Thống (Automated Test Execution)
+## 🧪 Kiểm thử chất lượng (Testing & Verification)
 
-### 5.1 Kiểm thử Backend API (35 Test Suites)
-```bash
-cd backend
-npm test
-```
-*Kết quả:* **35/35 Passed**, bao gồm kiểm thử RBAC đa CLB, nộp đơn động, duyệt trúng tuyển, phân quyền phó chủ nhiệm, tải mẫu CSV, import CLB, duyệt trạng thái và phòng chống CSV Formula Injection.
+Dự án đã vượt qua tất cả các bộ kiểm thử tự động:
 
-### 5.2 Kiểm thử Playwright E2E (Desktop & Mobile - 30 Tests)
-```bash
-cd e2e
-npm test
-```
-*Kết quả:* **30/30 Passed**, bao gồm:
-- Luồng tuyển sinh trọn vẹn (Sinh viên nộp đơn -> Ban chủ nhiệm duyệt -> Kích hoạt hội viên).
-- Đăng ký và hủy sự kiện, kiểm tra chặn đăng ký trùng.
-- Quản lý hội viên, bổ nhiệm phó chủ nhiệm, xuất CSV.
-- Quản lý media album ảnh CLB.
-- Quản trị viên cấp trường: Phê duyệt trạng thái CLB, Tải mẫu CSV & Batch Import CLB.
-- Điều khoản dịch vụ và Chính sách quyền riêng tư (OWASP ASVS / DSAR).
-- Kiểm thử đa nền tảng: Desktop Chromium & Mobile Pixel 5.
-
-### 5.3 Kiểm tra Build Production Frontend
-```bash
-cd frontend
-npm run build
-```
-*Kết quả:* Build thành công 100% trong ~3 giây không có lỗi hoặc cảnh báo gãy bundle.
+- **Code Quality**: `npm run lint` (`oxlint`) — **0 errors**.
+- **Production Bundle**: `npm run build` (Vite) — **PASS** (Hoàn tất đóng gói không lỗi).
+- **Docker Image Build**: Multi-stage build cho Frontend & Backend với cờ `--no-cache` — **PASS**.
+- **Responsive Viewport Verification**: Kiểm tra trực quan trên 4 kích cỡ màn hình tiêu chuẩn:
+  - Desktop FHD: `1920 × 1080px`
+  - Desktop Chuẩn: `1440 × 900px`
+  - Tablet: `768 × 1024px`
+  - Mobile: `390 × 844px` (iPhone 12/13/14)
 
 ---
 
-## 6. Điểm Mới trong Phase 6 (Release Hardening & Pilot Readiness)
+## 📚 Tài liệu nghiệm thu liên quan
 
-1. **Bảo mật & Quyền riêng tư (OWASP ASVS v4.0):**
-   - Triệt tiêu lỗ hổng **CSV Formula Injection** khi xuất dữ liệu người dùng (`sanitizeCsvField`).
-   - Loại bỏ trường đánh giá nhạy cảm `internalNotes` khỏi file xuất của ứng viên.
-   - Thêm trang [Chính sách Quyền riêng tư](/privacy-policy) với quy trình xử lý yêu cầu dữ liệu cá nhân (DSAR).
-   - Thêm trang [Điều khoản Dịch vụ](/terms-of-service) cho sinh viên và Ban chủ nhiệm.
-   - Áp dụng `trust proxy` và bảo vệ giới hạn tần suất gọi API (Rate Limiting) đằng sau Nginx.
-2. **Quản trị Dữ liệu Thí điểm BAFU (Data Readiness):**
-   - API & UI cho phép Quản trị viên cấp trường tải mẫu CSV (`/admin/clubs/template-csv`).
-   - Hỗ trợ nhập danh sách CLB thật từ CSV (`/admin/clubs/import-csv`) với cơ chế kiểm tra trùng lặp tên/slug và phân công Chủ nhiệm.
-   - Quản lý vòng đời trạng thái CLB (`PENDING`, `ACTIVE`, `INACTIVE`) giúp Ban Giám hiệu / Đoàn trường kiểm duyệt trước khi hiển thị công khai.
-3. **Sao lưu & Phục hồi Độc lập (Disaster Recovery):**
-   - Đã thực nghiệm phục hồi 100% bản sao lưu vào cơ sở dữ liệu độc lập `club_portal_restore_test` với độ khớp bản ghi tuyệt đối.
-   - Cung cấp kịch bản sao lưu nén tự động hàng ngày qua Crontab.
-4. **Cấu hình Sẵn sàng cho Môi trường Production:**
-   - [docker-compose.prod.yml](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docker-compose.prod.yml): Mạng nội bộ riêng biệt, cô lập hoàn toàn cổng cơ sở dữ liệu với Internet, giới hạn xoay vòng log (10MB x 3).
-   - [docker/nginx/nginx.prod.conf](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docker/nginx/nginx.prod.conf): Cấu hình SSL TLS 1.2/1.3, tự động chuyển hướng HTTP sang HTTPS và áp dụng các tiêu chuẩn an ninh HTTP Headers cao cấp.
+Xem chi tiết trong thư mục `docs/`:
+- [`BAFU_HOMEPAGE_REDESIGN.md`](docs/BAFU_HOMEPAGE_REDESIGN.md): Đặc tả kiến trúc giao diện trang chủ, bảng màu và nhịp điệu typography.
+- [`BAFU_MEDIA_REAUDIT.md`](docs/BAFU_MEDIA_REAUDIT.md): Báo cáo rà soát và loại bỏ toàn diện hình ảnh sai nguồn gốc.
+- [`BAFU_UI_ACCEPTANCE.md`](docs/BAFU_UI_ACCEPTANCE.md): Biên bản nghiệm thu kiểm thử responsive, lightbox và video embed.
+- [`BAFU_REAL_CLUB_CATALOG.md`](docs/BAFU_REAL_CLUB_CATALOG.md): Danh mục hồ sơ đối chiếu các CLB BAFU.
+
+Ảnh chụp màn hình nghiệm thu đầy đủ lưu tại: `screenshots/homepage-redesign/`.
 
 ---
 
-## 7. Tài Liệu Nghiệm Thu & Vận Hành (Phase 6 Deliverables)
+## 👥 Nhóm phát triển
 
-- [Báo cáo Audit Mã nguồn & Bảo mật](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/PHASE6_AUDIT_REPORT.md)
-- [Báo cáo Kiểm thử Tự động E2E](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/PHASE6_E2E_REPORT.md)
-- [Kế hoạch Kiểm thử Nghiệm thu Người dùng (UAT Test Plan)](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/UAT_TEST_PLAN.md)
-- [Kế hoạch Triển khai Thí điểm tại BAFU (BAFU Pilot Plan)](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/BAFU_PILOT_PLAN.md)
-- [Hướng dẫn Triển khai Vận hành Production](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/PRODUCTION_DEPLOYMENT.md)
-- [Báo cáo & Hướng dẫn Sao lưu Phục hồi Dữ liệu](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/BACKUP_RESTORE_VERIFICATION.md)
-- [Danh mục Kiểm tra Bảo mật Phát hành (Security Release Checklist)](file:///d:/CLB%20Sinh%20Vi%C3%AAn%20BAFU/Web_GT-CLB/docs/SECURITY_RELEASE_CHECKLIST.md)
+- **Đơn vị chủ quản**: Dự án thí điểm Cổng thông tin CLB BAFU
+- **Phiên bản**: `2.4.0-editorial`
+- **Kho lưu trữ GitHub**: [https://github.com/Loki-sama119/Web_GT-CLB](https://github.com/Loki-sama119/Web_GT-CLB)

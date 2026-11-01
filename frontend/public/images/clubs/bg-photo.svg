@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="photo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09090C"/>
+      <stop offset="50%" stop-color="#181824"/>
+      <stop offset="100%" stop-color="#060608"/>
+    </linearGradient>
+    <linearGradient id="prism-rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="33%" stop-color="#8B5CF6"/>
+      <stop offset="66%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <filter id="p-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#photo-grad)"/>
+
+  <!-- Camera Aperture Iris Blades & Concentric Lens Elements -->
+  <g fill="none" stroke="url(#prism-rainbow)" stroke-width="2" filter="url(#p-glow)" opacity="0.6">
+    <circle cx="600" cy="337" r="140"/>
+    <circle cx="600" cy="337" r="220" stroke-dasharray="10 8"/>
+    <circle cx="600" cy="337" r="320" stroke-width="1" opacity="0.4"/>
+  </g>
+
+  <!-- Aperture Diaphragm Geometric Blades -->
+  <g stroke="#06B6D4" stroke-width="1.5" fill="none" opacity="0.4">
+    <line x1="460" y1="337" x2="680" y2="200"/>
+    <line x1="680" y1="200" x2="740" y2="420"/>
+    <line x1="740" y1="420" x2="520" y2="460"/>
+    <line x1="520" y1="460" x2="480" y2="260"/>
+    <line x1="480" y1="260" x2="720" y2="280"/>
+  </g>
+
+  <!-- Chromatic Prism Flares -->
+  <line x1="100" y1="580" x2="1100" y2="100" stroke="url(#prism-rainbow)" stroke-width="4" opacity="0.6" filter="url(#p-glow)"/>
+  <line x1="200" y1="640" x2="1150" y2="180" stroke="#8B5CF6" stroke-width="2" opacity="0.4"/>
+
+  <!-- Bokeh Light Discs -->
+  <circle cx="350" cy="220" r="45" fill="#F43F5E" opacity="0.12" filter="url(#p-glow)"/>
+  <circle cx="850" cy="450" r="60" fill="#06B6D4" opacity="0.12" filter="url(#p-glow)"/>
+  <circle cx="780" cy="180" r="35" fill="#8B5CF6" opacity="0.15" filter="url(#p-glow)"/>
+
+  <!-- Watermark -->
+  <text x="80" y="580" font-family="Arial, sans-serif" font-weight="900" font-size="140" fill="#06B6D4" opacity="0.06">BAFU LENS</text>
+</svg>

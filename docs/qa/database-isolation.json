@@ -1,0 +1,127 @@
+{
+  "pass": true,
+  "before": {
+    "users": {
+      "count": 17,
+      "digest": "91290ec887487c96ac866e54fbaebf52"
+    },
+    "student_profiles": {
+      "count": 17,
+      "digest": "cd49ff828dfcc668660d85fbaf4ce0f0"
+    },
+    "clubs": {
+      "count": 14,
+      "digest": "32c629314ea5edb60f773921820a5103"
+    },
+    "club_memberships": {
+      "count": 11,
+      "digest": "8be147865d4bf3bd51fa1f00acdd24f7"
+    },
+    "applications": {
+      "count": 4,
+      "digest": "3c4a57dddcd199b0da4076b4446d3ae1"
+    },
+    "application_answers": {
+      "count": 13,
+      "digest": "119f5012318123449d4d29a47c6a6e70"
+    },
+    "application_histories": {
+      "count": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "recruitment_campaigns": {
+      "count": 3,
+      "digest": "0f03dc673479f7f9d1417b0ca87dd898"
+    },
+    "club_events": {
+      "count": 5,
+      "digest": "6f6bae18b1c003c881b93f8e9378c492"
+    },
+    "event_registrations": {
+      "count": 3,
+      "digest": "5dd7242bb1c58aced6a98cf834fff972"
+    },
+    "club_posts": {
+      "count": 1,
+      "digest": "d46033202a09306f1a60e2d2b0c518b9"
+    },
+    "club_medias": {
+      "count": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "media_assets": {
+      "count": 11,
+      "digest": "b46c57f9a0bfb4443fa9e7978e161be0"
+    },
+    "audit_logs": {
+      "count": 74,
+      "digest": "c17f6cb2126946626dff47f29a2751af"
+    },
+    "notifications": {
+      "count": 1,
+      "digest": "808cebea6b42d1debb2f085cc2626e32"
+    }
+  },
+  "after": {
+    "users": {
+      "count": 17,
+      "digest": "91290ec887487c96ac866e54fbaebf52"
+    },
+    "student_profiles": {
+      "count": 17,
+      "digest": "cd49ff828dfcc668660d85fbaf4ce0f0"
+    },
+    "clubs": {
+      "count": 14,
+      "digest": "32c629314ea5edb60f773921820a5103"
+    },
+    "club_memberships": {
+      "count": 11,
+      "digest": "8be147865d4bf3bd51fa1f00acdd24f7"
+    },
+    "applications": {
+      "count": 4,
+      "digest": "3c4a57dddcd199b0da4076b4446d3ae1"
+    },
+    "application_answers": {
+      "count": 13,
+      "digest": "119f5012318123449d4d29a47c6a6e70"
+    },
+    "application_histories": {
+      "count": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "recruitment_campaigns": {
+      "count": 3,
+      "digest": "0f03dc673479f7f9d1417b0ca87dd898"
+    },
+    "club_events": {
+      "count": 5,
+      "digest": "6f6bae18b1c003c881b93f8e9378c492"
+    },
+    "event_registrations": {
+      "count": 3,
+      "digest": "5dd7242bb1c58aced6a98cf834fff972"
+    },
+    "club_posts": {
+      "count": 1,
+      "digest": "d46033202a09306f1a60e2d2b0c518b9"
+    },
+    "club_medias": {
+      "count": 0,
+      "digest": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "media_assets": {
+      "count": 11,
+      "digest": "b46c57f9a0bfb4443fa9e7978e161be0"
+    },
+    "audit_logs": {
+      "count": 74,
+      "digest": "c17f6cb2126946626dff47f29a2751af"
+    },
+    "notifications": {
+      "count": 1,
+      "digest": "808cebea6b42d1debb2f085cc2626e32"
+    }
+  }
+}

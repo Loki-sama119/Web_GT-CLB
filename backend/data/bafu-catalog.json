@@ -1,0 +1,77 @@
+{
+  "checkedAt": "2026-10-27",
+  "clubs": [
+    {
+      "slug": "clb-tinh-nguyen-xanh",
+      "name": "CLB Tình nguyện Xanh BAFU",
+      "identityKey": "community",
+      "category": "tinh-nguyen-cong-dong",
+      "shortDescription": "Gắn kết sinh viên qua những hoạt động vì cộng đồng.",
+      "description": "Bài viết của trường ghi nhận CLB thực hiện chương trình Trung thu năm 2024, làm đồ chơi tái chế và trao quà cho thiếu nhi. Thông tin hoạt động và tuyển thành viên hiện tại đang được cập nhật.",
+      "sourceUrl": "https://www.bafu.edu.vn/home/tin-tuc/hoat-dong-su-kien/4179-sinh-vien-truong-dai-hoc-nong--lam-bac-giang-mang-trung-thu-den-voi-cac-em-thieu-nhi.html",
+      "activityStatus": "NOT_CONFIRMED"
+    },
+    {
+      "slug": "clb-hien-mau-tinh-nguyen",
+      "name": "CLB Hiến máu tình nguyện BAFU",
+      "identityKey": "blood",
+      "category": "tinh-nguyen-cong-dong",
+      "shortDescription": "Một cộng đồng sinh viên hướng đến các hoạt động hiến máu tình nguyện.",
+      "description": "Trường giới thiệu CLB Hiến máu tình nguyện trong các hoạt động ngoại khóa. Mối liên hệ với fanpage maubafu cần được đơn vị quản lý xác nhận; lịch hiến máu hiện tại chưa được công bố trên cổng này.",
+      "sourceUrl": "https://bafu.edu.vn/home/tin-tuc/dao-tao-tuyen-sinh/4428-vi-sao-nen-chon-truong-dai-hoc-nong-lam-bac-giang-chon-dung-truong-vung-tuong-lai.html",
+      "activityStatus": "NOT_CONFIRMED"
+    },
+    {
+      "slug": "clb-tin-hoc-bafu",
+      "name": "CLB Tin học BAFU",
+      "identityKey": "technology",
+      "category": "hoc-thuat-cong-nghe",
+      "shortDescription": "Giao lưu và học hỏi về tin học trong cộng đồng sinh viên.",
+      "description": "Bài viết của trường về lễ phát động Sinh viên 5 tốt năm 2015 ghi nhận quyết định thành lập CLB Tin học. Chưa có căn cứ đồng nhất CLB này với BAFU Tech. Hoạt động hiện tại đang chờ xác nhận.",
+      "sourceUrl": "https://bafu.edu.vn/home/tin-tuc/hoat-dong-su-kien/1639-le-phat-dong-phong-trao-sinh-vien-5-tot-nam-hoc-2015-2016.html",
+      "activityStatus": "NOT_CONFIRMED"
+    },
+    {
+      "slug": "clb-khoi-nghiep-bafu",
+      "name": "CLB Khởi nghiệp BAFU",
+      "identityKey": "enterprise",
+      "category": "ky-nang-khoi-nghiep",
+      "shortDescription": "Kết nối ý tưởng khởi nghiệp và tinh thần học hỏi từ doanh nghiệp.",
+      "description": "Báo Bắc Giang ghi nhận lễ ra mắt CLB ngày 11/04/2018 tại trường. CLB được giới thiệu với mục tiêu hỗ trợ ý tưởng khởi nghiệp và kết nối doanh nghiệp. Tình trạng hoạt động hiện tại chưa được xác nhận.",
+      "sourceUrl": "https://www.baobacninhtv.vn/truong-dai-hoc-nong-lam-bac-giang-ra-mat-clb-khoi-nghiep-bafu-postid280036.bbg",
+      "activityStatus": "NOT_CONFIRMED"
+    },
+    {
+      "slug": "clb-van-nghe-bafu",
+      "name": "CLB Văn nghệ BAFU",
+      "identityKey": "performing-arts",
+      "category": "nghe-thuat-van-hoa",
+      "shortDescription": "Không gian nghệ thuật trong đời sống sinh viên BAFU.",
+      "description": "CLB Văn nghệ được nhắc đến trong bài giới thiệu hoạt động ngoại khóa của trường. Lịch biểu diễn, ban chủ nhiệm và thông tin tuyển thành viên đang được cập nhật từ đơn vị phụ trách.",
+      "sourceUrl": "https://bafu.edu.vn/home/tin-tuc/dao-tao-tuyen-sinh/4428-vi-sao-nen-chon-truong-dai-hoc-nong-lam-bac-giang-chon-dung-truong-vung-tuong-lai.html",
+      "activityStatus": "NOT_CONFIRMED"
+    }
+  ],
+  "events": [
+    {
+      "slug": "trung-thu-trao-yeu-thuong-2024",
+      "clubSlug": "clb-tinh-nguyen-xanh",
+      "title": "Trung thu: Trao yêu thương cho em",
+      "description": "Hoạt động trao quà và đồ chơi tái chế cho thiếu nhi, được bài viết của trường ghi nhận.",
+      "date": "2024-09-16",
+      "location": "Khu tập thể giáo viên, Trường Đại học Nông – Lâm Bắc Giang",
+      "organizer": "CLB Tình nguyện Xanh",
+      "sourceUrl": "https://www.bafu.edu.vn/home/tin-tuc/hoat-dong-su-kien/4179-sinh-vien-truong-dai-hoc-nong--lam-bac-giang-mang-trung-thu-den-voi-cac-em-thieu-nhi.html"
+    },
+    {
+      "slug": "ra-mat-clb-khoi-nghiep-2018",
+      "clubSlug": "clb-khoi-nghiep-bafu",
+      "title": "Ra mắt CLB Khởi nghiệp BAFU",
+      "description": "Tọa đàm kiến thức khởi nghiệp và lễ ra mắt CLB, theo tin ngày 11/04/2018 của Báo Bắc Giang.",
+      "date": "2018-04-11",
+      "location": "Trường Đại học Nông – Lâm Bắc Giang",
+      "organizer": "Trường Đại học Nông – Lâm Bắc Giang, Đoàn trường",
+      "sourceUrl": "https://www.baobacninhtv.vn/truong-dai-hoc-nong-lam-bac-giang-ra-mat-clb-khoi-nghiep-bafu-postid280036.bbg"
+    }
+  ]
+}

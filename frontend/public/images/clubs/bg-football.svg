@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pitch-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#041208"/>
+      <stop offset="45%" stop-color="#082816"/>
+      <stop offset="100%" stop-color="#020904"/>
+    </linearGradient>
+    <linearGradient id="lime-slash" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#22C55E"/>
+    </linearGradient>
+    <filter id="f-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Pitch Background -->
+  <rect width="1200" height="675" fill="url(#pitch-grad)"/>
+
+  <!-- Stadium Floodlights Cone Beams -->
+  <polygon points="150,-50 350,675 -100,675" fill="#22C55E" opacity="0.08"/>
+  <polygon points="1050,-50 850,675 1300,675" fill="#10B981" opacity="0.08"/>
+
+  <!-- Dynamic Speed Slashes & Turf Energy Lines -->
+  <g stroke="url(#lime-slash)" stroke-linecap="round" filter="url(#f-glow)">
+    <line x1="-50" y1="520" x2="650" y2="120" stroke-width="8" opacity="0.7"/>
+    <line x1="50" y1="620" x2="750" y2="220" stroke-width="4" opacity="0.5"/>
+    <line x1="-120" y1="460" x2="520" y2="100" stroke-width="2" opacity="0.4"/>
+    <line x1="500" y1="650" x2="1250" y2="200" stroke-width="7" opacity="0.6"/>
+    <line x1="620" y1="690" x2="1350" y2="280" stroke-width="3" opacity="0.4"/>
+  </g>
+
+  <!-- Soccer Pitch Geometry Elements -->
+  <circle cx="600" cy="337" r="180" fill="none" stroke="#22C55E" stroke-width="2" stroke-dasharray="10 6" opacity="0.25"/>
+  <circle cx="600" cy="337" r="8" fill="#22C55E" opacity="0.7" filter="url(#f-glow)"/>
+  <line x1="600" y1="0" x2="600" y2="675" stroke="#22C55E" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.2"/>
+
+  <!-- Soccer Ball Dynamic Wireframe / Hex Pattern Silhouette -->
+  <g stroke="#10B981" stroke-width="2" fill="none" opacity="0.18" transform="translate(850, 180)">
+    <polygon points="120,40 180,75 180,145 120,180 60,145 60,75"/>
+    <polygon points="120,180 180,215 180,285 120,320 60,285 60,215"/>
+    <polygon points="180,145 240,110 300,145 300,215 240,250 180,215"/>
+  </g>
+
+  <!-- Big Vibrant Watermark -->
+  <text x="80" y="580" font-family="Arial, sans-serif" font-weight="900" font-size="160" fill="#22C55E" opacity="0.06" font-style="italic">BAFU FC</text>
+
+  <!-- Energy Glow Circles -->
+  <circle cx="600" cy="337" r="300" fill="#10B981" opacity="0.1" filter="url(#f-glow)"/>
+</svg>

@@ -1,75 +1,93 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, UsersThree } from '@phosphor-icons/react';
-import ClubLogo from '../ui/ClubLogo';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowUpRight, ImageSquare, CheckCircle } from "@phosphor-icons/react";
+import ClubLogo from "../ui/ClubLogo";
+import { clubIdentity, activityLabel } from "../../utils/clubIdentity";
 
-/**
- * EditorialClubCard - Thẻ câu lạc bộ chuẩn Swiss Editorial (Span 4/12 hoặc 3/12)
- * Bố cục tối giản, đường kẻ hairline border, typography rõ ràng, không đổ bóng mờ
- */
 export default function EditorialClubCard({ club }) {
+  const [failed, setFailed] = useState(false);
   if (!club) return null;
-
-  const isRecruiting = club.campaigns && club.campaigns.length > 0;
+  const identity = clubIdentity(club);
+  const hasCover = club.coverUrl && !failed;
 
   return (
-    <div className="group bg-white border border-[#D8D5CD] p-6 flex flex-col justify-between hover:border-[#181C1B] transition-colors relative">
-      {/* Top Header: Category & Recruitment indicator */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[#D8D5CD] text-xs">
-          <span className="uppercase tracking-[0.1em] font-bold text-[#12674D]">
-            {club.category?.name || 'Tổ chức BAFU'}
-          </span>
-          {isRecruiting ? (
-            <span className="inline-flex items-center gap-1.5 text-[#EF673F] font-bold text-[11px] uppercase tracking-wider">
-              <span className="w-1.5 h-1.5 bg-[#EF673F] animate-pulse" />
-              Đang tuyển
-            </span>
-          ) : (
-            <span className="text-[#7A827F] text-[11px] uppercase tracking-wider">
-              Thường kỳ
-            </span>
-          )}
-        </div>
-
-        {/* Club Logo & Name */}
-        <div className="flex items-start gap-3.5 pt-1">
-          <ClubLogo
-            logoUrl={club.logoUrl}
-            clubName={club.name}
-            size="md"
-            className="rounded-none border border-[#D8D5CD] shrink-0"
+    <article
+      className="compact-club group overflow-hidden flex flex-col bg-white border border-[#D8D5CD] hover:border-[#16845A] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg rounded-xl"
+      style={{ "--club-accent": identity.accent }}
+    >
+      {/* Top Banner Visual */}
+      <Link
+        to={"/clubs/" + club.slug}
+        className="relative h-32 w-full overflow-hidden block bg-[#17211C]"
+        tabIndex={-1}
+        aria-hidden="true"
+      >
+        {hasCover ? (
+          <img
+            src={club.coverUrl}
+            alt={`Ảnh bìa ${club.name}`}
+            onError={() => setFailed(true)}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
           />
-          <div className="space-y-1">
-            <h3 className="font-sans font-bold text-lg text-[#181C1B] group-hover:text-[#12674D] transition-colors leading-snug">
-              {club.name}
-            </h3>
-            <div className="text-xs text-[#575E5B] flex items-center gap-1">
-              <UsersThree size={14} />
-              <span>{club._count?.members || 15}+ thành viên</span>
-            </div>
+        ) : (
+          <div
+            className={`w-full h-full bg-gradient-to-br ${identity.gradient || "from-[#0F5132] to-[#16845A]"} flex items-center justify-center p-3 relative`}
+          >
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 text-white/90 text-[10px] font-semibold backdrop-blur-md border border-white/15">
+              <ImageSquare size={12} />
+              <span>Hình ảnh đang cập nhật</span>
+            </span>
           </div>
+        )}
+
+        <div className="absolute top-2.5 left-3 z-10">
+          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-black/60 text-white backdrop-blur-md border border-white/20">
+            {club.category?.name || identity.label}
+          </span>
+        </div>
+      </Link>
+
+      <div className="p-5 flex-1 flex flex-col justify-between">
+        <div>
+          <div className="flex items-center justify-between -mt-9 mb-3 relative z-10">
+            <ClubLogo
+              logoUrl={club.logoUrl}
+              name={club.name}
+              size="md"
+              className="ring-2 ring-white shadow-md bg-white shrink-0"
+            />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#0F5132] bg-[#0F5132]/10 px-2 py-0.5 rounded border border-[#0F5132]/20 mt-4">
+              {activityLabel(club)}
+            </span>
+          </div>
+
+          <h3 className="font-display font-bold text-lg text-[#17211C] leading-snug group-hover:text-[#0F5132] transition-colors">
+            <Link to={"/clubs/" + club.slug}>{club.name}</Link>
+          </h3>
+
+          <p className="text-xs text-[#575E5B] line-clamp-2 mt-2 leading-relaxed">
+            {club.shortDescription || "Hồ sơ câu lạc bộ sinh viên BAFU."}
+          </p>
         </div>
 
-        {/* Short Description */}
-        <p className="text-xs sm:text-sm text-[#575E5B] line-clamp-2 leading-relaxed pt-1">
-          {club.description || 'Tham gia giao lưu, học tập và rèn luyện kỹ năng cùng các thành viên năng động.'}
-        </p>
+        <div className="mt-4 pt-3.5 border-t border-[#E5E7EB] flex items-center justify-between text-xs">
+          <span className="text-[#64748B] font-semibold flex items-center gap-1">
+            <CheckCircle size={13} weight="fill" className="text-[#10B981]" />
+            <span>
+              {club.dataClassification === "REAL_VERIFIED"
+                ? "Có nguồn xác minh"
+                : "Đang cập nhật"}
+            </span>
+          </span>
+          <Link
+            to={"/clubs/" + club.slug}
+            className="font-bold text-[#0F5132] hover:text-[#16845A] inline-flex items-center gap-1 transition-colors"
+          >
+            Khám phá <ArrowUpRight size={14} weight="bold" />
+          </Link>
+        </div>
       </div>
-
-      {/* Footer Action */}
-      <div className="pt-4 mt-6 border-t border-[#D8D5CD] flex items-center justify-between">
-        <span className="text-[11px] uppercase tracking-wider text-[#7A827F] font-semibold">
-          {club.meetingSchedule ? 'Có lịch cố định' : 'Sinh hoạt định kỳ'}
-        </span>
-        <Link
-          to={`/clubs/${club.slug}`}
-          className="inline-flex items-center gap-1.5 font-bold text-xs uppercase tracking-wider text-[#181C1B] hover:text-[#EF673F] transition-colors"
-        >
-          <span>Xem chi tiết</span>
-          <ArrowRight size={13} />
-        </Link>
-      </div>
-    </div>
+    </article>
   );
 }

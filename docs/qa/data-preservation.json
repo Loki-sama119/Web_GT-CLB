@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-10-27T11:04:36.845Z",
+  "counts": {
+    "users": 17,
+    "profiles": 17,
+    "clubs": 14,
+    "campaigns": 3,
+    "applications": 4,
+    "memberships": 11,
+    "events": 5,
+    "registrations": 3,
+    "media": 0,
+    "assets": 11,
+    "auditLogs": 74
+  },
+  "unknownPreserved": [
+    {
+      "userId": "ad22030b-8a66-4bec-96eb-448b4d325477",
+      "originalUserFieldsUnchanged": true,
+      "originalProfileUnchanged": true
+    },
+    {
+      "userId": "5c42b650-b79d-4134-9996-4c34f0b6fc5c",
+      "originalUserFieldsUnchanged": true,
+      "originalProfileUnchanged": true
+    }
+  ],
+  "verificationTimestamp": "2026-10-27T10:33:48.648Z",
+  "pass": true
+}
