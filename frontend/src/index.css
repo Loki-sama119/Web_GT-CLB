@@ -1,40 +1,45 @@
 @import "tailwindcss";
+@import "./editorial.css";
 
 @theme {
-  --font-display: 'Oswald', sans-serif;
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: "Be Vietnam Pro", sans-serif;
+  --font-sans: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
 
-  --color-paper: #F4F0E7;
-  --color-ink: #181C1B;
-  --color-forest: #12674D;
-  --color-forest-hover: #0E523D;
-  --color-coral: #EF673F;
-  --color-coral-hover: #D9532B;
-  --color-neutral-border: #D8D5CD;
-  --color-paper-muted: #EBE6DB;
+  --color-paper: #f4f0e7;
+  --color-ink: #181c1b;
+  --color-forest: #12674d;
+  --color-forest-hover: #0e523d;
+  --color-coral: #ef673f;
+  --color-coral-hover: #d9532b;
+  --color-neutral-border: #d8d5cd;
+  --color-paper-muted: #ebe6db;
 }
 
 @layer base {
   :root {
-    --brand-navy: #142B49;
-    --brand-navy-hover: #0E1F35;
-    --brand-green: #12674D;
-    --brand-green-hover: #0E523D;
-    --brand-gold: #EF673F;
-    --brand-gold-hover: #D9532B;
-    --surface-bg: #F4F0E7;
-    --surface-card: #FFFFFF;
-    --text-primary: #181C1B;
-    --text-secondary: #575E5B;
-    --text-muted: #7A827F;
-    --border-subtle: #D8D5CD;
-    --border-focus: #12674D;
+    --brand-navy: #142b49;
+    --brand-navy-hover: #0e1f35;
+    --brand-green: #12674d;
+    --brand-green-hover: #0e523d;
+    --brand-gold: #ef673f;
+    --brand-gold-hover: #d9532b;
+    --surface-bg: #f4f0e7;
+    --surface-card: #ffffff;
+    --text-primary: #181c1b;
+    --text-secondary: #575e5b;
+    --text-muted: #7a827f;
+    --border-subtle: #d8d5cd;
+    --border-focus: #12674d;
   }
 
   body {
-    background-color: #F4F0E7;
-    color: #181C1B;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #f4f0e7;
+    color: #181c1b;
+    font-family:
+      "Be Vietnam Pro",
+      system-ui,
+      -apple-system,
+      sans-serif;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
@@ -42,16 +47,21 @@
     letter-spacing: -0.01em;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Oswald', sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Be Vietnam Pro", sans-serif;
     letter-spacing: -0.01em;
-    color: #181C1B;
+    color: #181c1b;
   }
 }
 
 /* Campus Modern subtle UI utilities */
 .campus-hero-gradient {
-  background: linear-gradient(135deg, #0D1E34 0%, #142B49 55%, #16464F 100%);
+  background: linear-gradient(135deg, #0d1e34 0%, #142b49 55%, #16464f 100%);
 }
 
 .campus-card-hover {
@@ -59,7 +69,9 @@
 }
 .campus-card-hover:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px -10px rgba(20, 43, 73, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 12px 28px -10px rgba(20, 43, 73, 0.12),
+    0 2px 6px -1px rgba(0, 0, 0, 0.04);
 }
 
 .glass-nav {
@@ -74,12 +86,12 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #94a3b8;
 }

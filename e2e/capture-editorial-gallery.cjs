@@ -9,7 +9,7 @@ async function captureGallery() {
   }
 
   const browser = await chromium.launch();
-  const baseUrl = 'http://localhost';
+  const baseUrl = 'http://localhost:8080';
 
   console.log('--- ĐANG CHỤP BỘ ẢNH BẰNG CHỨNG BAFU CAMPUS EDITORIAL ---');
 

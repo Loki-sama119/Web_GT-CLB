@@ -16,7 +16,7 @@
 - [ ] Thiết lập kết nối PostgreSQL và chạy Migration.
 - [ ] Xây dựng Script Seed Data:
   - 1 Super Admin (`admin@bafu.edu.vn`)
-  - 10+ Câu lạc bộ đa dạng (Bóng đá, Cầu lông, Bóng rổ, Tiếng Anh, Lập trình, Nhiếp ảnh, Tình nguyện...)
+  - Các Câu lạc bộ đa dạng (Bóng đá, Cầu lông, Tiếng Anh, Lập trình, Nhiếp ảnh, Tình nguyện...)
   - Tài khoản Club Admin cho các CLB
   - Tài khoản Sinh viên mẫu
   - Chiến dịch tuyển thành viên (`OPEN`, `CLOSED`, `DRAFT`) kèm form câu hỏi động

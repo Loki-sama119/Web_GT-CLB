@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="lensBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181B"/>
+      <stop offset="100%" stop-color="#3F3F46"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="94" fill="url(#lensBg)" stroke="#F59E0B" stroke-width="4"/>
+  <circle cx="100" cy="100" r="84" fill="none" stroke="#71717A" stroke-width="2"/>
+  <!-- Camera Lens Aperture -->
+  <circle cx="100" cy="85" r="34" fill="#09090B" stroke="#E4E4E7" stroke-width="3"/>
+  <circle cx="100" cy="85" r="22" fill="#18181B" stroke="#F59E0B" stroke-width="2"/>
+  <polygon points="100,68 114,80 106,97 94,97 86,80" fill="none" stroke="#F59E0B" stroke-width="2"/>
+  <circle cx="94" cy="79" r="4" fill="#60A5FA"/>
+  <!-- Focus brackets -->
+  <path d="M 54 65 L 46 65 L 46 75" fill="none" stroke="#F59E0B" stroke-width="3"/>
+  <path d="M 146 65 L 154 65 L 154 75" fill="none" stroke="#F59E0B" stroke-width="3"/>
+  <path d="M 54 105 L 46 105 L 46 95" fill="none" stroke="#F59E0B" stroke-width="3"/>
+  <path d="M 146 105 L 154 105 L 154 95" fill="none" stroke="#F59E0B" stroke-width="3"/>
+  <!-- Text -->
+  <text x="100" y="152" text-anchor="middle" fill="#FFFFFF" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="18" letter-spacing="3">BAFU LENS</text>
+  <text x="100" y="172" text-anchor="middle" fill="#F59E0B" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="10" letter-spacing="1">PHOTO &amp; MEDIA CLUB</text>
+</svg>
