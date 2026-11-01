@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   backend-test:
@@ -17,7 +17,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgrespassword
-          POSTGRES_DB: club_portal_db
+          POSTGRES_DB: club_portal_test
         ports:
           - 5432:5432
         options: >-
@@ -34,7 +34,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: backend/package-lock.json
 
       - name: Install backend dependencies
@@ -49,15 +49,15 @@ jobs:
 
       - name: Run Prisma Migrate Deploy & Seed
         env:
-          DATABASE_URL: postgresql://postgres:postgrespassword@localhost:5432/club_portal_db?schema=public
+          DATABASE_URL: postgresql://postgres:postgrespassword@localhost:5432/club_portal_test?schema=public
         run: |
           cd backend
           npx prisma migrate deploy
-          node prisma/seed.js
+          NODE_ENV=test SEED_TEST_FIXTURES=true node prisma/seed.js
 
       - name: Run Backend Integration Tests
         env:
-          DATABASE_URL: postgresql://postgres:postgrespassword@localhost:5432/club_portal_db?schema=public
+          DATABASE_URL: postgresql://postgres:postgrespassword@localhost:5432/club_portal_test?schema=public
           JWT_SECRET: super-secret-jwt-key-for-university-club-portal-2026
         run: |
           cd backend
@@ -75,7 +75,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install frontend dependencies

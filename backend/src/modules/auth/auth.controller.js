@@ -7,7 +7,11 @@ export class AuthController {
     try {
       const { user, token } = await AuthService.register(req.body);
       setAuthCookie(res, token);
-      return sendSuccess(res, 201, 'Đăng ký tài khoản sinh viên thành công', { user, token });
+      const data = { user };
+      if (process.env.NODE_ENV === 'test') {
+        data.token = token;
+      }
+      return sendSuccess(res, 201, 'Đăng ký tài khoản sinh viên thành công', data);
     } catch (error) {
       next(error);
     }
@@ -17,7 +21,11 @@ export class AuthController {
     try {
       const { user, token } = await AuthService.login(req.body);
       setAuthCookie(res, token);
-      return sendSuccess(res, 200, 'Đăng nhập thành công', { user, token });
+      const data = { user };
+      if (process.env.NODE_ENV === 'test') {
+        data.token = token;
+      }
+      return sendSuccess(res, 200, 'Đăng nhập thành công', data);
     } catch (error) {
       next(error);
     }

@@ -67,4 +67,16 @@ export class ApplicationsController {
       next(error);
     }
   }
+
+  static async exportClubApplications(req, res, next) {
+    try {
+      const { clubId } = req.params;
+      const { filename, csvContent } = await ApplicationsService.exportClubApplications(clubId);
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      return res.status(200).send(csvContent);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

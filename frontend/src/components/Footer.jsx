@@ -1,93 +1,90 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Globe, Heart } from 'lucide-react';
+import React from "react";
+import { Link } from "react-router-dom";
+import BrandWordmark from "./ui/BrandWordmark";
+import { ArrowUpRight, ShieldCheck } from "@phosphor-icons/react";
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 border-t border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-          {/* Cột 1: Thông tin trường */}
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-lg">
-                B
-              </div>
-              <span className="text-xl font-bold text-white tracking-tight">
-                Cổng Thông Tin Câu Lạc Bộ Sinh Viên BAFU
-              </span>
-            </div>
-            <p className="text-sm text-slate-400 mb-6 max-w-md leading-relaxed">
-              Hệ thống kết nối, hỗ trợ tuyển thành viên và quản lý hoạt động toàn diện của các câu lạc bộ, đội, nhóm sinh viên trực thuộc Trường Đại học Nông - Lâm Bắc Giang.
+    <footer className="bg-[#17211C] text-white border-t border-white/10 pt-16 pb-12 select-none">
+      <div className="editorial-container">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/10">
+          {/* Brand info (5 cols) */}
+          <div className="lg:col-span-5 space-y-4">
+            <BrandWordmark variant="dark" />
+            <p className="text-sm text-[#94A3B8] max-w-sm leading-relaxed">
+              Cổng thông tin câu lạc bộ sinh viên thí điểm tại Trường Đại học Nông – Lâm Bắc Giang. Nơi kết nối niềm đam mê, kỹ năng và những trải nghiệm thanh xuân ngoài giảng đường.
             </p>
-            <div className="space-y-2.5 text-sm text-slate-400">
-              <div className="flex items-center gap-2.5">
-                <MapPin className="w-4 h-4 text-blue-400 shrink-0" />
-                <span>Xã Bích Động, Thị xã Việt Yên, Tỉnh Bắc Giang</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-blue-400 shrink-0" />
-                <span>(0204) 3874 112 — Văn phòng Đoàn Thanh Niên & Hội Sinh Viên</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-blue-400 shrink-0" />
-                <span>doanthanhnien@bafu.edu.vn</span>
-              </div>
+            <div className="pt-2">
+              <a
+                href="https://bafu.edu.vn/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#E7B85B] hover:underline"
+              >
+                <span>Website Trường Đại học Nông – Lâm Bắc Giang</span>
+                <ArrowUpRight size={14} weight="bold" />
+              </a>
             </div>
           </div>
 
-          {/* Cột 2: Khám phá */}
-          <div>
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Khám phá CLB</h4>
-            <ul className="space-y-2.5 text-sm text-slate-400">
+          {/* Nav Links (3 cols) */}
+          <div className="lg:col-span-3 space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-white/50">
+              Khám phá
+            </h4>
+            <ul className="space-y-2 text-sm text-[#CBD5E1]">
               <li>
-                <Link to="/clubs?category=the-thao" className="hover:text-white transition-colors">Thể dục Thể thao</Link>
+                <Link to="/clubs" className="hover:text-white transition-colors">
+                  Danh bạ câu lạc bộ
+                </Link>
               </li>
               <li>
-                <Link to="/clubs?category=hoc-thuat-cong-nghe" className="hover:text-white transition-colors">Học thuật & Công nghệ</Link>
+                <Link to="/events" className="hover:text-white transition-colors">
+                  Sự kiện & Hoạt động
+                </Link>
               </li>
               <li>
-                <Link to="/clubs?category=nghe-thuat-van-hoa" className="hover:text-white transition-colors">Nghệ thuật & Văn hóa</Link>
+                <Link to="/student/dashboard" className="hover:text-white transition-colors">
+                  Hồ sơ sinh viên
+                </Link>
               </li>
               <li>
-                <Link to="/clubs?category=tinh-nguyen-cong-dong" className="hover:text-white transition-colors">Tình nguyện vì cộng đồng</Link>
-              </li>
-              <li>
-                <Link to="/clubs?recruiting=true" className="hover:text-white transition-colors flex items-center gap-1.5 text-orange-400">
-                  <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
-                  Đang mở đợt tuyển
+                <Link to="/login" className="hover:text-white transition-colors">
+                  Đăng nhập quản trị viên
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Cột 3: Dành cho sinh viên */}
-          <div>
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Dành cho Sinh Viên</h4>
-            <ul className="space-y-2.5 text-sm text-slate-400">
-              <li>
-                <Link to="/register" className="hover:text-white transition-colors">Đăng ký tài khoản</Link>
-              </li>
-              <li>
-                <Link to="/student/dashboard" className="hover:text-white transition-colors">Hồ sơ cá nhân</Link>
-              </li>
-              <li>
-                <Link to="/student/dashboard" className="hover:text-white transition-colors">Theo dõi đơn ứng tuyển</Link>
-              </li>
-              <li>
-                <Link to="/events" className="hover:text-white transition-colors">Lịch sự kiện & Sinh hoạt</Link>
-              </li>
-            </ul>
+          {/* Transparency & Disclaimer (4 cols) */}
+          <div className="lg:col-span-4 space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-white/50 flex items-center gap-1.5">
+              <ShieldCheck size={16} className="text-[#34D399]" />
+              <span>Chính sách & Minh bạch dữ liệu</span>
+            </h4>
+            <p className="text-xs text-[#94A3B8] leading-relaxed">
+              Đây là dự án nghiên cứu & thí điểm cổng kết nối sinh viên. Toàn bộ hình ảnh, thông tin CLB và sự kiện được đối chiếu theo tài liệu lưu trữ của trường tại <strong className="text-white">bafu.edu.vn</strong>.
+            </p>
+            <div className="flex flex-wrap items-center gap-3 pt-2 text-xs text-[#64748B]">
+              <Link to="/privacy-policy" className="hover:text-[#CBD5E1] transition-colors underline">
+                Quyền riêng tư
+              </Link>
+              <span>•</span>
+              <Link to="/terms-of-service" className="hover:text-[#CBD5E1] transition-colors underline">
+                Điều khoản sử dụng
+              </Link>
+            </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <div>
-            © {new Date().getFullYear()} Trường Đại học Nông - Lâm Bắc Giang. Bản quyền thuộc về Đoàn Trường & Hội Sinh Viên.
-          </div>
-          <div className="flex items-center gap-1">
-            Xây dựng với <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> phục vụ sinh viên BAFU
-          </div>
+        {/* Bottom Bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#64748B]">
+          <span>
+            © {new Date().getFullYear()} BAFU Campus Clubs. Dự án cổng thông tin sinh viên thí điểm.
+          </span>
+          <span className="flex items-center gap-1">
+            Thiết kế vì cộng đồng sinh viên BAFU
+          </span>
         </div>
       </div>
     </footer>

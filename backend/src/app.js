@@ -1,34 +1,84 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
-import rateLimit from 'express-rate-limit';
-import { ENV } from './config/env.js';
-import { errorHandler } from './middlewares/errorHandler.js';
+import { databaseName, isIsolatedTest } from "./utils/dataPolicy.js";
+import express from "express";
+import verificationRoutes from "./modules/admin/verification.routes.js";
+import prisma from "./config/db.js";
+import cors from "cors";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
+import rateLimit from "express-rate-limit";
+import { ENV } from "./config/env.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 // Import Routes
-import authRoutes from './modules/auth/auth.routes.js';
-import usersRoutes from './modules/users/users.routes.js';
-import clubsRoutes from './modules/clubs/clubs.routes.js';
-import recruitmentsRoutes from './modules/recruitments/recruitments.routes.js';
-import applicationsRoutes from './modules/applications/applications.routes.js';
-import membershipsRoutes from './modules/memberships/memberships.routes.js';
-import eventsRoutes from './modules/events/events.routes.js';
-import statsRoutes from './modules/stats/stats.routes.js';
-import adminRoutes from './modules/admin/admin.routes.js';
+import authRoutes from "./modules/auth/auth.routes.js";
+import usersRoutes from "./modules/users/users.routes.js";
+import clubsRoutes from "./modules/clubs/clubs.routes.js";
+import recruitmentsRoutes from "./modules/recruitments/recruitments.routes.js";
+import applicationsRoutes from "./modules/applications/applications.routes.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import membershipsRoutes from "./modules/memberships/memberships.routes.js";
+import eventsRoutes from "./modules/events/events.routes.js";
+import statsRoutes from "./modules/stats/stats.routes.js";
+import adminRoutes from "./modules/admin/admin.routes.js";
+import mediaRoutes from "./modules/media/media.routes.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Security Middlewares
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
+// Trust reverse proxy (Nginx) for correct client IP detection and rate limiting
+app.set("trust proxy", 1);
 
-app.use(cors({
-  origin: [ENV.CORS_ORIGIN, 'http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:80'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
-}));
+// Security Middlewares
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  }),
+);
+
+const configuredOrigins = (ENV.CORS_ORIGIN || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const defaultDevOrigins = [
+  "http://localhost",
+  "http://localhost:80",
+  "http://localhost:5173",
+  "http://127.0.0.1",
+  "http://127.0.0.1:80",
+  "http://127.0.0.1:5173",
+];
+
+const allowedOrigins =
+  ENV.NODE_ENV === "production" && configuredOrigins.length > 0
+    ? configuredOrigins
+    : Array.from(new Set([...configuredOrigins, ...defaultDevOrigins]));
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow non-browser requests (Postman, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin) || allowedOrigins.includes("*")) {
+        return callback(null, true);
+      }
+      return callback(
+        new Error(`CORS policy does not allow access from origin: ${origin}`),
+      );
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+    ],
+  }),
+);
 
 // Giới hạn tần suất request (Rate Limiting)
 const limiter = rateLimit({
@@ -36,34 +86,71 @@ const limiter = rateLimit({
   max: ENV.RATE_LIMIT_MAX || 2000,
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => process.env.NODE_ENV === 'test',
-  message: { success: false, message: 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.' }
+  skip: (req) => process.env.NODE_ENV === "test",
+  message: {
+    success: false,
+    message: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.",
+  },
 });
 app.use(limiter);
 
-// Body parsers
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Body parsers (Explicit 1MB limit to prevent DoS memory exhaustion while supporting rich club data/applications)
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
 
+// Static Uploads Folder
+app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
+
 // Health Check API
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
 // Mount API v1 Routes
 const apiV1 = express.Router();
-apiV1.use('/auth', authRoutes);
-apiV1.use('/users', usersRoutes);
-apiV1.use('/', clubsRoutes);
-apiV1.use('/', recruitmentsRoutes);
-apiV1.use('/', applicationsRoutes);
-apiV1.use('/', membershipsRoutes);
-apiV1.use('/', eventsRoutes);
-apiV1.use('/stats', statsRoutes);
-apiV1.use('/admin', adminRoutes);
+apiV1.use("/admin", verificationRoutes);
+apiV1.get("/media-assets/campus", async (req, res, next) => {
+  try {
+    const assets = await prisma.mediaAsset.findMany({
+      where: {
+        type: "CAMPUS",
+        clubId: null,
+        eventId: null,
+        verificationStatus: "VERIFIED_APPROVED",
+        usagePermission: "APPROVED",
+        sourceUrl: { not: null },
+        verifiedAt: { not: null },
+      },
+    });
+    res.json({ success: true, data: { assets } });
+  } catch (error) {
+    next(error);
+  }
+});
+apiV1.get("/environment", (req, res) =>
+  res.json({
+    environment: isIsolatedTest() ? "test" : "public",
+    databaseKind:
+      databaseName() === "club_portal_e2e"
+        ? "e2e"
+        : databaseName() === "club_portal_test"
+          ? "test"
+          : "public",
+  }),
+);
+apiV1.use("/auth", authRoutes);
+apiV1.use("/users", usersRoutes);
+apiV1.use("/", clubsRoutes);
+apiV1.use("/", recruitmentsRoutes);
+apiV1.use("/", applicationsRoutes);
+apiV1.use("/", membershipsRoutes);
+apiV1.use("/", eventsRoutes);
+apiV1.use("/", mediaRoutes);
+apiV1.use("/stats", statsRoutes);
+apiV1.use("/admin", adminRoutes);
 
-app.use('/api/v1', apiV1);
+app.use("/api/v1", apiV1);
 
 // Global Error Handler
 app.use(errorHandler);

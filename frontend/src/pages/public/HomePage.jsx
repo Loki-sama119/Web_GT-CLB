@@ -1,413 +1,558 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { api } from '../../services/api';
-import { 
-  Users, Trophy, Calendar, Sparkles, ArrowRight, Search, 
-  CheckCircle2, Clock, MapPin, ChevronRight, GraduationCap, Flame
-} from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "../../services/api";
+import {
+  ArrowUpRight,
+  CalendarBlank,
+  CheckCircle,
+  Eye,
+  Info,
+  MapPin,
+  PlayCircle,
+  Users,
+  X,
+  Compass,
+} from "@phosphor-icons/react";
+import CampusMasthead from "../../components/editorial/CampusMasthead";
+import FeatureClubTile from "../../components/editorial/FeatureClubTile";
+import EditorialClubCard from "../../components/editorial/EditorialClubCard";
+import EventPoster from "../../components/editorial/EventPoster";
+import {
+  BAFU_DEFAULT_CLUBS,
+  BAFU_DEFAULT_EVENTS,
+  BAFU_STATS,
+} from "../../utils/bafuData";
+
+function SectionHeading({ number, title, note, link, to }) {
+  return (
+    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 mb-8 border-b border-[#D8D5CD]">
+      <div className="space-y-1.5">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-xs font-black text-[#16845A] uppercase tracking-widest px-2 py-0.5 rounded bg-[#16845A]/10 border border-[#16845A]/20">
+            MỤC {number}
+          </span>
+        </div>
+        <h2 className="font-display font-black text-2xl sm:text-3xl lg:text-4xl text-[#17211C] tracking-tight">
+          {title}
+        </h2>
+        {note && <p className="text-sm sm:text-base text-[#575E5B] max-w-2xl">{note}</p>}
+      </div>
+      {link && to && (
+        <Link
+          to={to}
+          className="inline-flex items-center gap-1.5 text-sm font-bold text-[#0F5132] hover:text-[#16845A] transition-colors shrink-0 group"
+        >
+          <span>{link}</span>
+          <ArrowUpRight size={18} weight="bold" className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+        </Link>
+      )}
+    </div>
+  );
+}
 
 export default function HomePage() {
-  const [stats, setStats] = useState({
-    totalClubs: 10,
-    totalMembers: 240,
-    totalCampaigns: 2,
-    totalEvents: 2
-  });
-  const [categories, setCategories] = useState([]);
-  const [recruitingClubs, setRecruitingClubs] = useState([]);
-  const [featuredClubs, setFeaturedClubs] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const [stats, setStats] = useState(BAFU_STATS);
+  const [clubs, setClubs] = useState(BAFU_DEFAULT_CLUBS);
+  const [events, setEvents] = useState(BAFU_DEFAULT_EVENTS);
+  const [search, setSearch] = useState("");
+  const [activeEventTab, setActiveEventTab] = useState("past"); // 'upcoming' | 'past'
+  const [activeLightboxMedia, setActiveLightboxMedia] = useState(null);
 
   useEffect(() => {
-    async function loadHomeData() {
+    let current = true;
+    (async () => {
       try {
-        const [statsRes, catRes, recRes, featRes, evRes] = await Promise.all([
+        const [s, c, e] = await Promise.all([
           api.getStatsOverview().catch(() => null),
-          api.getCategories().catch(() => null),
-          api.getClubs({ recruiting: 'true', limit: 4 }).catch(() => null),
-          api.getClubs({ limit: 6 }).catch(() => null),
-          api.getEvents({ limit: 3 }).catch(() => null)
+          api.getClubs({ limit: 12 }).catch(() => null),
+          api.getEvents({ limit: 8 }).catch(() => null),
         ]);
-
-        if (statsRes?.data) setStats(statsRes.data);
-        if (catRes?.data?.categories) setCategories(catRes.data.categories);
-        if (recRes?.data?.clubs) setRecruitingClubs(recRes.data.clubs);
-        if (featRes?.data?.clubs) setFeaturedClubs(featRes.data.clubs);
-        if (evRes?.data?.events) setEvents(evRes.data.events);
-      } finally {
-        setLoading(false);
+        if (current) {
+          if (s?.data) setStats(s.data);
+          if (c?.data?.clubs?.length) setClubs(c.data.clubs);
+          if (e?.data?.events?.length) setEvents(e.data.events);
+        }
+      } catch (_err) {
+        // Fallback truthful BAFU data
       }
-    }
-    loadHomeData();
+    })();
+    return () => {
+      current = false;
+    };
   }, []);
 
+  const upcomingEvents = events.filter(
+    (e) => new Date(e.startTime) > new Date() && e.status === "UPCOMING",
+  );
+  const pastEvents = events.filter(
+    (e) => new Date(e.startTime) <= new Date() || e.status === "PAST",
+  );
+
+  // Bộ sưu tập tư liệu hoạt động sinh viên BAFU đã xác minh từ bài viết chính thức
+  const studentGallery = [
+    {
+      id: "gal-01",
+      src: "/images/bafu/students-welcome-2025.jpg",
+      title: "Gala Chào Tân Sinh Viên & Ngày Hội Thanh Xuân",
+      scope: "TƯ LIỆU TRƯỜNG • PHONG TRÀO CHUNG",
+      caption: "Khoảnh khắc sôi nổi của sinh viên trong đêm hội chào tân sinh viên Trường ĐH Nông – Lâm Bắc Giang.",
+      source: "bafu.edu.vn",
+      sourceUrl: "https://bafu.edu.vn/home/tin-tuc/dao-tao-tuyen-sinh/4428-vi-sao-nen-chon-truong-dai-hoc-nong-lam-bac-giang-chon-dung-truong-vung-tuong-lai.html",
+    },
+    {
+      id: "gal-02",
+      src: "/images/bafu/students-football-2025.jpg",
+      title: "Giải Bóng Đá Thường Niên BAFU Cup",
+      scope: "TƯ LIỆU THỂ THAO SINH VIÊN BAFU",
+      caption: "Hoạt động thi đấu thể thao rèn luyện sức khỏe và tinh thần đồng đội tại sân bóng cỏ nhân tạo BAFU.",
+      source: "bafu.edu.vn",
+      sourceUrl: "https://bafu.edu.vn/home/tin-tuc/dao-tao-tuyen-sinh/4428-vi-sao-nen-chon-truong-dai-hoc-nong-lam-bac-giang-chon-dung-truong-vung-tuong-lai.html",
+    },
+    {
+      id: "gal-03",
+      src: "/images/bafu/students-practical-lab-2025.jpg",
+      title: "Nghiên cứu & Thực hành phòng thí nghiệm",
+      scope: "TƯ LIỆU HỌC THUẬT & NGHIÊN CỨU",
+      caption: "Sinh viên thực hành kỹ thuật chuyên sâu tại phòng thí nghiệm công nghệ sinh học nông - lâm nghiệp.",
+      source: "bafu.edu.vn",
+      sourceUrl: "https://bafu.edu.vn/home/tin-tuc/dao-tao-tuyen-sinh/4428-vi-sao-nen-chon-truong-dai-hoc-nong-lam-bac-giang-chon-dung-truong-vung-tuong-lai.html",
+    },
+    {
+      id: "gal-04",
+      src: "/images/bafu/students-graduation-2025.jpg",
+      title: "Lễ Trao Bằng Tốt Nghiệp Cử Nhân & Kỹ Sư",
+      scope: "TƯ LIỆU TRƯỜNG • LỄ TỐT NGHIỆP",
+      caption: "Niềm vui rạng rỡ của các tân cử nhân, kỹ sư BAFU trong ngày vinh quy nhận bằng tốt nghiệp.",
+      source: "bafu.edu.vn",
+      sourceUrl: "https://bafu.edu.vn/home/tin-tuc/dao-tao-tuyen-sinh/4428-vi-sao-nen-chon-truong-dai-hoc-nong-lam-bac-giang-chon-dung-truong-vung-tuong-lai.html",
+    },
+  ];
+
   return (
-    <div className="space-y-16 pb-16">
-      {/* 1. Hero Section */}
-      <section className="relative overflow-hidden gradient-hero text-white py-20 lg:py-28">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.15),transparent)]" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wide uppercase">
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                Cổng Thông Tin Câu Lạc Bộ Đại Học Nông - Lâm Bắc Giang
+    <div className="bg-[#F8FAF7] text-[#17211C] min-h-screen selection:bg-[#16845A] selection:text-white">
+      {/* SECTION 02: Full-Width Campus Hero Banner */}
+      <CampusMasthead
+        searchQuery={search}
+        onSearchChange={setSearch}
+        onSearchSubmit={(e) => {
+          e.preventDefault();
+          navigate("/clubs?search=" + encodeURIComponent(search.trim()));
+        }}
+        stats={stats}
+      />
+
+      {/* SECTION 03: Khám phá những cộng đồng sinh viên (Visual Grid) */}
+      <section id="kham-pha" className="py-20 lg:py-24 border-b border-[#D8D5CD]/60">
+        <div className="editorial-container">
+          <SectionHeading
+            number="01"
+            title="Những cộng đồng sinh viên BAFU"
+            note="Các câu lạc bộ có hồ sơ tư liệu được ghi nhận trong các kênh thông tin chính thức của Trường Đại học Nông – Lâm Bắc Giang."
+            link="Xem tất cả câu lạc bộ"
+            to="/clubs"
+          />
+
+          {clubs.length > 0 ? (
+            <div className="space-y-8">
+              {/* Top 2 featured visual tiles */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {clubs.slice(0, 2).map((c, i) => (
+                  <FeatureClubTile key={c.id || c.slug} club={c} index={i + 1} />
+                ))}
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
-                Cháy Hết Mình Cùng <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-300">
-                  Thanh Xuân Đại Học
-                </span>
-              </h1>
-
-              <p className="text-lg text-blue-100 max-w-2xl font-normal leading-relaxed">
-                Nơi hội tụ hơn 10+ Câu lạc bộ Thể thao, Học thuật, Văn nghệ và Tình nguyện. Đăng ký trực tuyến, nộp hồ sơ xét tuyển nhanh chóng và phát triển bản thân vượt bậc!
-              </p>
-
-              <div className="pt-2 flex flex-wrap items-center gap-4">
-                <Link
-                  to="/clubs"
-                  className="px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold text-base shadow-lg shadow-amber-400/25 transition-all flex items-center gap-2 hover:scale-102"
-                >
-                  Khám phá CLB ngay
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-                <Link
-                  to="/clubs?recruiting=true"
-                  className="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-base border border-white/20 backdrop-blur-md transition-all flex items-center gap-2"
-                >
-                  <Flame className="w-5 h-5 text-orange-400 fill-orange-400" />
-                  Đợt tuyển đang mở
-                </Link>
-              </div>
-
-              {/* Live Real Stats Banner */}
-              <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-white/15">
-                <div>
-                  <div className="text-3xl font-extrabold text-white">{stats.totalClubs}+</div>
-                  <div className="text-xs text-blue-200 font-medium">Câu lạc bộ</div>
+              {/* Next clubs in 3-column visual grid */}
+              {clubs.length > 2 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pt-2">
+                  {clubs.slice(2).map((c) => (
+                    <EditorialClubCard key={c.id || c.slug} club={c} />
+                  ))}
                 </div>
-                <div>
-                  <div className="text-3xl font-extrabold text-white">{stats.totalMembers}+</div>
-                  <div className="text-xs text-blue-200 font-medium">Hội viên sinh viên</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-extrabold text-amber-300">{stats.totalCampaigns}</div>
-                  <div className="text-xs text-blue-200 font-medium">Đợt tuyển đang mở</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-extrabold text-white">{stats.totalEvents}+</div>
-                  <div className="text-xs text-blue-200 font-medium">Sự kiện thường niên</div>
-                </div>
-              </div>
+              )}
             </div>
-
-            {/* Hero Right Visual Cards */}
-            <div className="lg:col-span-5 relative hidden lg:block">
-              <div className="relative mx-auto max-w-sm">
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-2xl space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-white/15">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-3 h-3 rounded-full bg-emerald-400 animate-ping" />
-                      <span className="text-sm font-semibold">Tuyển thành viên 2026</span>
-                    </div>
-                    <span className="text-xs bg-white/20 px-2.5 py-1 rounded-full">Trực tuyến 100%</span>
-                  </div>
-
-                  <div className="bg-white/15 rounded-2xl p-4 space-y-2">
-                    <div className="text-xs text-blue-200 font-medium">Đợt tuyển nổi bật</div>
-                    <div className="font-bold text-white text-base">BAFU Tech — Lập trình & Sáng tạo số</div>
-                    <div className="text-xs text-blue-100 flex items-center justify-between pt-1">
-                      <span>Chỉ tiêu: 25 thành viên</span>
-                      <span className="text-amber-300 font-semibold">Đang nhận đơn</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-white/15 rounded-2xl p-4 space-y-2">
-                    <div className="text-xs text-blue-200 font-medium">Đợt tuyển thử giọng</div>
-                    <div className="font-bold text-white text-base">CLB Âm Nhạc & Guitar Melody</div>
-                    <div className="text-xs text-blue-100 flex items-center justify-between pt-1">
-                      <span>Vocalist & Guitar</span>
-                      <span className="text-amber-300 font-semibold">Đang nhận đơn</span>
-                    </div>
-                  </div>
-
-                  <Link
-                    to="/clubs"
-                    className="block w-full text-center py-2.5 rounded-xl bg-white text-blue-800 font-bold text-sm hover:bg-blue-50 transition-colors"
-                  >
-                    Xem tất cả câu lạc bộ
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. Danh mục lĩnh vực hoạt động */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Lĩnh Vực Hoạt Động
-            </h2>
-            <p className="text-slate-500 text-sm mt-1">Tìm kiếm câu lạc bộ đúng với đam mê và kỹ năng của bạn</p>
-          </div>
-          <Link to="/clubs" className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
-            Xem tất cả <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          {categories.map((cat) => (
-            <Link
-              key={cat.id}
-              to={`/clubs?category=${cat.slug}`}
-              className="group p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 hover:shadow-md transition-all text-center flex flex-col items-center card-hover"
-            >
-              <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xl mb-3 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                {cat.icon === 'Trophy' ? <Trophy className="w-7 h-7" /> : <Users className="w-7 h-7" />}
-              </div>
-              <h3 className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors">
-                {cat.name}
-              </h3>
-              <p className="text-xs text-slate-400 mt-1">
-                {cat._count?.clubs || 0} CLB trực thuộc
+          ) : (
+            <div className="bg-white border border-[#D8D5CD] p-12 text-center rounded-xl space-y-3">
+              <p className="text-base text-[#575E5B]">
+                Danh mục câu lạc bộ đang được cập nhật từ các nguồn xác minh.
               </p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* 3. CLB Đang Tuyển Thành Viên */}
-      {recruitingClubs.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-8 rounded-3xl bg-linear-to-br from-amber-50 to-orange-50 border border-amber-200/70">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 font-bold text-xs uppercase tracking-wider mb-2">
-                  <Flame className="w-3.5 h-3.5 fill-orange-500 text-orange-500" />
-                  Đang mở đợt tuyển sinh
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                  Gia Nhập Các Câu Lạc Bộ Ngay Hôm Nay
-                </h2>
-                <p className="text-slate-600 text-sm mt-1">
-                  Đừng bỏ lỡ cơ hội trở thành thành viên chính thức trong đợt tuyển thành viên học kỳ này
-                </p>
-              </div>
-              <Link
-                to="/clubs?recruiting=true"
-                className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-semibold text-sm shadow-sm transition-colors flex items-center gap-1.5"
-              >
-                Xem tất cả đợt tuyển
-                <ArrowRight className="w-4 h-4" />
+              <Link to="/clubs" className="text-sm font-bold text-[#0F5132] hover:underline">
+                Tra cứu danh bạ câu lạc bộ ↗
               </Link>
             </div>
+          )}
+        </div>
+      </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {recruitingClubs.map((club) => (
+      {/* SECTION 04: Hoạt động sinh viên BAFU (Asymmetric Editorial Gallery) */}
+      <section id="hoat-dong" className="py-20 lg:py-24 bg-[#FAF9F5] border-b border-[#D8D5CD]/60">
+        <div className="editorial-container">
+          <SectionHeading
+            number="02"
+            title="Khoảnh khắc & Hoạt động sinh viên BAFU"
+            note="Tư liệu ghi nhận các phong trào học tập, văn nghệ, thể thao và gắn kết thanh xuân tại Trường ĐH Nông – Lâm Bắc Giang."
+            link="Tìm hiểu đời sống sinh viên"
+            to="/events"
+          />
+
+          {/* Asymmetric Gallery Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+            {/* Main Featured Photo (7 cols) */}
+            <div
+              onClick={() => setActiveLightboxMedia(studentGallery[0])}
+              className="lg:col-span-7 group relative overflow-hidden rounded-2xl bg-[#17211C] shadow-lg border border-[#D8D5CD] cursor-pointer min-h-[380px] sm:min-h-[460px] flex flex-col justify-end"
+            >
+              <img
+                src={studentGallery[0].src}
+                alt={studentGallery[0].title}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#17211C]/90 via-[#17211C]/35 to-transparent pointer-events-none" />
+
+              <div className="relative z-10 p-6 sm:p-8 space-y-2 text-white">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-black uppercase tracking-widest px-3 py-1 rounded bg-[#16845A] text-white">
+                    {studentGallery[0].scope}
+                  </span>
+                  <span className="text-xs text-white/80 flex items-center gap-1 font-semibold group-hover:text-[#E7B85B] transition-colors">
+                    <Eye size={16} />
+                    <span>Xem ảnh lớn</span>
+                  </span>
+                </div>
+                <h3 className="font-display font-bold text-xl sm:text-2xl lg:text-3xl leading-tight">
+                  {studentGallery[0].title}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#E2E8F0] line-clamp-2">
+                  {studentGallery[0].caption}
+                </p>
+                <div className="pt-2 text-[11px] text-[#A7F3D0] flex items-center gap-1 font-medium">
+                  <CheckCircle size={13} weight="fill" />
+                  <span>Nguồn tư liệu: {studentGallery[0].source}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Secondary 3 stacked photos (5 cols) */}
+            <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+              {studentGallery.slice(1).map((item) => (
                 <div
-                  key={club.id}
-                  className="bg-white rounded-2xl border border-amber-200/60 p-5 shadow-xs flex flex-col justify-between card-hover"
+                  key={item.id}
+                  onClick={() => setActiveLightboxMedia(item)}
+                  className="group relative overflow-hidden rounded-xl bg-[#17211C] shadow-sm border border-[#D8D5CD] cursor-pointer h-48 sm:h-52 flex flex-col justify-end"
                 >
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-[11px] font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
-                        Đang nhận hồ sơ
-                      </span>
-                      <span className="text-xs text-slate-400 font-medium">{club.category?.name}</span>
-                    </div>
+                  <img
+                    src={item.src}
+                    alt={item.title}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    loading="eager"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#17211C]/90 via-[#17211C]/40 to-transparent pointer-events-none" />
 
-                    <h3 className="font-bold text-slate-900 text-base leading-snug line-clamp-2 mb-2">
-                      {club.name}
-                    </h3>
-                    <p className="text-xs text-slate-500 line-clamp-3 mb-4 leading-relaxed">
-                      {club.shortDescription}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-xs text-slate-500 font-medium">
-                      {club._count?.memberships || 0} thành viên
+                  <div className="relative z-10 p-4 space-y-1 text-white">
+                    <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#E7B85B]">
+                      {item.scope}
                     </span>
-                    <Link
-                      to={`/clubs/${club.slug}`}
-                      className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
-                    >
-                      Ứng tuyển ngay <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                    <h4 className="font-display font-bold text-base leading-snug group-hover:text-[#E7B85B] transition-colors">
+                      {item.title}
+                    </h4>
+                    <p className="text-[11px] text-white/80 line-clamp-1">
+                      {item.caption}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </section>
-      )}
-
-      {/* 4. Quy trình 4 bước tham gia CLB */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Quy Trình Ứng Tuyển & Kích Hoạt Hội Viên
-          </h2>
-          <p className="text-slate-500 text-sm mt-2">
-            Hệ thống hóa toàn bộ quy trình từ khâu nộp đơn trực tuyến đến khi được công nhận hội viên chính thức
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs relative">
-            <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 font-black text-lg flex items-center justify-center mb-4">
-              1
-            </div>
-            <h3 className="font-bold text-slate-900 text-base mb-2">Chọn Câu Lạc Bộ</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Khám phá các CLB phù hợp với năng khiếu, sở thích và lịch học của bản thân.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs relative">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 font-black text-lg flex items-center justify-center mb-4">
-              2
-            </div>
-            <h3 className="font-bold text-slate-900 text-base mb-2">Nộp Đơn Trực Tuyến</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Hoàn thành bộ câu hỏi ứng tuyển do từng CLB thiết lập một cách chân thực nhất.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs relative">
-            <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 font-black text-lg flex items-center justify-center mb-4">
-              3
-            </div>
-            <h3 className="font-bold text-slate-900 text-base mb-2">Xét Duyệt & Phỏng Vấn</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Ban chủ nhiệm xem xét hồ sơ, hẹn lịch phỏng vấn và chấm điểm minh bạch.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs relative">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 font-black text-lg flex items-center justify-center mb-4">
-              4
-            </div>
-            <h3 className="font-bold text-slate-900 text-base mb-2">Kích Hoạt Thành Viên</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Khi được duyệt chấp thuận, hệ thống tự động kích hoạt tư cách hội viên CLB ngay lập tức.
-            </p>
-          </div>
         </div>
       </section>
 
-      {/* 5. Câu Lạc Bộ Tiêu Biểu */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Câu Lạc Bộ Tiêu Biểu
-            </h2>
-            <p className="text-slate-500 text-sm mt-1">Các câu lạc bộ có hoạt động phong trào sôi nổi nhất trường</p>
-          </div>
-          <Link to="/clubs" className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
-            Xem tất cả CLB <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
+      {/* SECTION 05: Video và khoảnh khắc sinh viên */}
+      <section className="py-20 lg:py-24 border-b border-[#D8D5CD]/60 bg-white">
+        <div className="editorial-container">
+          <SectionHeading
+            number="03"
+            title="Phóng sự & Video tư liệu trường"
+            note="Tìm hiểu khuôn viên xanh sinh thái và môi trường đào tạo tại Trường Đại học Nông – Lâm Bắc Giang qua phóng sự truyền hình thực tế."
+          />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredClubs.map((club) => (
-            <div
-              key={club.id}
-              className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col justify-between card-hover"
-            >
-              <div>
-                <div className="flex items-start justify-between gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-blue-600 text-white font-bold text-lg flex items-center justify-center shrink-0">
-                    {club.name.charAt(4) || 'C'}
-                  </div>
-                  <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
-                    {club.category?.name}
-                  </span>
-                </div>
-
-                <h3 className="font-bold text-slate-900 text-lg leading-snug mb-2 hover:text-blue-600 transition-colors">
-                  <Link to={`/clubs/${club.slug}`}>{club.name}</Link>
-                </h3>
-
-                <p className="text-xs text-slate-500 line-clamp-2 mb-4 leading-relaxed">
-                  {club.shortDescription}
-                </p>
-
-                {club.meetingSchedule && (
-                  <div className="flex items-center gap-2 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100 mb-4">
-                    <Clock className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                    <span className="truncate">{club.meetingSchedule}</span>
-                  </div>
-                )}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+            {/* 16:9 Responsive Video Player */}
+            <div className="lg:col-span-8">
+              <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-xl bg-black border border-[#D8D5CD]">
+                <iframe
+                  src="https://www.youtube-nocookie.com/embed/pewDI97HQDQ?rel=0&modestbranding=1"
+                  title="Phóng sự: Khuôn viên Trường Đại học Nông – Lâm Bắc Giang"
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               </div>
-
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs text-slate-500 font-medium">
-                  {club._count?.memberships || 0} hội viên
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 text-xs text-[#575E5B]">
+                <span className="font-semibold text-[#17211C]">
+                  Phóng sự Khuôn viên Trường Đại học Nông – Lâm Bắc Giang (BAFU)
                 </span>
-                <Link
-                  to={`/clubs/${club.slug}`}
-                  className="px-4 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold text-xs transition-colors"
-                >
-                  Xem chi tiết
-                </Link>
+                <span className="text-[#16845A] font-bold">
+                  Kênh chính thức: @dhnlbg ↗
+                </span>
               </div>
             </div>
-          ))}
+
+            {/* Video Companion Highlights */}
+            <div className="lg:col-span-4 space-y-6">
+              <div className="border-l-3 border-[#0F5132] pl-4 space-y-1">
+                <span className="text-xs font-bold uppercase tracking-widest text-[#0F5132]">
+                  MÔI TRƯỜNG BAFU
+                </span>
+                <h3 className="font-display font-bold text-xl text-[#17211C]">
+                  Không gian học tập xanh & thân thiện
+                </h3>
+                <p className="text-sm text-[#575E5B] leading-relaxed">
+                  Khuôn viên trường rộng lớn tại Bích Động, Việt Yên, Bắc Giang với hệ sinh thái hồ nước, đồi cây và đảo cò thanh bình.
+                </p>
+              </div>
+
+              <div className="bg-[#F8FAF7] border border-[#D8D5CD] p-5 rounded-xl space-y-3 text-xs text-[#575E5B]">
+                <div className="flex items-center gap-2 font-bold text-[#17211C]">
+                  <MapPin size={18} className="text-[#0F5132]" />
+                  <span>Cơ sở vật chất sinh viên</span>
+                </div>
+                <ul className="space-y-2 leading-relaxed">
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#16845A] mt-1.5 shrink-0" />
+                    <span>Hội trường lớn A1 & khu vực sân khấu biểu diễn thanh niên.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#16845A] mt-1.5 shrink-0" />
+                    <span>Sân vận động, sân cỏ nhân tạo & nhà thi đấu đa năng.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#16845A] mt-1.5 shrink-0" />
+                    <span>Phòng thực hành máy tính & không gian nghiên cứu sinh viên.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <a
+                href="https://www.youtube.com/@dhnlbg"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 text-xs font-bold text-[#0F5132] hover:text-[#16845A] transition-colors"
+              >
+                <PlayCircle size={18} weight="bold" />
+                <span>Xem thêm trên kênh YouTube BAFU (@dhnlbg) ↗</span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* 6. Sự Kiện Sắp Diễn Ra */}
-      {events.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-8">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Sự Kiện Sắp Diễn Ra
-              </h2>
-              <p className="text-slate-500 text-sm mt-1">Các giải thi đấu, đêm nhạc và hội thảo học thuật của sinh viên</p>
+      {/* SECTION 06: Tin tức và sự kiện (Tách rõ Lịch mới & Tư liệu lịch sử) */}
+      <section className="py-20 lg:py-24 border-b border-[#D8D5CD]/60 bg-[#FAF9F5]">
+        <div className="editorial-container">
+          <SectionHeading
+            number="04"
+            title="Tin tức & Sự kiện hoạt động"
+            note="Phân định minh bạch giữa các sự kiện sắp diễn ra và tư liệu các hoạt động đã diễn ra trong lịch sử trường."
+            link="Xem tất cả sự kiện"
+            to="/events"
+          />
+
+          {/* Tab Selector */}
+          <div className="flex items-center gap-3 mb-8">
+            <button
+              type="button"
+              onClick={() => setActiveEventTab("past")}
+              className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                activeEventTab === "past"
+                  ? "bg-[#0F5132] text-white shadow-xs"
+                  : "bg-white text-[#575E5B] border border-[#D8D5CD] hover:border-[#0F5132]"
+              }`}
+            >
+              Tư liệu hoạt động đã diễn ra ({pastEvents.length})
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveEventTab("upcoming")}
+              className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                activeEventTab === "upcoming"
+                  ? "bg-[#0F5132] text-white shadow-xs"
+                  : "bg-white text-[#575E5B] border border-[#D8D5CD] hover:border-[#0F5132]"
+              }`}
+            >
+              Lịch sự kiện sắp tới ({upcomingEvents.length})
+            </button>
+          </div>
+
+          {activeEventTab === "past" ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+              {pastEvents.map((e) => (
+                <div
+                  key={e.id}
+                  className="bg-white border border-[#D8D5CD] hover:border-[#16845A] rounded-xl p-6 sm:p-7 shadow-xs hover:shadow-md transition-all space-y-4"
+                >
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#E7B85B] uppercase tracking-wider bg-[#E7B85B]/10 px-2.5 py-0.5 rounded border border-[#E7B85B]/20">
+                      Tư liệu lịch sử
+                    </span>
+                    <span className="text-[#64748B] flex items-center gap-1 font-semibold">
+                      <CalendarBlank size={14} />
+                      {new Date(e.startTime).toLocaleDateString("vi-VN", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })}
+                    </span>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-display font-bold text-xl text-[#17211C] leading-snug">
+                      {e.title}
+                    </h3>
+                    <p className="text-sm text-[#575E5B] leading-relaxed">
+                      {e.description || "Hoạt động được ghi nhận trong các bài viết tư liệu của trường."}
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-[#E5E7EB] flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span className="font-semibold text-[#16845A]">
+                      {e.club?.name || "Đại học Nông – Lâm Bắc Giang"}
+                    </span>
+                    {e.sourceUrl && (
+                      <a
+                        href={e.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[#0F5132] hover:text-[#16845A] font-bold hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>Bài viết nguồn ↗</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-            <Link to="/events" className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
-              Xem tất cả sự kiện <ChevronRight className="w-4 h-4" />
+          ) : (
+            <div className="bg-white border border-[#D8D5CD] rounded-xl p-10 text-center space-y-3">
+              <span className="inline-block p-3 rounded-full bg-[#F4F1EA] text-[#0F5132]">
+                <CalendarBlank size={28} />
+              </span>
+              <h3 className="font-display font-bold text-lg text-[#17211C]">
+                Chưa có sự kiện sắp tới được xác minh công bố
+              </h3>
+              <p className="text-sm text-[#575E5B] max-w-md mx-auto">
+                Lịch hoạt động mới sẽ được hiển thị tại đây ngay khi có thông báo chính thức từ ban chủ nhiệm các câu lạc bộ và Đoàn trường.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* SECTION 07: Kết nối cộng đồng (Full-Width High-End CTA Banner) */}
+      <section className="py-20 lg:py-24 bg-[#0F5132] text-white relative overflow-hidden">
+        {/* Subtle decorative glow */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#16845A]/40 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#E7B85B]/15 rounded-full blur-2xl pointer-events-none -ml-20 -mb-20" />
+
+        <div className="editorial-container relative z-10 text-center max-w-3xl mx-auto space-y-6">
+          <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#A7F3D0] bg-white/10 px-3.5 py-1.5 rounded-full border border-white/20">
+            KẾT NỐI & PHÁT TRIỂN
+          </span>
+
+          <h2 className="font-display font-black text-3xl sm:text-5xl uppercase tracking-tight leading-tight">
+            SẴN SÀNG TÌM MỘT CỘNG ĐỒNG
+            <br />
+            <span className="text-[#E7B85B]">CHO RIÊNG BẠN?</span>
+          </h2>
+
+          <p className="text-base sm:text-lg text-[#E2E8F0] leading-relaxed max-w-2xl mx-auto">
+            Khám phá các câu lạc bộ thanh xuân, học hỏi kỹ năng mới và kết nối cùng những người bạn đồng hành trong suốt quãng đời sinh viên tại BAFU.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <Link
+              to="/clubs"
+              className="px-8 py-4 bg-[#E7B85B] hover:bg-[#D9A33E] text-[#17211C] font-bold uppercase tracking-wider text-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+            >
+              Khám phá danh bạ CLB
+            </Link>
+            <Link
+              to="/events"
+              className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold uppercase tracking-wider text-sm rounded-lg backdrop-blur-md transition-all duration-300 border border-white/20"
+            >
+              Tra cứu hoạt động
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((ev) => (
-              <div key={ev.id} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs card-hover flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-2 text-xs text-blue-600 font-semibold mb-2">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span>{new Date(ev.startTime).toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                  </div>
-                  <h3 className="font-bold text-slate-900 text-base mb-2">{ev.title}</h3>
-                  <p className="text-xs text-slate-500 line-clamp-2 mb-3">{ev.description}</p>
-                  <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span className="truncate">{ev.location}</span>
-                  </div>
-                </div>
+          <p className="text-xs text-white/60 pt-4">
+            Dự án cổng thông tin thí điểm phục vụ sinh viên Trường Đại học Nông – Lâm Bắc Giang.
+          </p>
+        </div>
+      </section>
 
-                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs font-medium text-slate-400">{ev.club?.name}</span>
-                  <Link
-                    to="/events"
-                    className="text-xs font-bold text-blue-600 hover:text-blue-700"
-                  >
-                    Xem chi tiết →
-                  </Link>
-                </div>
+      {/* Lightbox Modal for Editorial Gallery */}
+      {activeLightboxMedia && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fade-in"
+          onClick={() => setActiveLightboxMedia(null)}
+        >
+          <div
+            className="bg-white rounded-2xl overflow-hidden max-w-4xl w-full shadow-2xl relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setActiveLightboxMedia(null)}
+              className="absolute top-4 right-4 z-10 p-2 bg-black/60 hover:bg-black/80 text-white rounded-full transition-colors cursor-pointer"
+              aria-label="Đóng"
+            >
+              <X size={20} weight="bold" />
+            </button>
+
+            <div className="relative aspect-video sm:aspect-[16/10] w-full bg-black">
+              <img
+                src={activeLightboxMedia.src}
+                alt={activeLightboxMedia.title}
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            <div className="p-6 sm:p-8 space-y-3 bg-white">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-[#0F5132] uppercase tracking-wider">
+                  {activeLightboxMedia.scope}
+                </span>
+                <span className="text-[#64748B]">
+                  Nguồn: {activeLightboxMedia.source}
+                </span>
               </div>
-            ))}
+
+              <h3 className="font-display font-bold text-2xl text-[#17211C]">
+                {activeLightboxMedia.title}
+              </h3>
+
+              <p className="text-sm text-[#575E5B] leading-relaxed">
+                {activeLightboxMedia.caption}
+              </p>
+
+              {activeLightboxMedia.sourceUrl && (
+                <div className="pt-3 border-t border-[#E5E7EB]">
+                  <a
+                    href={activeLightboxMedia.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs font-bold text-[#0F5132] hover:underline inline-flex items-center gap-1"
+                  >
+                    Xem bài viết nguồn trên bafu.edu.vn ↗
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
-        </section>
+        </div>
       )}
     </div>
   );

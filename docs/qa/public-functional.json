@@ -1,0 +1,30 @@
+{
+  "pass": true,
+  "checkedAt": "2026-10-27T11:12:19.491Z",
+  "results": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "search": true,
+      "reset": true,
+      "categoryFilter": true,
+      "historicalEvents": true,
+      "quarantine404": true,
+      "noDemoLogin": true
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "search": true,
+      "reset": true,
+      "categoryFilter": true,
+      "historicalEvents": true,
+      "quarantine404": true,
+      "noDemoLogin": true
+    }
+  ]
+}

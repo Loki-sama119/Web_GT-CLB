@@ -1,11 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { api } from '../../services/api';
-import { useAuth } from '../../context/AuthContext';
-import { 
-  Users, Calendar, Clock, MapPin, Mail, Phone, Globe, Flame, 
-  CheckCircle2, AlertCircle, Send, X, ArrowLeft, Shield
-} from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { api } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
+import {
+  UsersThree,
+  Clock,
+  MapPin,
+  EnvelopeSimple,
+  Phone,
+  CheckCircle,
+  WarningCircle,
+  PaperPlaneTilt,
+  X,
+  ArrowLeft,
+  ShieldCheck,
+  Image as ImageIcon,
+  FacebookLogo,
+  ArrowRight,
+} from "@phosphor-icons/react";
+import { clubIdentity, activityLabel, getClubBackground } from "../../utils/clubIdentity";
+import ClubVisual from "../../components/editorial/ClubVisual";
+import ClubLogo from "../../components/ui/ClubLogo";
+import Modal from "../../components/ui/Modal";
+
+function getYouTubeEmbedUrl(url = "") {
+  if (!url) return null;
+  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+  return match ? `https://www.youtube.com/embed/${match[1]}?rel=0&modestbranding=1` : null;
+}
 
 export default function ClubDetailPage() {
   const { slug } = useParams();
@@ -14,14 +36,18 @@ export default function ClubDetailPage() {
 
   const [club, setClub] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Modal nộp đơn ứng tuyển động
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [formAnswers, setFormAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState('');
+  const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  // Album hoạt động CLB
+  const [albumImages, setAlbumImages] = useState([]);
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   useEffect(() => {
     async function fetchClub() {
@@ -30,9 +56,17 @@ export default function ClubDetailPage() {
         const res = await api.getClubBySlug(slug);
         if (res.data?.club) {
           setClub(res.data.club);
+          try {
+            const albumRes = await api.getClubAlbum(res.data.club.id);
+            if (albumRes.data?.medias) {
+              setAlbumImages(albumRes.data.medias);
+            }
+          } catch (albumErr) {
+            console.error("Lỗi tải album:", albumErr);
+          }
         }
       } catch (err) {
-        setError(err.message || 'Không tìm thấy câu lạc bộ');
+        setError(err.message || "Không tìm thấy câu lạc bộ");
       } finally {
         setLoading(false);
       }
@@ -42,51 +76,57 @@ export default function ClubDetailPage() {
 
   const handleOpenApplyModal = (campaign) => {
     if (!user) {
-      navigate('/login?redirect=' + encodeURIComponent(window.location.pathname));
+      navigate(
+        "/login?redirect=" + encodeURIComponent(window.location.pathname),
+      );
       return;
     }
     setSelectedCampaign(campaign);
     setFormAnswers({});
-    setSubmitError('');
+    setSubmitError("");
     setSubmitSuccess(false);
   };
 
   const handleInputChange = (questionId, value) => {
-    setFormAnswers(prev => ({
+    setFormAnswers((prev) => ({
       ...prev,
-      [questionId]: value
+      [questionId]: value,
     }));
   };
 
   const handleCheckboxChange = (questionId, optionValue, isChecked) => {
-    const currentList = Array.isArray(formAnswers[questionId]) ? formAnswers[questionId] : [];
+    const currentList = Array.isArray(formAnswers[questionId])
+      ? formAnswers[questionId]
+      : [];
     let updated;
     if (isChecked) {
       updated = [...currentList, optionValue];
     } else {
-      updated = currentList.filter(item => item !== optionValue);
+      updated = currentList.filter((item) => item !== optionValue);
     }
-    setFormAnswers(prev => ({
+    setFormAnswers((prev) => ({
       ...prev,
-      [questionId]: updated
+      [questionId]: updated,
     }));
   };
 
   const handleSubmitApplication = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    setSubmitError('');
+    setSubmitError("");
 
     try {
-      const answersPayload = Object.entries(formAnswers).map(([questionId, answerValue]) => ({
-        questionId,
-        answerValue
-      }));
+      const answersPayload = Object.entries(formAnswers).map(
+        ([questionId, answerValue]) => ({
+          questionId,
+          answerValue,
+        }),
+      );
 
       await api.applyRecruitment(selectedCampaign.id, answersPayload);
       setSubmitSuccess(true);
     } catch (err) {
-      setSubmitError(err.message || 'Lỗi khi nộp hồ sơ');
+      setSubmitError(err.message || "Lỗi khi nộp hồ sơ");
     } finally {
       setSubmitting(false);
     }
@@ -94,365 +134,671 @@ export default function ClubDetailPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-slate-500 font-medium">Đang tải thông tin câu lạc bộ...</p>
+      <div className="bg-[#F4F0E7] min-h-screen flex items-center justify-center p-8">
+        <div className="text-center space-y-3">
+          <div className="w-8 h-8 border-2 border-[#181C1B] border-t-transparent animate-spin mx-auto" />
+          <p className="text-[#575E5B] font-semibold text-sm uppercase tracking-wider">
+            Đang tải hồ sơ câu lạc bộ...
+          </p>
+        </div>
       </div>
     );
   }
 
   if (error || !club) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 text-center space-y-4">
-        <div className="text-4xl">⚠️</div>
-        <h2 className="text-xl font-bold text-slate-800">{error || 'Không tìm thấy câu lạc bộ'}</h2>
-        <Link to="/clubs" className="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline">
-          <ArrowLeft className="w-4 h-4" /> Quay lại danh sách câu lạc bộ
-        </Link>
+      <div className="bg-[#F4F0E7] min-h-screen py-20 px-4">
+        <div className="max-w-xl mx-auto bg-white border border-[#D8D5CD] p-10 text-center space-y-4">
+          <div className="w-12 h-12 bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+            <WarningCircle size={28} />
+          </div>
+          <h2 className="font-display font-bold text-2xl uppercase text-[#181C1B]">
+            {error || "Không tìm thấy câu lạc bộ"}
+          </h2>
+          <Link
+            to="/clubs"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#181C1B] text-white text-sm font-bold uppercase tracking-wider hover:bg-[#12674D] transition-colors"
+          >
+            <ArrowLeft size={16} />
+            <span>Quay lại danh sách câu lạc bộ</span>
+          </Link>
+        </div>
       </div>
     );
   }
 
-  const leaders = club.memberships?.filter(m => ['LEADER', 'VICE_LEADER'].includes(m.role)) || [];
+  const leaders =
+    club.memberships?.filter((m) =>
+      ["LEADER", "VICE_LEADER"].includes(m.role),
+    ) || [];
   const openCampaigns = club.campaigns || [];
+  const identity = clubIdentity(club);
 
   return (
-    <div className="pb-16">
-      {/* 1. Header Banner */}
-      <div className="relative bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white py-14 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <Link to="/clubs" className="inline-flex items-center gap-1.5 text-xs text-blue-200 hover:text-white mb-6">
-            <ArrowLeft className="w-4 h-4" /> Tất cả câu lạc bộ
+    <div
+      className="club-profile bg-[#F4F0E7] text-[#181C1B] min-h-screen font-sans pb-24"
+      style={{ "--club-accent": identity.accent }}
+    >
+      {/* 1. EDITORIAL PROFILE HEADER */}
+      <div className="club-profile-header bg-[#111614] text-white border-b border-[#2A2F2D] relative overflow-hidden">
+        {/* Subtle Category Background or Real Verified Cover */}
+        <div className="absolute inset-0 z-0">
+          {club.coverUrl ? (
+            <img
+              src={club.coverUrl}
+              alt={`Ảnh bìa ${club.name}`}
+              className="w-full h-full object-cover object-center"
+            />
+          ) : (
+            <div
+              className={`w-full h-full bg-gradient-to-r ${identity.gradient || "from-[#0F5132] to-[#16845A]"}`}
+            />
+          )}
+          {/* Subtle overlay for high legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111614] via-[#111614]/80 to-[#111614]/40" />
+          <div
+            className="absolute inset-0 opacity-25 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at 85% 25%, ${identity.accent} 0%, transparent 65%)`,
+            }}
+          />
+        </div>
+
+        <div className="editorial-container py-12 sm:py-16 relative z-10 space-y-6">
+          <Link
+            to="/clubs"
+            className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.12em] text-[#D8D5CD] hover:text-white transition-colors"
+          >
+            <ArrowLeft size={14} />
+            <span>Thư mục câu lạc bộ BAFU</span>
           </Link>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-blue-600 text-white font-black text-3xl flex items-center justify-center shadow-2xl border-2 border-white/20 shrink-0">
-              {club.name.charAt(4) || 'C'}
-            </div>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-2">
+            <ClubLogo
+              name={club.name}
+              slug={club.slug}
+              logoUrl={club.logoUrl}
+              categorySlug={club.category?.slug}
+              size="xl"
+              className="rounded-2xl border-2 border-white/40 shrink-0 shadow-lg bg-white p-2"
+            />
 
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <span className="text-xs font-bold bg-blue-500/20 text-blue-200 px-3 py-1 rounded-full border border-blue-400/20">
-                  {club.category?.name}
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2 text-sm">
+                <span className="px-2.5 py-0.5 bg-[#12674D] text-white font-bold uppercase tracking-wider">
+                  {club.category?.name || "Tổ chức BAFU"}
                 </span>
                 {openCampaigns.length > 0 && (
-                  <span className="text-xs font-bold bg-orange-500 text-white px-3 py-1 rounded-full flex items-center gap-1">
-                    <Flame className="w-3.5 h-3.5 fill-white" /> Đang tuyển thành viên
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#EF673F] text-white font-bold uppercase tracking-wider">
+                    <span className="w-1.5 h-1.5 bg-white animate-pulse" />
+                    Đang tuyển thành viên
                   </span>
                 )}
+                <span className="px-2.5 py-0.5 bg-white/10 text-[#D8D5CD] uppercase tracking-wider font-semibold border border-white/20">
+                  {club.dataClassification === "REAL_VERIFIED"
+                    ? "Có nguồn xác minh"
+                    : "Thông tin đang cập nhật"}
+                </span>
               </div>
-              <h1 className="text-2xl sm:text-4xl font-black tracking-tight">{club.name}</h1>
-              <p className="text-blue-100 text-sm max-w-2xl">{club.shortDescription}</p>
+
+              <h1 className="font-display font-bold uppercase text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-none">
+                {club.name}
+              </h1>
+
+              {club.shortDescription && (
+                <p className="text-sm sm:text-base text-[#D8D5CD] max-w-3xl leading-relaxed">
+                  {club.shortDescription}
+                </p>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2. Main Detail Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+      <div className="editorial-container profile-evidence">
+        <div>
+          <span className="eyebrow">{identity.label} / Hồ sơ câu lạc bộ</span>
+          <p>
+            {club.dataClassification === "REAL_VERIFIED"
+              ? "Đã đối chiếu tên CLB với bài viết nguồn. Thông tin hoạt động hiện tại đang được cập nhật."
+              : "Thông tin đang cập nhật."}
+          </p>
+        </div>
+        {club.sourceUrl && (
+          <a
+            href={club.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-link"
+          >
+            Đọc bài viết nguồn ↗
+          </a>
+        )}
+      </div>
+      {/* 2. MAIN EDITORIAL CONTENT (12-COLUMN ASYMMETRICAL GRID) */}
+      <div className="editorial-container pt-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Cột trái: Thông tin chính & Đợt tuyển (8 cột) */}
+          {/* Cột trái (8/12 cột): Đợt tuyển, Giới thiệu, BCN, Album */}
           <div className="lg:col-span-8 space-y-8">
             {/* Đợt tuyển đang mở (Nổi bật) */}
             {openCampaigns.length > 0 && (
-              <div className="p-6 sm:p-8 rounded-3xl bg-linear-to-br from-amber-50 to-orange-50 border border-amber-200 shadow-sm space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-orange-600 font-bold text-xs uppercase tracking-wider">
-                    <Flame className="w-4 h-4 fill-orange-500" /> Đợt tuyển đang diễn ra
+              <section className="bg-white border border-[#D8D5CD] p-6 sm:p-8 space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-[#D8D5CD]">
+                  <div className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#EF673F]">
+                    <span className="w-2 h-2 bg-[#EF673F] animate-pulse" />
+                    <span>Đợt tuyển quân đang diễn ra</span>
                   </div>
-                  <span className="text-xs font-semibold text-slate-500">
-                    Hạn nộp: {new Date(openCampaigns[0].endDate).toLocaleDateString('vi-VN')}
+                  <span className="text-sm text-[#575E5B] font-semibold">
+                    Hạn chót:{" "}
+                    {new Date(openCampaigns[0].endDate).toLocaleDateString(
+                      "vi-VN",
+                    )}
                   </span>
                 </div>
 
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                <div className="space-y-3">
+                  <h3 className="font-display font-bold text-2xl sm:text-3xl uppercase text-[#181C1B]">
                     {openCampaigns[0].title}
                   </h3>
-                  <p className="text-sm text-slate-600 mt-2 leading-relaxed">
+                  <p className="text-sm text-[#575E5B] leading-relaxed">
                     {openCampaigns[0].description}
                   </p>
                   {openCampaigns[0].requirements && (
-                    <div className="mt-3 p-4 bg-white/80 rounded-xl border border-amber-200/60 text-xs text-slate-700 space-y-1">
-                      <div className="font-bold text-slate-800">Yêu cầu & Tiêu chí:</div>
-                      <div className="whitespace-pre-line text-slate-600">{openCampaigns[0].requirements}</div>
+                    <div className="p-4 bg-[#F4F0E7] border border-[#D8D5CD] text-sm text-[#181C1B] space-y-1">
+                      <div className="font-bold uppercase tracking-wider">
+                        Yêu cầu & Tiêu chí xét tuyển:
+                      </div>
+                      <div className="whitespace-pre-line text-[#575E5B] leading-relaxed">
+                        {openCampaigns[0].requirements}
+                      </div>
                     </div>
                   )}
                 </div>
 
-                <div className="pt-2 flex flex-wrap items-center justify-between gap-4 border-t border-amber-200/60">
-                  <span className="text-xs font-semibold text-slate-600">
-                    Chỉ tiêu: <strong className="text-slate-900">{openCampaigns[0].targetQuantity} bạn</strong>
+                <div className="pt-4 border-t border-[#D8D5CD] flex flex-wrap items-center justify-between gap-4">
+                  <span className="text-sm text-[#575E5B]">
+                    Chỉ tiêu tuyển sinh:{" "}
+                    <strong className="text-[#181C1B] font-bold">
+                      {openCampaigns[0].targetQuantity} sinh viên
+                    </strong>
                   </span>
                   <button
                     onClick={() => handleOpenApplyModal(openCampaigns[0])}
-                    className="px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-md shadow-orange-500/20 transition-all flex items-center gap-2"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#EF673F] hover:bg-[#D9532B] text-white text-sm uppercase tracking-wider font-bold transition-colors cursor-pointer"
                   >
-                    Ứng tuyển vào CLB ngay
-                    <Send className="w-4 h-4" />
+                    <PaperPlaneTilt size={16} weight="bold" />
+                    <span>Ứng tuyển vào CLB ngay</span>
                   </button>
                 </div>
-              </div>
+              </section>
             )}
 
+            {openCampaigns.length === 0 && (
+              <p className="editorial-empty">
+                Chưa có đợt tuyển thành viên đã được xác minh đang mở.
+              </p>
+            )}
             {/* Giới thiệu chi tiết */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-4">
-              <h2 className="text-xl font-extrabold text-slate-900">Giới Thiệu & Mục Tiêu Hoạt Động</h2>
-              <div className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+            <section className="bg-white border border-[#D8D5CD] p-6 sm:p-8 space-y-4">
+              <h2 className="font-display font-bold text-xl uppercase tracking-wider text-[#181C1B] pb-3 border-b border-[#D8D5CD]">
+                Giới Thiệu & Mục Tiêu Hoạt Động
+              </h2>
+              <div className="text-sm text-[#575E5B] leading-relaxed whitespace-pre-line">
                 {club.description}
               </div>
 
+              {!club.meetingSchedule && (
+                <p className="text-sm text-[#575E5B]">
+                  Lịch sinh hoạt: đang cập nhật.
+                </p>
+              )}
               {club.meetingSchedule && (
-                <div className="mt-6 p-4 rounded-2xl bg-blue-50 border border-blue-100 flex items-start gap-3">
-                  <Clock className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <div className="mt-6 p-4 bg-[#F4F0E7] border border-[#D8D5CD] flex items-start gap-3">
+                  <Clock size={20} className="text-[#12674D] shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-bold text-slate-900 text-sm">Lịch sinh hoạt thường kỳ</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">{club.meetingSchedule}</p>
+                    <h4 className="font-bold text-sm uppercase tracking-wider text-[#181C1B]">
+                      Lịch sinh hoạt thường kỳ
+                    </h4>
+                    <p className="text-sm text-[#575E5B] mt-0.5">
+                      {club.meetingSchedule}
+                    </p>
                   </div>
                 </div>
               )}
-            </div>
+            </section>
 
-            {/* Ban Chủ Nhiệm */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-6">
-              <h2 className="text-xl font-extrabold text-slate-900">Ban Chủ Nhiệm Câu Lạc Bộ</h2>
+            <section className="bg-white border border-[#D8D5CD] p-6 sm:p-8">
+              <h2 className="text-xl mb-6">Hoạt động có bài viết nguồn</h2>
+              {club.events?.length ? (
+                <div className="space-y-5">
+                  {club.events.map((event) => (
+                    <article
+                      key={event.id}
+                      className="border-t border-[#D8D5CD] pt-5"
+                    >
+                      <p className="text-sm text-[#575E5B]">
+                        {new Date(event.startTime).toLocaleDateString("vi-VN", {
+                          timeZone: "Asia/Ho_Chi_Minh",
+                        })}{" "}
+                        ·{" "}
+                        {new Date(event.startTime) < new Date()
+                          ? "Đã diễn ra"
+                          : "Sắp diễn ra"}
+                      </p>
+                      <h3 className="text-xl my-3">{event.title}</h3>
+                      {event.sourceUrl && (
+                        <a
+                          className="text-link"
+                          href={event.sourceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Đọc bài viết nguồn ↗
+                        </a>
+                      )}
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-[#575E5B]">
+                  Tư liệu hoạt động đang cập nhật.
+                </p>
+              )}
+            </section>
+            {/* Ban Chủ Nhiệm Câu Lạc Bộ */}
+            <section className="bg-white border border-[#D8D5CD] p-6 sm:p-8 space-y-5">
+              <h2 className="font-display font-bold text-xl uppercase tracking-wider text-[#181C1B] pb-3 border-b border-[#D8D5CD]">
+                Ban Chủ Nhiệm Câu Lạc Bộ
+              </h2>
               {leaders.length === 0 ? (
-                <p className="text-sm text-slate-400">Đang cập nhật danh sách ban điều hành.</p>
+                <p className="text-sm text-[#7A827F]">
+                  Đang cập nhật danh sách ban điều hành.
+                </p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {leaders.map((m) => (
-                    <div key={m.id} className="p-4 rounded-2xl border border-slate-100 bg-slate-50 flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center shrink-0">
-                        {m.user?.studentProfile?.fullName?.charAt(0) || 'L'}
+                    <div
+                      key={m.id}
+                      className="p-4 border border-[#D8D5CD] bg-[#F4F0E7] flex items-center gap-3.5"
+                    >
+                      <div className="w-10 h-10 bg-[#181C1B] text-white font-bold flex items-center justify-center text-sm shrink-0">
+                        {m.user?.studentProfile?.fullName?.charAt(0) || "L"}
                       </div>
-                      <div>
-                        <div className="font-bold text-slate-900 text-sm">
-                          {m.user?.studentProfile?.fullName || 'Chủ nhiệm CLB'}
+                      <div className="min-w-0">
+                        <div className="font-bold text-[#181C1B] text-sm truncate">
+                          {m.user?.studentProfile?.fullName || "Chủ nhiệm CLB"}
                         </div>
-                        <div className="text-xs text-blue-600 font-semibold">
-                          {m.role === 'LEADER' ? 'Chủ nhiệm câu lạc bộ' : 'Phó chủ nhiệm'}
+                        <div className="text-sm text-[#12674D] font-bold uppercase tracking-wider">
+                          {m.role === "LEADER"
+                            ? "Chủ nhiệm CLB"
+                            : "Phó chủ nhiệm"}
                         </div>
-                        <div className="text-[11px] text-slate-500">
-                          {m.user?.studentProfile?.faculty || 'Trường ĐH Nông - Lâm Bắc Giang'}
+                        <div className="text-xs text-[#575E5B] truncate">
+                          {m.user?.studentProfile?.faculty ||
+                            "ĐH Nông - Lâm Bắc Giang"}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
-            </div>
+            </section>
+
+            {/* 1. Video & Phóng Sự Quảng Bá CLB */}
+            {albumImages.filter(m => m.mediaType === 'VIDEO' || (m.url && m.url.includes('youtube'))).length > 0 && (
+              <section className="bg-white border border-[#D8D5CD] p-6 sm:p-8 space-y-5 shadow-xs">
+                <div className="flex items-center justify-between pb-3 border-b border-[#D8D5CD]">
+                  <div>
+                    <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#EF673F]">
+                      <span className="w-2 h-2 bg-[#EF673F] rounded-full animate-pulse" />
+                      <span>Phóng sự & Video chính thức</span>
+                    </div>
+                    <h2 className="font-display font-bold text-xl uppercase tracking-wider text-[#181C1B] mt-1">
+                      Video Quảng Bá & Hoạt Động
+                    </h2>
+                  </div>
+                  <span className="text-xs font-bold px-2.5 py-1 bg-[#12674D]/10 text-[#12674D] border border-[#12674D]/20">
+                    BAFU OFFICIAL MEDIA
+                  </span>
+                </div>
+
+                <div className="space-y-6">
+                  {albumImages
+                    .filter(m => m.mediaType === 'VIDEO' || (m.url && m.url.includes('youtube')))
+                    .map((vid) => {
+                      const embedUrl = getYouTubeEmbedUrl(vid.url);
+                      return (
+                        <div key={vid.id} className="space-y-3">
+                          {embedUrl ? (
+                            <div className="relative aspect-video w-full overflow-hidden bg-black border border-[#D8D5CD] shadow-sm">
+                              <iframe
+                                src={embedUrl}
+                                title={vid.caption || "Video CLB BAFU"}
+                                className="w-full h-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                              />
+                            </div>
+                          ) : (
+                            <video
+                              src={vid.url}
+                              controls
+                              className="w-full aspect-video bg-black border border-[#D8D5CD]"
+                            />
+                          )}
+                          {vid.caption && (
+                            <p className="text-sm font-semibold text-[#181C1B] flex items-center gap-2">
+                              <span className="w-2 h-2 bg-[#12674D] rounded-full shrink-0" />
+                              <span>{vid.caption}</span>
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+              </section>
+            )}
+
           </div>
 
-          {/* Cột phải: Thông tin liên hệ & Thống kê (4 cột) */}
+          {/* Cột phải (4/12 cột): Thông tin CLB & Sidebar đăng ký */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs space-y-4">
-              <h3 className="font-extrabold text-slate-900 text-base">Thông Tin Liên Hệ</h3>
-              <div className="space-y-3 text-xs text-slate-600">
-                {club.email && (
-                  <div className="flex items-center gap-2.5">
-                    <Mail className="w-4 h-4 text-blue-600 shrink-0" />
-                    <span>{club.email}</span>
-                  </div>
-                )}
-                {club.phone && (
-                  <div className="flex items-center gap-2.5">
-                    <Phone className="w-4 h-4 text-blue-600 shrink-0" />
-                    <span>{club.phone}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2.5">
-                  <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
-                  <span>Trường Đại học Nông - Lâm Bắc Giang</span>
-                </div>
-              </div>
-            </div>
+            <aside className="bg-white border border-[#D8D5CD] p-6 space-y-5 sticky top-24">
+              <h3 className="font-display font-bold text-base uppercase tracking-wider text-[#181C1B] pb-3 border-b border-[#D8D5CD]">
+                Thông Tin Câu Lạc Bộ
+              </h3>
 
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs space-y-3">
-              <h3 className="font-extrabold text-slate-900 text-base">Thống Kê Hoạt Động</h3>
-              <div className="grid grid-cols-2 gap-3 text-center">
-                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                  <div className="text-2xl font-black text-blue-600">
-                    {club._count?.memberships || 0}
-                  </div>
-                  <div className="text-[11px] text-slate-500 font-medium">Hội viên chính thức</div>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-[#575E5B]">Quy mô hội viên:</span>
+                  <span className="font-bold text-[#181C1B]">
+                    {club._count?.memberships || 0} thành viên
+                  </span>
                 </div>
-                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                  <div className="text-2xl font-black text-slate-800">
-                    {club._count?.events || 0}
-                  </div>
-                  <div className="text-[11px] text-slate-500 font-medium">Sự kiện tổ chức</div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[#575E5B]">Lĩnh vực:</span>
+                  <span className="font-bold text-[#12674D] uppercase tracking-wider">
+                    {club.category?.name}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[#575E5B]">Trạng thái:</span>
+                  <span className="px-2 py-0.5 text-xs font-bold uppercase tracking-wider bg-[#12674D]/10 text-[#12674D]">
+                    {activityLabel(club)}
+                  </span>
                 </div>
               </div>
-            </div>
+
+              <div className="pt-4 border-t border-[#D8D5CD] space-y-2.5 text-sm text-[#575E5B]">
+                {club.fanpageUrl && (
+                  <div className="flex items-center gap-2.5">
+                    <FacebookLogo
+                      size={16}
+                      weight="fill"
+                      className="text-[#1877F2] shrink-0"
+                    />
+                    <a
+                      href={club.fanpageUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="truncate text-[#1877F2] hover:underline font-semibold"
+                    >
+                      Liên kết fanpage
+                    </a>
+                  </div>
+                )}
+                {(club.email || club.contactEmail) && (
+                  <div className="flex items-center gap-2.5">
+                    <EnvelopeSimple
+                      size={16}
+                      className="text-[#181C1B] shrink-0"
+                    />
+                    <span className="truncate">
+                      {club.email || club.contactEmail}
+                    </span>
+                  </div>
+                )}
+                {(club.phone || club.contactPhone) && (
+                  <div className="flex items-center gap-2.5">
+                    <Phone size={16} className="text-[#181C1B] shrink-0" />
+                    <span>{club.phone || club.contactPhone}</span>
+                  </div>
+                )}
+                <div className="flex items-start gap-2.5">
+                  <MapPin
+                    size={16}
+                    className="text-[#EF673F] shrink-0 mt-0.5"
+                  />
+                  <span>Địa điểm sinh hoạt: đang cập nhật.</span>
+                </div>
+              </div>
+
+              {openCampaigns.length > 0 && (
+                <div className="pt-2">
+                  <button
+                    onClick={() => handleOpenApplyModal(openCampaigns[0])}
+                    className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#EF673F] hover:bg-[#D9532B] text-white font-bold text-sm uppercase tracking-wider transition-colors cursor-pointer"
+                  >
+                    <PaperPlaneTilt size={16} weight="bold" />
+                    <span>Nộp đơn ứng tuyển</span>
+                  </button>
+                </div>
+              )}
+            </aside>
           </div>
         </div>
       </div>
 
-      {/* 3. Modal Ứng Tuyển Động (Dynamic Application Form Modal) */}
+      {/* Modal Nộp Hồ Sơ Động */}
       {selectedCampaign && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <div>
-                <h3 className="font-extrabold text-slate-900 text-lg sm:text-xl">
-                  {selectedCampaign.form?.title || 'Đơn Ứng Tuyển Thành Viên'}
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">{club.name}</p>
+        <Modal
+          isOpen={true}
+          onClose={() => setSelectedCampaign(null)}
+          title={`Ứng Tuyển: ${selectedCampaign.title}`}
+          subtitle={`Câu lạc bộ: ${club.name}`}
+          maxWidth="max-w-2xl"
+        >
+          {submitSuccess ? (
+            <div className="py-8 text-center space-y-4">
+              <div className="w-12 h-12 bg-[#12674D]/10 text-[#12674D] flex items-center justify-center mx-auto">
+                <CheckCircle size={32} weight="fill" />
               </div>
-              <button
-                onClick={() => setSelectedCampaign(null)}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <h4 className="font-display font-bold text-xl uppercase text-[#181C1B]">
+                Nộp Hồ Sơ Thành Công!
+              </h4>
+              <p className="text-sm text-[#575E5B] max-w-md mx-auto leading-relaxed">
+                Đơn ứng tuyển của bạn đã được chuyển đến Ban chủ nhiệm{" "}
+                {club.name}. Bạn có thể theo dõi tiến độ xét duyệt trực tuyến
+                tại Bảng điều khiển sinh viên.
+              </p>
+              <div className="pt-2 flex justify-center gap-3">
+                <button
+                  onClick={() => setSelectedCampaign(null)}
+                  className="px-5 py-2 border border-[#D8D5CD] text-[#181C1B] hover:bg-[#F4F0E7] font-bold text-sm uppercase tracking-wider cursor-pointer"
+                >
+                  Đóng
+                </button>
+                <Link
+                  to="/student/dashboard"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 bg-[#181C1B] hover:bg-[#12674D] text-white font-bold text-sm uppercase tracking-wider transition-colors"
+                >
+                  <span>Xem hồ sơ của tôi</span>
+                  <ArrowRight size={14} />
+                </Link>
+              </div>
             </div>
-
-            {submitSuccess ? (
-              <div className="py-12 text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-3xl">
-                  ✓
+          ) : (
+            <form onSubmit={handleSubmitApplication} className="space-y-5">
+              {submitError && (
+                <div className="p-3 bg-rose-50 border border-rose-200 text-sm text-rose-700 flex items-center gap-2">
+                  <WarningCircle size={16} className="shrink-0" />
+                  <span>{submitError}</span>
                 </div>
-                <h4 className="text-xl font-bold text-slate-900">Nộp Hồ Sơ Thành Công!</h4>
-                <p className="text-sm text-slate-600 max-w-md mx-auto">
-                  Ban chủ nhiệm CLB {club.name} đã nhận được hồ sơ của bạn. Bạn có thể theo dõi tiến độ xét duyệt trực tuyến tại Bảng điều khiển sinh viên.
-                </p>
-                <div className="pt-4 flex justify-center gap-3">
-                  <Link
-                    to="/student/dashboard"
-                    className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs"
-                  >
-                    Đến trang theo dõi hồ sơ
-                  </Link>
-                  <button
-                    onClick={() => setSelectedCampaign(null)}
-                    className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs"
-                  >
-                    Đóng cửa sổ
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmitApplication} className="space-y-6 pt-6">
-                {submitError && (
-                  <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-600 flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    <span>{submitError}</span>
-                  </div>
-                )}
+              )}
 
-                {/* Render các câu hỏi động từ form */}
-                {selectedCampaign.form?.questions?.map((q) => {
-                  let options = [];
-                  if (q.options) {
-                    try {
-                      options = JSON.parse(q.options);
-                    } catch (e) {
-                      options = [];
-                    }
+              {selectedCampaign.form?.questions?.map((q) => {
+                let options = [];
+                if (q.options) {
+                  try {
+                    options = JSON.parse(q.options);
+                  } catch (e) {
+                    options = [];
                   }
+                }
 
-                  return (
-                    <div key={q.id} className="space-y-2">
-                      <label className="block text-sm font-bold text-slate-800">
-                        {q.questionText} {q.isRequired && <span className="text-red-500">*</span>}
-                      </label>
+                return (
+                  <div key={q.id} className="space-y-1.5">
+                    <label className="block text-sm font-bold uppercase tracking-wider text-[#181C1B]">
+                      {q.questionText}{" "}
+                      {q.isRequired && <span className="text-rose-500">*</span>}
+                    </label>
 
-                      {/* Loại SHORT_TEXT */}
-                      {q.questionType === 'SHORT_TEXT' && (
-                        <input
-                          type="text"
-                          required={q.isRequired}
-                          value={formAnswers[q.id] || ''}
-                          onChange={(e) => handleInputChange(q.id, e.target.value)}
-                          placeholder="Nhập câu trả lời của bạn..."
-                          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-                        />
-                      )}
+                    {q.questionType === "SHORT_TEXT" && (
+                      <input
+                        type="text"
+                        required={q.isRequired}
+                        value={formAnswers[q.id] || ""}
+                        onChange={(e) =>
+                          handleInputChange(q.id, e.target.value)
+                        }
+                        placeholder="Nhập câu trả lời của bạn..."
+                        className="w-full px-3.5 py-2.5 border border-[#D8D5CD] text-sm focus:outline-hidden focus:border-[#181C1B] bg-white"
+                      />
+                    )}
 
-                      {/* Loại LONG_TEXT */}
-                      {q.questionType === 'LONG_TEXT' && (
-                        <textarea
-                          rows={4}
-                          required={q.isRequired}
-                          value={formAnswers[q.id] || ''}
-                          onChange={(e) => handleInputChange(q.id, e.target.value)}
-                          placeholder="Nhập chi tiết câu trả lời..."
-                          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-                        />
-                      )}
+                    {q.questionType === "LONG_TEXT" && (
+                      <textarea
+                        rows={3}
+                        required={q.isRequired}
+                        value={formAnswers[q.id] || ""}
+                        onChange={(e) =>
+                          handleInputChange(q.id, e.target.value)
+                        }
+                        placeholder="Nhập chi tiết câu trả lời..."
+                        className="w-full px-3.5 py-2.5 border border-[#D8D5CD] text-sm focus:outline-hidden focus:border-[#181C1B] bg-white"
+                      />
+                    )}
 
-                      {/* Loại SINGLE_CHOICE */}
-                      {q.questionType === 'SINGLE_CHOICE' && (
-                        <div className="space-y-2">
-                          {options.map((opt, idx) => (
-                            <label key={idx} className="flex items-center gap-2.5 text-xs text-slate-700 cursor-pointer">
+                    {q.questionType === "SINGLE_CHOICE" && (
+                      <div className="space-y-2 pt-1">
+                        {options.map((opt, idx) => (
+                          <label
+                            key={idx}
+                            className="flex items-center gap-2.5 text-sm text-[#181C1B] cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name={q.id}
+                              value={opt}
+                              checked={formAnswers[q.id] === opt}
+                              onChange={(e) =>
+                                handleInputChange(q.id, e.target.value)
+                              }
+                              className="w-4 h-4 text-[#181C1B] focus:ring-[#181C1B]"
+                            />
+                            <span>{opt}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+
+                    {q.questionType === "MULTIPLE_CHOICE" && (
+                      <div className="space-y-2 pt-1">
+                        {options.map((opt, idx) => {
+                          const isChecked =
+                            Array.isArray(formAnswers[q.id]) &&
+                            formAnswers[q.id].includes(opt);
+                          return (
+                            <label
+                              key={idx}
+                              className="flex items-center gap-2.5 text-sm text-[#181C1B] cursor-pointer"
+                            >
                               <input
-                                type="radio"
-                                name={q.id}
+                                type="checkbox"
                                 value={opt}
-                                checked={formAnswers[q.id] === opt}
-                                onChange={(e) => handleInputChange(q.id, e.target.value)}
-                                className="w-4 h-4 text-blue-600"
+                                checked={isChecked}
+                                onChange={(e) =>
+                                  handleCheckboxChange(
+                                    q.id,
+                                    opt,
+                                    e.target.checked,
+                                  )
+                                }
+                                className="w-4 h-4 text-[#181C1B] rounded-none focus:ring-[#181C1B]"
                               />
                               <span>{opt}</span>
                             </label>
-                          ))}
-                        </div>
-                      )}
+                          );
+                        })}
+                      </div>
+                    )}
 
-                      {/* Loại MULTIPLE_CHOICE */}
-                      {q.questionType === 'MULTIPLE_CHOICE' && (
-                        <div className="space-y-2">
-                          {options.map((opt, idx) => {
-                            const isChecked = Array.isArray(formAnswers[q.id]) && formAnswers[q.id].includes(opt);
-                            return (
-                              <label key={idx} className="flex items-center gap-2.5 text-xs text-slate-700 cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  value={opt}
-                                  checked={isChecked}
-                                  onChange={(e) => handleCheckboxChange(q.id, opt, e.target.checked)}
-                                  className="w-4 h-4 text-blue-600 rounded-sm"
-                                />
-                                <span>{opt}</span>
-                              </label>
-                            );
-                          })}
-                        </div>
-                      )}
+                    {q.questionType === "URL" && (
+                      <input
+                        type="url"
+                        required={q.isRequired}
+                        value={formAnswers[q.id] || ""}
+                        onChange={(e) =>
+                          handleInputChange(q.id, e.target.value)
+                        }
+                        placeholder="https://facebook.com/..."
+                        className="w-full px-3.5 py-2.5 border border-[#D8D5CD] text-sm focus:outline-hidden focus:border-[#181C1B] bg-white"
+                      />
+                    )}
+                  </div>
+                );
+              })}
 
-                      {/* Loại URL */}
-                      {q.questionType === 'URL' && (
-                        <input
-                          type="url"
-                          required={q.isRequired}
-                          value={formAnswers[q.id] || ''}
-                          onChange={(e) => handleInputChange(q.id, e.target.value)}
-                          placeholder="https://facebook.com/..."
-                          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-                        />
-                      )}
-                    </div>
-                  );
-                })}
+              <div className="pt-4 flex items-center justify-end gap-2.5 border-t border-[#D8D5CD]">
+                <button
+                  type="button"
+                  onClick={() => setSelectedCampaign(null)}
+                  className="px-4 py-2 border border-[#D8D5CD] text-[#575E5B] hover:text-[#181C1B] font-bold text-sm uppercase tracking-wider cursor-pointer"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center gap-2 px-6 py-2 bg-[#181C1B] hover:bg-[#12674D] text-white font-bold text-sm uppercase tracking-wider transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  <PaperPlaneTilt size={16} weight="bold" />
+                  <span>
+                    {submitting ? "Đang gửi..." : "Gửi đơn ứng tuyển"}
+                  </span>
+                </button>
+              </div>
+            </form>
+          )}
+        </Modal>
+      )}
 
-                <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedCampaign(null)}
-                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs"
-                  >
-                    Hủy bỏ
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold text-xs flex items-center gap-2 shadow-xs"
-                  >
-                    {submitting ? 'Đang gửi hồ sơ...' : 'Gửi đơn ứng tuyển'}
-                  </button>
-                </div>
-              </form>
+      {/* Lightbox Modal Xem Ảnh Lớn */}
+      {lightboxImage && (
+        <div
+          onClick={() => setLightboxImage(null)}
+          className="fixed inset-0 z-50 bg-[#181C1B]/95 flex items-center justify-center p-4 animate-in fade-in"
+        >
+          <button
+            onClick={() => setLightboxImage(null)}
+            className="absolute top-4 right-4 p-2 text-white/80 hover:text-white transition-colors cursor-pointer"
+            aria-label="Đóng ảnh"
+          >
+            <X size={24} />
+          </button>
+          <div
+            className="max-w-4xl max-h-[85vh] flex flex-col items-center gap-3"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={lightboxImage.url}
+              alt={lightboxImage.caption || club.name}
+              className="max-h-[75vh] w-auto max-w-full object-contain border border-white/20"
+            />
+            {lightboxImage.caption && (
+              <p className="text-white text-sm font-semibold text-center bg-black/60 px-4 py-2 border border-white/10">
+                {lightboxImage.caption}
+              </p>
             )}
           </div>
         </div>

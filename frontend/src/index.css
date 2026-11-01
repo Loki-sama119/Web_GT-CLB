@@ -1,47 +1,97 @@
 @import "tailwindcss";
+@import "./editorial.css";
+
+@theme {
+  --font-display: "Be Vietnam Pro", sans-serif;
+  --font-sans: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
+
+  --color-paper: #f4f0e7;
+  --color-ink: #181c1b;
+  --color-forest: #12674d;
+  --color-forest-hover: #0e523d;
+  --color-coral: #ef673f;
+  --color-coral-hover: #d9532b;
+  --color-neutral-border: #d8d5cd;
+  --color-paper-muted: #ebe6db;
+}
 
 @layer base {
   :root {
-    --primary: #2563eb;
-    --primary-hover: #1d4ed8;
-    --secondary: #0f172a;
-    --accent: #f97316;
-    --background: #f8fafc;
-    --card: #ffffff;
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --border: #e2e8f0;
+    --brand-navy: #142b49;
+    --brand-navy-hover: #0e1f35;
+    --brand-green: #12674d;
+    --brand-green-hover: #0e523d;
+    --brand-gold: #ef673f;
+    --brand-gold-hover: #d9532b;
+    --surface-bg: #f4f0e7;
+    --surface-card: #ffffff;
+    --text-primary: #181c1b;
+    --text-secondary: #575e5b;
+    --text-muted: #7a827f;
+    --border-subtle: #d8d5cd;
+    --border-focus: #12674d;
   }
 
   body {
-    background-color: var(--background);
-    color: var(--text-main);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f4f0e7;
+    color: #181c1b;
+    font-family:
+      "Be Vietnam Pro",
+      system-ui,
+      -apple-system,
+      sans-serif;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Be Vietnam Pro", sans-serif;
+    letter-spacing: -0.01em;
+    color: #181c1b;
   }
 }
 
-/* Glassmorphism & custom utility classes */
-.glass-header {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* Campus Modern subtle UI utilities */
+.campus-hero-gradient {
+  background: linear-gradient(135deg, #0d1e34 0%, #142b49 55%, #16464f 100%);
 }
 
-.gradient-hero {
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #0284c7 100%);
+.campus-card-hover {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.campus-card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 12px 28px -10px rgba(20, 43, 73, 0.12),
+    0 2px 6px -1px rgba(0, 0, 0, 0.04);
 }
 
-.gradient-badge {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+.glass-nav {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-.card-hover {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+/* Custom scrollbar for dashboard tables */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.15);
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

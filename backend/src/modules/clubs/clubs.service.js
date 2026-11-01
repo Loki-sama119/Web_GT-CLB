@@ -1,145 +1,139 @@
-import prisma from '../../config/db.js';
-
+import prisma from "../../config/db.js";
+import {
+  verifiedWhere,
+  activeCampaignWhere,
+  visibleUserWhere,
+  presentClub,
+  isIsolatedTest,
+} from "../../utils/dataPolicy.js";
 export class ClubsService {
   static async getCategories() {
     return prisma.clubCategory.findMany({
-      orderBy: { displayOrder: 'asc' },
+      orderBy: { displayOrder: "asc" },
       include: {
         _count: {
-          select: { clubs: true }
-        }
-      }
+          select: {
+            clubs: { where: { status: "ACTIVE", ...verifiedWhere() } },
+          },
+        },
+      },
     });
   }
-
-  static async getClubs({ category, search, recruiting, page = 1, limit = 12 }) {
-    const skip = (Number(page) - 1) * Number(limit);
-    const take = Number(limit);
-
+  static async getClubs({
+    category,
+    search,
+    recruiting,
+    page = 1,
+    limit = 12,
+  }) {
+    page = Math.max(1, Number(page) || 1);
+    limit = Math.min(50, Math.max(1, Number(limit) || 12));
     const where = {
-      status: 'ACTIVE',
-      ...(category && {
-        category: {
-          slug: category
-        }
-      }),
+      status: "ACTIVE",
+      ...verifiedWhere(),
+      ...(category && { category: { slug: category } }),
       ...(search && {
-        OR: [
-          { name: { contains: search, mode: 'insensitive' } },
-          { shortDescription: { contains: search, mode: 'insensitive' } },
-          { description: { contains: search, mode: 'insensitive' } }
-        ]
+        OR: ["name", "shortDescription", "description"].map((field) => ({
+          [field]: { contains: search, mode: "insensitive" },
+        })),
       }),
-      ...(recruiting === 'true' && {
-        campaigns: {
-          some: {
-            status: 'OPEN',
-            endDate: { gte: new Date() }
-          }
-        }
-      })
+      ...(recruiting === "true" && {
+        campaigns: { some: activeCampaignWhere() },
+      }),
     };
-
-    const [total, clubs] = await Promise.all([
+    const [total, clubs, assets] = await Promise.all([
       prisma.club.count({ where }),
       prisma.club.findMany({
         where,
-        skip,
-        take,
+        skip: (page - 1) * limit,
+        take: limit,
         include: {
-          category: {
-            select: { id: true, name: true, slug: true, icon: true }
-          },
+          category: true,
+          campaigns: { where: activeCampaignWhere() },
           _count: {
             select: {
-              memberships: { where: { status: 'ACTIVE' } },
-              campaigns: { where: { status: 'OPEN', endDate: { gte: new Date() } } }
-            }
-          }
+              memberships: {
+                where: { status: "ACTIVE", user: visibleUserWhere() },
+              },
+              campaigns: { where: activeCampaignWhere() },
+            },
+          },
         },
-        orderBy: { createdAt: 'desc' }
-      })
+        orderBy: { name: "asc" },
+      }),
+      prisma.mediaAsset.findMany({
+        where: {
+          verificationStatus: "VERIFIED_APPROVED",
+          usagePermission: "APPROVED",
+        },
+      }),
     ]);
-
     return {
-      clubs,
-      meta: {
-        page: Number(page),
-        limit: Number(limit),
-        total,
-        totalPages: Math.ceil(total / take)
-      }
+      clubs: clubs.map((club) => presentClub(club, assets)),
+      meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
     };
   }
-
   static async getClubBySlug(slug) {
-    const club = await prisma.club.findUnique({
-      where: { slug },
+    const club = await prisma.club.findFirst({
+      where: { slug, status: "ACTIVE", ...verifiedWhere() },
       include: {
         category: true,
         memberships: {
           where: {
-            status: 'ACTIVE',
-            role: { in: ['LEADER', 'VICE_LEADER'] }
+            status: "ACTIVE",
+            role: { in: ["LEADER", "VICE_LEADER"] },
+            user: visibleUserWhere(),
           },
           include: {
-            user: {
-              include: {
-                studentProfile: true
-              }
-            }
-          }
+            user: { select: { id: true, email: true, studentProfile: true } },
+          },
         },
         campaigns: {
-          where: {
-            status: 'OPEN',
-            endDate: { gte: new Date() }
-          },
+          where: activeCampaignWhere(),
           include: {
             form: {
-              include: {
-                questions: {
-                  orderBy: { orderIndex: 'asc' }
-                }
-              }
-            }
-          }
+              include: { questions: { orderBy: { orderIndex: "asc" } } },
+            },
+          },
         },
         events: {
-          where: {
-            status: 'UPCOMING'
-          },
-          orderBy: { startTime: 'asc' },
-          take: 3
+          where: { isPublic: true, ...verifiedWhere() },
+          orderBy: { startTime: "desc" },
+          take: 6,
         },
         posts: {
-          where: {
-            status: 'PUBLISHED'
-          },
-          orderBy: { createdAt: 'desc' },
-          take: 5
+          where: { status: "PUBLISHED", ...verifiedWhere() },
+          orderBy: { createdAt: "desc" },
+          take: 5,
         },
+        assets: true,
         _count: {
           select: {
-            memberships: { where: { status: 'ACTIVE' } },
-            events: true,
-            posts: true
-          }
-        }
-      }
+            memberships: {
+              where: { status: "ACTIVE", user: visibleUserWhere() },
+            },
+            events: { where: verifiedWhere() },
+            posts: { where: verifiedWhere() },
+          },
+        },
+      },
     });
-
-    if (!club) {
-      const err = new Error('Không tìm thấy câu lạc bộ với đường dẫn này');
-      err.statusCode = 404;
-      throw err;
-    }
-
-    return club;
+    if (!club)
+      throw Object.assign(
+        new Error("Thông tin câu lạc bộ chưa được công bố hoặc không tồn tại"),
+        { statusCode: 404 },
+      );
+    const result = presentClub(club, club.assets);
+    delete result.assets;
+    return result;
   }
-
   static async createClub(data) {
-    const slug = data.slug || data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const slug =
+      data.slug ||
+      data.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
     return prisma.club.create({
       data: {
         name: data.name,
@@ -147,19 +141,40 @@ export class ClubsService {
         shortDescription: data.shortDescription,
         description: data.description,
         categoryId: data.categoryId,
-        meetingSchedule: data.meetingSchedule || '',
+        meetingSchedule: data.meetingSchedule || null,
         email: data.email || null,
         phone: data.phone || null,
         fanpageUrl: data.fanpageUrl || null,
-        status: data.status || 'ACTIVE'
-      }
+        status: data.status || (isIsolatedTest() ? "ACTIVE" : "PENDING"),
+      },
     });
   }
-
   static async updateClub(clubId, data) {
+    const allowed = [
+      "name",
+      "slug",
+      "shortDescription",
+      "description",
+      "categoryId",
+      "meetingSchedule",
+      "email",
+      "phone",
+      "fanpageUrl",
+    ];
+    const editable = Object.fromEntries(
+      allowed
+        .filter((key) => data[key] !== undefined)
+        .map((key) => [key, data[key]]),
+    );
     return prisma.club.update({
       where: { id: clubId },
-      data
+      data: {
+        ...editable,
+        ...(!isIsolatedTest() && {
+          dataClassification: "REAL_UNVERIFIED",
+          verifiedAt: null,
+        }),
+      },
     });
   }
 }

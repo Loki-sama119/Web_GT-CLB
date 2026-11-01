@@ -9,10 +9,10 @@
 
 | Nhóm Kiểm thử | Công cụ | Số lượng Test | Kết quả | Tỷ lệ Đạt |
 |---|---|---|---|---|
-| **Backend API Integration Tests** | Vitest v3 + Supertest | 11 / 11 tests | **PASSED** | **100%** |
+| **Backend API Integration Tests** | Vitest v3 + Supertest | 31 / 31 tests | **PASSED** | **100%** |
 | **Playwright E2E (Desktop Chromium)** | Playwright (Trình duyệt thật) | 9 / 9 tests | **PASSED** | **100%** |
 | **Playwright E2E (Mobile Pixel 5)** | Playwright (Mobile Viewport) | 9 / 9 tests | **PASSED** | **100%** |
-| **Tổng số lượt kiểm thử** | | **29 / 29 tests** | **PASSED** | **100%** |
+| **Tổng số lượt kiểm thử thực tế** | | **49 / 49 tests** | **PASSED** | **100%** |
 
 ---
 
@@ -71,13 +71,40 @@ Running 18 tests using 1 worker
 ## 4. LOG THỰC THI KIỂM THỬ BACKEND API (VITEST)
 
 ```text
- ✓ tests/api.test.js (11 tests) 2478ms
+ ✓ tests/api.test.js (31 tests) 1910ms
    ✓ University Club Portal API Integration Tests > TC01: Người dùng đăng ký tài khoản hợp lệ thành công
    ✓ University Club Portal API Integration Tests > TC02: Đăng nhập thất bại khi sai mật khẩu và thành công khi đúng mật khẩu
+   ✓ University Club Portal API Integration Tests > TC03: Tìm kiếm, lọc và xem chi tiết CLB theo slug
+   ✓ University Club Portal API Integration Tests > TC05: Thiếu câu trả lời bắt buộc thì backend từ chối trả về 400
+   ✓ University Club Portal API Integration Tests > TC04: Sinh viên nộp hồ sơ hợp lệ với đầy đủ câu hỏi bắt buộc
+   ✓ University Club Portal API Integration Tests > TC06: Ngăn chặn nộp trùng hồ sơ đang hoạt động trong cùng một đợt tuyển
+   ✓ University Club Portal API Integration Tests > TC07: Không thể nộp hồ sơ cho đợt tuyển có trạng thái CLOSED
    ✓ University Club Portal API Integration Tests > TC08: Duyệt hồ sơ ACCEPTED tự động kích hoạt membership duy nhất cho sinh viên
+   ✓ University Club Portal API Integration Tests > TC10: Sinh viên xem dòng trạng thái hồ sơ của mình và internalNotes được ẩn an toàn
    ✓ University Club Portal API Integration Tests > TC11: Club Admin của CLB Cầu Lông không thể truy cập danh sách hồ sơ CLB BAFU Tech
+   ✓ University Club Portal API Integration Tests > TC12: User vai trò STUDENT bị từ chối khi gọi API Super Admin
+   ✓ University Club Portal API Integration Tests > TC13: Sinh viên upload Avatar thành công và cập nhật profile
+   ✓ University Club Portal API Integration Tests > TC14: Club Admin upload ảnh vào Album hoạt động và lấy danh sách album
+   ✓ University Club Portal API Integration Tests > TC15: Chặn tệp tin độc hại hoặc không đúng định dạng hình ảnh
+   ✓ University Club Portal API Integration Tests > TC16: Club Admin xuất danh sách ứng viên file CSV thành công có UTF-8 BOM
+   ✓ University Club Portal API Integration Tests > TC17: Chặn Club Admin CLB Cầu Lông xuất danh sách ứng viên của CLB BAFU Tech (RBAC 403)
+   ✓ University Club Portal API Integration Tests > TC18: Hệ thống ghi nhận đầy đủ lịch sử thay đổi trạng thái ApplicationHistory
+   ✓ University Club Portal API Integration Tests > TC19: Dịch vụ Email gửi thông báo nộp đơn và trúng tuyển an toàn
+   ✓ University Club Portal API Integration Tests > TC20: Lỗi dịch vụ Email không làm hỏng tiến trình xét duyệt hồ sơ ứng tuyển
+   ✓ University Club Portal API Integration Tests > TC21: BCN tạo sự kiện mới cho CLB thành công
+   ✓ University Club Portal API Integration Tests > TC22: Sinh viên đăng ký tham gia sự kiện và nhận email xác nhận
+   ✓ University Club Portal API Integration Tests > TC23: Chặn đăng ký trùng lặp vào sự kiện đã tham gia
+   ✓ University Club Portal API Integration Tests > TC24: Sinh viên xem danh sách các sự kiện mình đã đăng ký
+   ✓ University Club Portal API Integration Tests > TC25: Sinh viên hủy đăng ký sự kiện thành công
+   ✓ University Club Portal API Integration Tests > TC26: Club Admin lấy danh sách thành viên CLB có tìm kiếm và lọc
+   ✓ University Club Portal API Integration Tests > TC27: Club Admin xuất danh sách thành viên ra file CSV có UTF-8 BOM
+   ✓ University Club Portal API Integration Tests > TC28: Cập nhật chức vụ hội viên thành VICE_LEADER thành công
+   ✓ University Club Portal API Integration Tests > TC29: Một sinh viên có thể tham gia nhiều câu lạc bộ trên cùng một tài khoản
+   ✓ University Club Portal API Integration Tests > TC30: Super Admin truy cập báo cáo tổng hợp hoạt động CLB toàn trường
+   ✓ University Club Portal API Integration Tests > TC31: Super Admin xuất file CSV báo cáo toàn trường có UTF-8 BOM
+   ✓ University Club Portal API Integration Tests > TC32: Chặn tài khoản Sinh viên truy cập báo cáo Super Admin (RBAC 403)
 
  Test Files  1 passed (1)
-      Tests  11 passed (11)
-   Duration  7.03s
+      Tests  31 passed (31)
+   Duration  4.21s
 ```
