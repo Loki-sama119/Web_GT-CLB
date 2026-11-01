@@ -185,32 +185,102 @@ Hệ thống tích hợp quy trình bảo mật tài khoản hoàn chỉnh:
 
 ---
 
-## 📧 Hướng Dẫn Cấu Hình SMTP Gửi Mail Thực Tế
+## 📧 Hướng Dẫn Cấu Hình SMTP Gửi Mail & Cơ Chế Fallback An Toàn
 
-Hệ thống hỗ trợ gửi email thông báo kết quả ứng tuyển, xác nhận sự kiện và gửi mã OTP đặt lại mật khẩu.
+Hệ thống Cổng Thông Tin CLB Sinh Viên BAFU được tích hợp dịch vụ Email tự động qua Nodemailer, phục vụ các luồng nghiệp vụ quan trọng:
+- 📩 **Gửi mã OTP 6 số đặt lại mật khẩu** (kèm giao diện HTML nhận diện thương hiệu BAFU sang trọng, có hạn dùng 15 phút).
+- 🔐 **Thông báo mật khẩu đã thay đổi** (cảnh báo bảo mật tức thì khi tài khoản có biến động).
+- 🎉 **Thông báo kết quả xét duyệt hồ sơ ứng tuyển** (Trúng tuyển `ACCEPTED`, Chưa phù hợp `REJECTED`, Yêu cầu bổ sung hồ sơ).
+- 🎫 **Gửi vé xác nhận đăng ký sự kiện CLB** (thời gian, địa điểm, hướng dẫn check-in nhận điểm rèn luyện).
 
-### 1. Chế độ Mặc Định (An toàn — Không lo lỗi crash)
-Nếu bạn **chưa cấu hình thông tin SMTP**, hệ thống sẽ tự động kích hoạt chế độ **MOCK LOGGER**:
-- Mọi yêu cầu gửi email sẽ in trực tiếp nội dung và mã OTP ra màn hình Terminal / Docker logs.
-- API luôn phản hồi thành công và trả về mã OTP thử nghiệm để bạn test ngay lập tức mà không gặp bất kỳ trở ngại nào.
+---
 
-### 2. Cấu hình gửi qua Gmail thật (Chỉ mất 2 phút)
-Để email gửi về đúng hòm thư thật của bạn:
+### 1. Cơ Chế Fallback Thông Minh (Safe Mock Logger)
 
-1. Đăng nhập vào tài khoản Google của bạn.
-2. Bật **"Xác minh 2 bước" (2-Step Verification)** tại: [https://myaccount.google.com/security](https://myaccount.google.com/security)
-3. Truy cập trang tạo **Mật khẩu ứng dụng**: [https://myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
-4. Đặt tên ứng dụng (ví dụ: `BAFU Club Portal`) $\rightarrow$ Bấm **Tạo**.
-5. Google sẽ cấp cho bạn một chuỗi mật khẩu gồm 16 chữ cái (ví dụ: `abcd efgh ijkl mnop`).
-6. Mở file `.env` (hoặc file `backend/.env`) và điền:
-   ```env
-   SMTP_HOST=smtp.gmail.com
-   SMTP_PORT=587
-   SMTP_USER=email_cua_ban@gmail.com
-   SMTP_PASS=abcdefghijklmnop
-   SMTP_FROM="Cổng Thông Tin CLB Sinh Viên BAFU" <email_cua_ban@gmail.com>
-   ```
-7. Khởi động lại hệ thống bằng cách chạy lại `start.bat` (chọn mục `1` hoặc `4` rồi `1`). Từ thời điểm này, mọi mã OTP và thông báo sẽ được gửi trực tiếp tới hòm thư người nhận!
+> [!NOTE]
+> **Chạy ngay không cần cấu hình:** Nếu bạn là người mới thử nghiệm và chưa cấu hình tài khoản SMTP, hệ thống sẽ **tự động kích hoạt cơ chế Fallback an toàn (Safe Mock Logger)**:
+> - Mọi thao tác gửi email sẽ **không bao giờ bị lỗi hay làm crash API request**.
+> - Nội dung email và **mã OTP 6 số sẽ được in trực tiếp ra màn hình Terminal / Docker Console** và trả về gợi ý `debugOtp` trong môi trường thử nghiệm.
+> - Bạn có thể copy ngay mã OTP từ console để kiểm tra chức năng mà không cần cài đặt thêm bất kỳ thứ gì.
+
+---
+
+### 2. Hướng Dẫn Thao Tác Cấu Hình Gửi Mail Thật Bằng Gmail (Step-by-Step)
+
+Để hệ thống gửi email thực tế đến hòm thư người dùng (Gmail cá nhân hoặc email nhà trường `@bafu.edu.vn`), bạn chỉ cần làm theo **5 bước đơn giản** sau:
+
+#### 🔹 Bước 1: Bật Xác minh 2 bước (2-Step Verification) cho tài khoản Google
+1. Mở trình duyệt và truy cập trang bảo mật Google: [https://myaccount.google.com/security](https://myaccount.google.com/security).
+2. Tại mục **"Cách bạn đăng nhập vào Google" (How you sign in to Google)**, kiểm tra xem **"Xác minh 2 bước" (2-Step Verification)** đã bật chưa.
+3. Nếu đang tắt $\rightarrow$ Bấm vào để bật và xác thực số điện thoại của bạn.
+
+> [!IMPORTANT]
+> **Bắt buộc phải bật Xác minh 2 bước** thì Google mới cho phép tạo "Mật khẩu ứng dụng" (App Password). Bạn **không được sử dụng mật khẩu đăng nhập thông thường của Gmail** vì Google sẽ chặn kết nối từ bên thứ ba vì lý do bảo mật.
+
+#### 🔹 Bước 2: Tạo "Mật khẩu ứng dụng" (App Password)
+1. Truy cập trực tiếp liên kết tạo mật khẩu ứng dụng của Google:  
+   👉 **[https://myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)**
+2. Nhập tên ứng dụng gợi nhớ vào ô tên: ví dụ nhập `BAFU Club Portal`.
+3. Bấm nút **"Tạo" (Create)**.
+4. Google sẽ hiển thị một cửa sổ thông báo chứa **mã mật khẩu 16 ký tự** (dạng 4 nhóm chữ cái, ví dụ: `abcd efgh ijkl mnop`).
+5. **Sao chép chuỗi 16 ký tự này** (không cần giữ khoảng cách hoặc để liền nhau đều được).
+
+#### 🔹 Bước 3: Điền cấu hình vào tệp môi trường `.env`
+Mở file `.env` (tại thư mục gốc dự án `Web_GT-CLB/.env` hoặc `Web_GT-CLB/backend/.env`), tìm đến phần cấu hình SMTP và điền thông tin của bạn:
+
+```env
+# ==============================================================================
+# CẤU HÌNH GỬI EMAIL SMTP (GMAIL HOẶC GOOGLE WORKSPACE BAFU)
+# ==============================================================================
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=email_cua_ban@gmail.com
+SMTP_PASS=abcdefghijklmnop
+SMTP_FROM="Cổng Thông Tin CLB Sinh Viên BAFU" <no-reply@bafu.edu.vn>
+```
+
+#### 🔹 Bước 4: Bảng giải thích chi tiết ý nghĩa từng thông số
+| Tên biến | Giá trị mẫu | Ý nghĩa & Hướng dẫn thiết lập |
+| :--- | :--- | :--- |
+| `SMTP_HOST` | `smtp.gmail.com` | Địa chỉ máy chủ gửi mail của Google (hoặc `smtp.office365.com` nếu dùng Outlook BAFU). |
+| `SMTP_PORT` | `587` | Cổng SMTP tiêu chuẩn hỗ trợ giao thức bảo mật TLS/STARTTLS (Có thể dùng `465` cho SSL). |
+| `SMTP_USER` | `ten_ban@gmail.com` | Địa chỉ email Google của bạn (dùng để xác thực gửi thư). |
+| `SMTP_PASS` | `abcd efgh ijkl mnop` | **Mật khẩu ứng dụng 16 ký tự** vừa lấy ở Bước 2 (Tuyệt đối không dùng mật khẩu Gmail chính). |
+| `SMTP_FROM` | `"Cổng CLB BAFU" <no-reply@bafu.edu.vn>` | Tên và địa chỉ hiển thị trong hòm thư của người nhận (giúp email trông chuyên nghiệp và uy tín). |
+
+#### 🔹 Bước 5: Khởi động lại hệ thống để nhận cấu hình mới
+- **Nếu chạy bằng `start.bat`:** Chọn mục `[4] Dừng hệ thống` rồi chọn lại mục `[1] Khởi chạy hệ thống`.
+- **Nếu chạy bằng Docker Compose:**
+  ```powershell
+  docker compose up -d --force-recreate backend
+  ```
+- **Nếu chạy Dev (Local Node.js):** Tắt terminal backend đang chạy (Ctrl+C) và gõ lại `npm run dev`.
+
+---
+
+### 3. Thử Nghiệm Gửi Email & Kiểm Tra Kết Quả
+
+1. Mở website tại [http://localhost](http://localhost) và vào trang **Đăng nhập** (`/login`).
+2. Bấm nút **"Quên mật khẩu?"**.
+3. Nhập một email bất kỳ đang có trong hệ thống (ví dụ: `admin@bafu.edu.vn` hoặc email cá nhân bạn vừa đăng ký).
+4. Bấm **"Gửi mã xác thực"**:
+   - **Nếu đã cấu hình SMTP thật:** Mở hòm thư email của bạn kiểm tra hộp thư đến (Inbox) hoặc thư mục Rác (Spam) để xem email HTML có logo BAFU và mã OTP 6 số.
+   - **Nếu dùng chế độ Mock Fallback:** Mở terminal chạy `docker logs club_portal_backend` hoặc màn hình console để xem dòng log dạng:  
+     `📧 [MOCK EMAIL] Gửi tới: admin@bafu.edu.vn | Tiêu đề: "[BAFU Club Portal] Mã xác thực OTP đặt lại mật khẩu: 123456"`
+
+---
+
+### 4. Xử Lý Các Sự Cố Thường Gặp (Troubleshooting)
+
+- ⚠️ **Lỗi `535-5.7.8 Username and Password not accepted`:**
+  - *Nguyên nhân:* Bạn đang nhập mật khẩu đăng nhập thông thường của Gmail hoặc chuỗi Mật khẩu ứng dụng bị sai ký tự.
+  - *Cách sửa:* Đảm bảo đã bật Xác minh 2 bước và truy cập lại [https://myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) để tạo một App Password mới, sau đó dán chính xác vào `SMTP_PASS`.
+- ⚠️ **Lỗi `ETIMEDOUT` hoặc `Connection timed out`:**
+  - *Nguyên nhân:* Mạng Wi-Fi hoặc tường lửa nội bộ chặn cổng 587.
+  - *Cách sửa:* Đổi `SMTP_PORT=465` trong file `.env` và khởi động lại backend.
+- ⚠️ **Email bị rơi vào mục Thư rác (Spam):**
+  - *Nguyên nhân:* Bộ lọc của Google/Outlook đánh dấu email tự động mới thiết lập.
+  - *Cách sửa:* Bấm "Không phải thư rác" (Not Spam) để đưa thư về hộp thư chính.
 
 ---
 
